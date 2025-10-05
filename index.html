@@ -88,54 +88,72 @@
                 },
                 {
                     id: 3,
+                    type: 'drag-drop-images',
+                    question: 'Drag each device to the correct group:',
+                    items: [
+                        { name: 'Keyboard', type: 'input', icon: '⌨️' },
+                        { name: 'Monitor', type: 'output', icon: '🖥️' },
+                        { name: 'Mouse', type: 'input', icon: '🖱️' },
+                        { name: 'Printer', type: 'output', icon: '🖨️' },
+                        { name: 'Microphone', type: 'input', icon: '🎤' },
+                        { name: 'Speaker', type: 'output', icon: '🔊' }
+                    ],
+                    categories: ['Input Devices', 'Output Devices'],
+                    correctAnswers: {
+                        'Input Devices': ['Keyboard', 'Mouse', 'Microphone'],
+                        'Output Devices': ['Monitor', 'Printer', 'Speaker']
+                    }
+                },
+                {
+                    id: 4,
                     type: 'true-false',
                     question: 'Software is something you can physically touch.',
                     options: ['True', 'False'],
                     correct: 1
                 },
                 {
-                    id: 4,
+                    id: 5,
                     type: 'multiple',
                     question: 'Which device is used for INPUT?',
                     options: ['Printer', 'Screen', 'Keyboard', 'Speaker'],
                     correct: 2
                 },
                 {
-                    id: 5,
+                    id: 6,
                     type: 'fill',
                     question: 'A _______ is a device that shows us the results of what the computer processed.',
                     answer: 'screen'
                 },
                 {
-                    id: 6,
+                    id: 7,
                     type: 'multiple',
                     question: 'Which of these is an example of a network?',
                     options: ['Printer', 'Bluetooth', 'Keyboard', 'Game'],
                     correct: 1
                 },
                 {
-                    id: 7,
+                    id: 8,
                     type: 'true-false',
                     question: 'Smartphones and tablets are examples of ICT devices.',
                     options: ['True', 'False'],
                     correct: 0
                 },
                 {
-                    id: 8,
+                    id: 9,
                     type: 'multiple',
                     question: 'What is an example of OUTPUT?',
                     options: ['Mouse clicking', 'Typing on keyboard', 'Printer printing paper', 'Touching screen'],
                     correct: 2
                 },
                 {
-                    id: 9,
+                    id: 10,
                     type: 'true-false',
                     question: 'Sending emails is an example of using ICT in daily life.',
                     options: ['True', 'False'],
                     correct: 0
                 },
                 {
-                    id: 10,
+                    id: 11,
                     type: 'multiple',
                     question: 'What does PROCESSING mean in ICT?',
                     options: [
@@ -147,22 +165,10 @@
                     correct: 2
                 },
                 {
-                    id: 11,
+                    id: 12,
                     type: 'fill',
                     question: 'The _______ connects devices to share information wirelessly.',
                     answer: 'internet'
-                },
-                {
-                    id: 12,
-                    type: 'multiple',
-                    question: 'How does ICT help us learn?',
-                    options: [
-                        'It makes devices heavier',
-                        'It helps us find information quickly',
-                        'It makes books disappear',
-                        'It stops communication'
-                    ],
-                    correct: 1
                 }
             ];
 
