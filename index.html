@@ -1,462 +1,482 @@
-import React, { useState, useEffect } from 'react';
-import { Monitor, AlertCircle } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICT Quiz for 5th Grade</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="root"></div>
 
-const ICTQuiz = () => {
-  const [studentName, setStudentName] = useState('');
-  const [hasStarted, setHasStarted] = useState(false);
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState({});
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [showWarning, setShowWarning] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [completedStudents, setCompletedStudents] = useState({});
-  const [showNameError, setShowNameError] = useState(false);
+    <script type="text/babel">
+        const { useState, useEffect } = React;
 
-  // Sample student names
-  const studentList = [
-    "Emma Johnson",
-    "Liam Smith",
-    "Sophia Garcia",
-    "Noah Martinez",
-    "Olivia Brown",
-    "Ethan Davis",
-    "Ava Rodriguez",
-    "Mason Wilson",
-    "Isabella Lopez",
-    "Lucas Anderson"
-  ];
+        const Monitor = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" strokeWidth="2"/>
+                <line x1="8" y1="21" x2="16" y2="21" strokeWidth="2"/>
+                <line x1="12" y1="17" x2="12" y2="21" strokeWidth="2"/>
+            </svg>
+        );
 
-  // Quiz questions based on the ICT presentation
-  const questions = [
-    {
-      id: 1,
-      type: 'multiple',
-      question: 'What does ICT stand for?',
-      options: [
-        'Internet and Computer Technology',
-        'Information and Communication Technology',
-        'International Computer Training',
-        'Internet Communication Tools'
-      ],
-      correct: 1
-    },
-    {
-      id: 2,
-      type: 'multiple',
-      question: 'Which of these is an example of ICT hardware?',
-      options: ['Word processor', 'Internet browser', 'Laptop', 'Social media app'],
-      correct: 2
-    },
-    {
-      id: 3,
-      type: 'true-false',
-      question: 'Software is something you can physically touch.',
-      options: ['True', 'False'],
-      correct: 1
-    },
-    {
-      id: 4,
-      type: 'multiple',
-      question: 'Which device is used for INPUT?',
-      options: ['Printer', 'Screen', 'Keyboard', 'Speaker'],
-      correct: 2
-    },
-    {
-      id: 5,
-      type: 'fill',
-      question: 'A _______ is a device that shows us the results of what the computer processed.',
-      answer: 'screen'
-    },
-    {
-      id: 6,
-      type: 'multiple',
-      question: 'Which of these is an example of a network?',
-      options: ['Printer', 'Wi-Fi', 'Keyboard', 'Game'],
-      correct: 1
-    },
-    {
-      id: 7,
-      type: 'true-false',
-      question: 'Smartphones and tablets are examples of ICT devices.',
-      options: ['True', 'False'],
-      correct: 0
-    },
-    {
-      id: 8,
-      type: 'multiple',
-      question: 'What is an example of software?',
-      options: ['Mouse', 'Word processor', 'Printer', 'Scanner'],
-      correct: 1
-    },
-    {
-      id: 9,
-      type: 'fill',
-      question: 'The _______ connects devices to share information wirelessly.',
-      answer: 'internet'
-    },
-    {
-      id: 10,
-      type: 'multiple',
-      question: 'Which is an example of OUTPUT?',
-      options: ['Mouse clicking', 'Typing on keyboard', 'Printer printing paper', 'Touching screen'],
-      correct: 2
-    },
-    {
-      id: 11,
-      type: 'true-false',
-      question: 'Sending emails is an example of using ICT in daily life.',
-      options: ['True', 'False'],
-      correct: 0
-    },
-    {
-      id: 12,
-      type: 'multiple',
-      question: 'What does PROCESSING mean in ICT?',
-      options: [
-        'Showing results on screen',
-        'Typing information',
-        'The device thinks and works on information',
-        'Connecting to Wi-Fi'
-      ],
-      correct: 2
-    },
-    {
-      id: 13,
-      type: 'fill',
-      question: 'A _______ is a physical device you can touch, like a computer or tablet.',
-      answer: 'hardware'
-    },
-    {
-      id: 14,
-      type: 'multiple',
-      question: 'How does ICT help us learn?',
-      options: [
-        'It makes devices heavier',
-        'It helps us find information quickly',
-        'It makes books disappear',
-        'It stops communication'
-      ],
-      correct: 1
-    },
-    {
-      id: 15,
-      type: 'true-false',
-      question: 'Bluetooth is a type of network that helps devices connect.',
-      options: ['True', 'False'],
-      correct: 0
-    }
-  ];
+        const AlertCircle = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" strokeWidth="2"/>
+                <line x1="12" y1="8" x2="12" y2="12" strokeWidth="2"/>
+                <line x1="12" y1="16" x2="12.01" y2="16" strokeWidth="2"/>
+            </svg>
+        );
 
-  // Monitor fullscreen and tab visibility
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      const isCurrentlyFullscreen = !!document.fullscreenElement;
-      setIsFullscreen(isCurrentlyFullscreen);
-      
-      if (!isCurrentlyFullscreen && hasStarted && !isCompleted) {
-        setShowWarning(true);
-        setTimeout(() => setShowWarning(false), 3000);
-      }
-    };
+        const ICTQuiz = () => {
+            const [studentName, setStudentName] = useState('');
+            const [hasStarted, setHasStarted] = useState(false);
+            const [currentQuestion, setCurrentQuestion] = useState(0);
+            const [answers, setAnswers] = useState({});
+            const [isFullscreen, setIsFullscreen] = useState(false);
+            const [showWarning, setShowWarning] = useState(false);
+            const [isCompleted, setIsCompleted] = useState(false);
+            const [completedStudents, setCompletedStudents] = useState({});
+            const [showNameError, setShowNameError] = useState(false);
 
-    const handleVisibilityChange = () => {
-      if (document.hidden && hasStarted && !isCompleted) {
-        setShowWarning(true);
-        setTimeout(() => setShowWarning(false), 3000);
-      }
-    };
+            const studentList = [
+                "Emma Johnson",
+                "Liam Smith",
+                "Sophia Garcia",
+                "Noah Martinez",
+                "Olivia Brown",
+                "Ethan Davis",
+                "Ava Rodriguez",
+                "Mason Wilson",
+                "Isabella Lopez",
+                "Lucas Anderson"
+            ];
 
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+            const questions = [
+                {
+                    id: 1,
+                    type: 'multiple',
+                    question: 'What does ICT stand for?',
+                    options: [
+                        'Internet and Computer Technology',
+                        'Information and Communication Technology',
+                        'International Computer Training',
+                        'Internet Communication Tools'
+                    ],
+                    correct: 1
+                },
+                {
+                    id: 2,
+                    type: 'multiple',
+                    question: 'Which of these is an example of ICT hardware?',
+                    options: ['Word processor', 'Internet browser', 'Laptop', 'Social media app'],
+                    correct: 2
+                },
+                {
+                    id: 3,
+                    type: 'true-false',
+                    question: 'Software is something you can physically touch.',
+                    options: ['True', 'False'],
+                    correct: 1
+                },
+                {
+                    id: 4,
+                    type: 'multiple',
+                    question: 'Which device is used for INPUT?',
+                    options: ['Printer', 'Screen', 'Keyboard', 'Speaker'],
+                    correct: 2
+                },
+                {
+                    id: 5,
+                    type: 'fill',
+                    question: 'A _______ is a device that shows us the results of what the computer processed.',
+                    answer: 'screen'
+                },
+                {
+                    id: 6,
+                    type: 'multiple',
+                    question: 'Which of these is an example of a network?',
+                    options: ['Printer', 'Wi-Fi', 'Keyboard', 'Game'],
+                    correct: 1
+                },
+                {
+                    id: 7,
+                    type: 'true-false',
+                    question: 'Smartphones and tablets are examples of ICT devices.',
+                    options: ['True', 'False'],
+                    correct: 0
+                },
+                {
+                    id: 8,
+                    type: 'multiple',
+                    question: 'What is an example of software?',
+                    options: ['Mouse', 'Word processor', 'Printer', 'Scanner'],
+                    correct: 1
+                },
+                {
+                    id: 9,
+                    type: 'fill',
+                    question: 'The _______ connects devices to share information wirelessly.',
+                    answer: 'internet'
+                },
+                {
+                    id: 10,
+                    type: 'multiple',
+                    question: 'Which is an example of OUTPUT?',
+                    options: ['Mouse clicking', 'Typing on keyboard', 'Printer printing paper', 'Touching screen'],
+                    correct: 2
+                },
+                {
+                    id: 11,
+                    type: 'true-false',
+                    question: 'Sending emails is an example of using ICT in daily life.',
+                    options: ['True', 'False'],
+                    correct: 0
+                },
+                {
+                    id: 12,
+                    type: 'multiple',
+                    question: 'What does PROCESSING mean in ICT?',
+                    options: [
+                        'Showing results on screen',
+                        'Typing information',
+                        'The device thinks and works on information',
+                        'Connecting to Wi-Fi'
+                    ],
+                    correct: 2
+                },
+                {
+                    id: 13,
+                    type: 'fill',
+                    question: 'A _______ is a physical device you can touch, like a computer or tablet.',
+                    answer: 'hardware'
+                },
+                {
+                    id: 14,
+                    type: 'multiple',
+                    question: 'How does ICT help us learn?',
+                    options: [
+                        'It makes devices heavier',
+                        'It helps us find information quickly',
+                        'It makes books disappear',
+                        'It stops communication'
+                    ],
+                    correct: 1
+                },
+                {
+                    id: 15,
+                    type: 'true-false',
+                    question: 'Bluetooth is a type of network that helps devices connect.',
+                    options: ['True', 'False'],
+                    correct: 0
+                }
+            ];
 
-    return () => {
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [hasStarted, isCompleted]);
+            useEffect(() => {
+                const handleFullscreenChange = () => {
+                    const isCurrentlyFullscreen = !!document.fullscreenElement;
+                    setIsFullscreen(isCurrentlyFullscreen);
+                    
+                    if (!isCurrentlyFullscreen && hasStarted && !isCompleted) {
+                        setShowWarning(true);
+                        setTimeout(() => setShowWarning(false), 3000);
+                    }
+                };
 
-  const enterFullscreen = () => {
-    const elem = document.documentElement;
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    }
-  };
+                const handleVisibilityChange = () => {
+                    if (document.hidden && hasStarted && !isCompleted) {
+                        setShowWarning(true);
+                        setTimeout(() => setShowWarning(false), 3000);
+                    }
+                };
 
-  const handleStartQuiz = () => {
-    if (!studentName) {
-      setShowNameError(true);
-      return;
-    }
-    
-    if (completedStudents[studentName]) {
-      alert('You have already completed this quiz! You can only take it once.');
-      return;
-    }
-    
-    setHasStarted(true);
-    enterFullscreen();
-  };
+                document.addEventListener('fullscreenchange', handleFullscreenChange);
+                document.addEventListener('visibilitychange', handleVisibilityChange);
 
-  const handleAnswer = (answer) => {
-    setAnswers({ ...answers, [currentQuestion]: answer });
-  };
+                return () => {
+                    document.removeEventListener('fullscreenchange', handleFullscreenChange);
+                    document.removeEventListener('visibilitychange', handleVisibilityChange);
+                };
+            }, [hasStarted, isCompleted]);
 
-  const handleNext = () => {
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-    } else {
-      // Quiz completed
-      setIsCompleted(true);
-      setCompletedStudents({ ...completedStudents, [studentName]: true });
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
-    }
-  };
+            const enterFullscreen = () => {
+                const elem = document.documentElement;
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                }
+            };
 
-  const calculateScore = () => {
-    let score = 0;
-    questions.forEach((q, index) => {
-      if (q.type === 'fill') {
-        if (answers[index]?.toLowerCase().trim() === q.answer.toLowerCase()) {
-          score++;
-        }
-      } else {
-        if (answers[index] === q.correct) {
-          score++;
-        }
-      }
-    });
-    return score;
-  };
+            const handleStartQuiz = () => {
+                if (!studentName) {
+                    setShowNameError(true);
+                    return;
+                }
+                
+                if (completedStudents[studentName]) {
+                    alert('You have already completed this quiz! You can only take it once.');
+                    return;
+                }
+                
+                setHasStarted(true);
+                enterFullscreen();
+            };
 
-  // Animated background component
-  const AnimatedBackground = () => (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none">
-      <style>{`
-        @keyframes float1 {
-          0%, 100% { transform: translate(0, 0) rotate(0deg); }
-          33% { transform: translate(30px, -30px) rotate(120deg); }
-          66% { transform: translate(-20px, 20px) rotate(240deg); }
-        }
-        @keyframes float2 {
-          0%, 100% { transform: translate(0, 0) rotate(0deg); }
-          33% { transform: translate(-40px, 40px) rotate(-120deg); }
-          66% { transform: translate(20px, -20px) rotate(-240deg); }
-        }
-        @keyframes float3 {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(15px, 15px) scale(1.1); }
-        }
-        .float-1 { animation: float1 20s infinite ease-in-out; }
-        .float-2 { animation: float2 25s infinite ease-in-out; }
-        .float-3 { animation: float3 15s infinite ease-in-out; }
-      `}</style>
-      
-      {/* Doodle elements */}
-      <div className="float-1 absolute top-20 left-10 opacity-20">
-        <Monitor className="w-16 h-16 text-blue-400" />
-      </div>
-      <div className="float-2 absolute top-40 right-20 opacity-20">
-        <div className="w-12 h-12 border-4 border-purple-400 rounded-lg"></div>
-      </div>
-      <div className="float-3 absolute bottom-32 left-1/4 opacity-20">
-        <div className="w-8 h-8 bg-pink-400 rounded-full"></div>
-      </div>
-      <div className="float-1 absolute top-1/3 right-1/4 opacity-20">
-        <div className="w-10 h-10 border-4 border-indigo-400 rounded-full"></div>
-      </div>
-      <div className="float-2 absolute bottom-20 right-32 opacity-20">
-        <div className="w-14 h-14 border-4 border-blue-400 rotate-45"></div>
-      </div>
-      <div className="float-3 absolute top-1/2 left-16 opacity-20">
-        <svg width="40" height="40" viewBox="0 0 40 40">
-          <path d="M20 5 L35 35 L5 35 Z" fill="none" stroke="#a78bfa" strokeWidth="3"/>
-        </svg>
-      </div>
-    </div>
-  );
+            const handleAnswer = (answer) => {
+                setAnswers({ ...answers, [currentQuestion]: answer });
+            };
 
-  // Start screen
-  if (!hasStarted && !isCompleted) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
-        <AnimatedBackground />
-        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 transform transition-all">
-          <div className="flex items-center justify-center mb-6">
-            <Monitor className="w-12 h-12 text-blue-600 mr-3" />
-            <h1 className="text-4xl font-bold text-blue-600">ICT Quiz for 5th Grade</h1>
-          </div>
-          
-          <p className="text-gray-700 text-center mb-6">
-            Welcome to your Information and Communication Technology quiz! This test will help you review what you've learned about different types of ICT tools, devices, and their uses.
-          </p>
+            const handleNext = () => {
+                if (currentQuestion < questions.length - 1) {
+                    setCurrentQuestion(currentQuestion + 1);
+                } else {
+                    setIsCompleted(true);
+                    setCompletedStudents({ ...completedStudents, [studentName]: true });
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    }
+                }
+            };
 
-          <div className="bg-blue-50 rounded-lg p-6 mb-6">
-            <p className="text-lg font-semibold text-gray-800 mb-3">📋 Instructions:</p>
-            <ul className="space-y-2 text-gray-700">
-              <li>• There are 15 questions in total</li>
-              <li>• Different question types: multiple choice, true/false, and fill in the blank</li>
-              <li>• Take your time and read each question carefully</li>
-              <li>• Click Next to move to the next question</li>
-            </ul>
-          </div>
+            const calculateScore = () => {
+                let score = 0;
+                questions.forEach((q, index) => {
+                    if (q.type === 'fill') {
+                        if (answers[index]?.toLowerCase().trim() === q.answer.toLowerCase()) {
+                            score++;
+                        }
+                    } else {
+                        if (answers[index] === q.correct) {
+                            score++;
+                        }
+                    }
+                });
+                return score;
+            };
 
-          <div className="mb-6">
-            <label className="block text-gray-700 font-semibold mb-2">Select Your Name:</label>
-            <select
-              value={studentName}
-              onChange={(e) => {
-                setStudentName(e.target.value);
-                setShowNameError(false);
-              }}
-              className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
-            >
-              <option value="">-- Choose your name --</option>
-              {studentList.map((name) => (
-                <option key={name} value={name} disabled={completedStudents[name]}>
-                  {name} {completedStudents[name] ? '(Completed)' : ''}
-                </option>
-              ))}
-            </select>
-            {showNameError && (
-              <p className="text-red-500 text-sm mt-2">Please select your name to start the quiz.</p>
-            )}
-          </div>
+            const AnimatedBackground = () => (
+                <div className="fixed inset-0 overflow-hidden pointer-events-none">
+                    <style>{`
+                        @keyframes float1 {
+                            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+                            33% { transform: translate(30px, -30px) rotate(120deg); }
+                            66% { transform: translate(-20px, 20px) rotate(240deg); }
+                        }
+                        @keyframes float2 {
+                            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+                            33% { transform: translate(-40px, 40px) rotate(-120deg); }
+                            66% { transform: translate(20px, -20px) rotate(-240deg); }
+                        }
+                        @keyframes float3 {
+                            0%, 100% { transform: translate(0, 0) scale(1); }
+                            50% { transform: translate(15px, 15px) scale(1.1); }
+                        }
+                        .float-1 { animation: float1 20s infinite ease-in-out; }
+                        .float-2 { animation: float2 25s infinite ease-in-out; }
+                        .float-3 { animation: float3 15s infinite ease-in-out; }
+                    `}</style>
+                    
+                    <div className="float-1 absolute top-20 left-10 opacity-20">
+                        <Monitor className="w-16 h-16 text-blue-400" />
+                    </div>
+                    <div className="float-2 absolute top-40 right-20 opacity-20">
+                        <div className="w-12 h-12 border-4 border-purple-400 rounded-lg"></div>
+                    </div>
+                    <div className="float-3 absolute bottom-32 left-1/4 opacity-20">
+                        <div className="w-8 h-8 bg-pink-400 rounded-full"></div>
+                    </div>
+                    <div className="float-1 absolute top-1/3 right-1/4 opacity-20">
+                        <div className="w-10 h-10 border-4 border-indigo-400 rounded-full"></div>
+                    </div>
+                    <div className="float-2 absolute bottom-20 right-32 opacity-20">
+                        <div className="w-14 h-14 border-4 border-blue-400 rotate-45"></div>
+                    </div>
+                    <div className="float-3 absolute top-1/2 left-16 opacity-20">
+                        <svg width="40" height="40" viewBox="0 0 40 40">
+                            <path d="M20 5 L35 35 L5 35 Z" fill="none" stroke="#a78bfa" strokeWidth="3"/>
+                        </svg>
+                    </div>
+                </div>
+            );
 
-          <button
-            onClick={handleStartQuiz}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-xl transition-colors shadow-lg"
-          >
-            Start Quiz
-          </button>
+            if (!hasStarted && !isCompleted) {
+                return (
+                    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
+                        <AnimatedBackground />
+                        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 transform transition-all">
+                            <div className="flex items-center justify-center mb-6">
+                                <Monitor className="w-12 h-12 text-blue-600 mr-3" />
+                                <h1 className="text-4xl font-bold text-blue-600">ICT Quiz for 5th Grade</h1>
+                            </div>
+                            
+                            <p className="text-gray-700 text-center mb-6">
+                                Welcome to your Information and Communication Technology quiz! This test will help you review what you've learned about different types of ICT tools, devices, and their uses.
+                            </p>
 
-          <p className="text-sm text-gray-600 text-center mt-4">
-            ⚠️ The quiz will enter fullscreen mode. Please stay on this tab until you finish.
-          </p>
-        </div>
-      </div>
-    );
-  }
+                            <div className="bg-blue-50 rounded-lg p-6 mb-6">
+                                <p className="text-lg font-semibold text-gray-800 mb-3">📋 Instructions:</p>
+                                <ul className="space-y-2 text-gray-700">
+                                    <li>• There are 15 questions in total</li>
+                                    <li>• Different question types: multiple choice, true/false, and fill in the blank</li>
+                                    <li>• Take your time and read each question carefully</li>
+                                    <li>• Click Next to move to the next question</li>
+                                </ul>
+                            </div>
 
-  // Completed screen
-  if (isCompleted) {
-    const score = calculateScore();
-    const percentage = Math.round((score / questions.length) * 100);
-    
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-400 via-blue-500 to-purple-500 flex items-center justify-center p-4">
-        <AnimatedBackground />
-        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10">
-          <div className="text-center">
-            <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">Quiz Completed!</h2>
-            <p className="text-xl text-gray-700 mb-2">Great job, {studentName}!</p>
-            <div className="bg-blue-50 rounded-lg p-6 my-6">
-              <p className="text-3xl font-bold text-blue-600 mb-2">
-                Your Score: {score} / {questions.length}
-              </p>
-              <p className="text-2xl text-gray-700">{percentage}%</p>
-            </div>
-            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
-              <p className="text-gray-700">
-                {percentage >= 80 ? '🌟 Excellent work! You have a great understanding of ICT!' :
-                 percentage >= 60 ? '👍 Good job! Keep learning about ICT!' :
-                 '💪 Keep studying! You can do better next time!'}
-              </p>
-            </div>
-            <p className="text-gray-600">
-              Thank you for taking the ICT quiz. You've completed this test and cannot retake it.
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+                            <div className="mb-6">
+                                <label className="block text-gray-700 font-semibold mb-2">Select Your Name:</label>
+                                <select
+                                    value={studentName}
+                                    onChange={(e) => {
+                                        setStudentName(e.target.value);
+                                        setShowNameError(false);
+                                    }}
+                                    className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
+                                >
+                                    <option value="">-- Choose your name --</option>
+                                    {studentList.map((name) => (
+                                        <option key={name} value={name} disabled={completedStudents[name]}>
+                                            {name} {completedStudents[name] ? '(Completed)' : ''}
+                                        </option>
+                                    ))}
+                                </select>
+                                {showNameError && (
+                                    <p className="text-red-500 text-sm mt-2">Please select your name to start the quiz.</p>
+                                )}
+                            </div>
 
-  // Quiz questions screen
-  const currentQ = questions[currentQuestion];
-  const isAnswered = answers[currentQuestion] !== undefined;
+                            <button
+                                onClick={handleStartQuiz}
+                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-xl transition-colors shadow-lg"
+                            >
+                                Start Quiz
+                            </button>
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
-      <AnimatedBackground />
-      
-      {/* Warning message */}
-      {showWarning && (
-        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center">
-          <AlertCircle className="w-5 h-5 mr-2" />
-          <span>⚠️ Please stay in fullscreen and on this tab!</span>
-        </div>
-      )}
+                            <p className="text-sm text-gray-600 text-center mt-4">
+                                ⚠️ The quiz will enter fullscreen mode. Please stay on this tab until you finish.
+                            </p>
+                        </div>
+                    </div>
+                );
+            }
 
-      {/* Question card */}
-      <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 transform transition-all">
-        <div className="mb-6">
-          <div className="flex justify-between items-center mb-4">
-            <span className="text-sm font-semibold text-gray-500">
-              Question {currentQuestion + 1} of {questions.length}
-            </span>
-            <span className="text-sm font-semibold text-blue-600">
-              {studentName}
-            </span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div
-              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
-            ></div>
-          </div>
-        </div>
+            if (isCompleted) {
+                const score = calculateScore();
+                const percentage = Math.round((score / questions.length) * 100);
+                
+                return (
+                    <div className="min-h-screen bg-gradient-to-br from-green-400 via-blue-500 to-purple-500 flex items-center justify-center p-4">
+                        <AnimatedBackground />
+                        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10">
+                            <div className="text-center">
+                                <div className="text-6xl mb-4">🎉</div>
+                                <h2 className="text-4xl font-bold text-gray-800 mb-4">Quiz Completed!</h2>
+                                <p className="text-xl text-gray-700 mb-2">Great job, {studentName}!</p>
+                                <div className="bg-blue-50 rounded-lg p-6 my-6">
+                                    <p className="text-3xl font-bold text-blue-600 mb-2">
+                                        Your Score: {score} / {questions.length}
+                                    </p>
+                                    <p className="text-2xl text-gray-700">{percentage}%</p>
+                                </div>
+                                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+                                    <p className="text-gray-700">
+                                        {percentage >= 80 ? '🌟 Excellent work! You have a great understanding of ICT!' :
+                                         percentage >= 60 ? '👍 Good job! Keep learning about ICT!' :
+                                         '💪 Keep studying! You can do better next time!'}
+                                    </p>
+                                </div>
+                                <p className="text-gray-600">
+                                    Thank you for taking the ICT quiz. You've completed this test and cannot retake it.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
 
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">{currentQ.question}</h2>
+            const currentQ = questions[currentQuestion];
+            const isAnswered = answers[currentQuestion] !== undefined;
 
-        {/* Multiple choice or True/False */}
-        {(currentQ.type === 'multiple' || currentQ.type === 'true-false') && (
-          <div className="space-y-3 mb-6">
-            {currentQ.options.map((option, index) => (
-              <button
-                key={index}
-                onClick={() => handleAnswer(index)}
-                className={`w-full p-4 text-left rounded-xl border-2 transition-all ${
-                  answers[currentQuestion] === index
-                    ? 'border-blue-600 bg-blue-50 font-semibold'
-                    : 'border-gray-300 hover:border-blue-400 hover:bg-gray-50'
-                }`}
-              >
-                {option}
-              </button>
-            ))}
-          </div>
-        )}
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
+                    <AnimatedBackground />
+                    
+                    {showWarning && (
+                        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center">
+                            <AlertCircle className="w-5 h-5 mr-2" />
+                            <span>⚠️ Please stay in fullscreen and on this tab!</span>
+                        </div>
+                    )}
 
-        {/* Fill in the blank */}
-        {currentQ.type === 'fill' && (
-          <div className="mb-6">
-            <input
-              type="text"
-              value={answers[currentQuestion] || ''}
-              onChange={(e) => handleAnswer(e.target.value)}
-              placeholder="Type your answer here..."
-              className="w-full p-4 border-2 border-gray-300 rounded-xl focus:border-blue-600 focus:outline-none"
-            />
-          </div>
-        )}
+                    <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 transform transition-all">
+                        <div className="mb-6">
+                            <div className="flex justify-between items-center mb-4">
+                                <span className="text-sm font-semibold text-gray-500">
+                                    Question {currentQuestion + 1} of {questions.length}
+                                </span>
+                                <span className="text-sm font-semibold text-blue-600">
+                                    {studentName}
+                                </span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-2">
+                                <div
+                                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                                    style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
+                                ></div>
+                            </div>
+                        </div>
 
-        <button
-          onClick={handleNext}
-          disabled={!isAnswered}
-          className={`w-full py-4 px-6 rounded-xl font-bold transition-all ${
-            isAnswered
-              ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg'
-              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-          }`}
-        >
-          {currentQuestion < questions.length - 1 ? 'Next' : 'Finish Quiz'}
-        </button>
-      </div>
-    </div>
-  );
-};
+                        <h2 className="text-2xl font-bold text-gray-800 mb-6">{currentQ.question}</h2>
 
-export default ICTQuiz;
+                        {(currentQ.type === 'multiple' || currentQ.type === 'true-false') && (
+                            <div className="space-y-3 mb-6">
+                                {currentQ.options.map((option, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => handleAnswer(index)}
+                                        className={`w-full p-4 text-left rounded-xl border-2 transition-all ${
+                                            answers[currentQuestion] === index
+                                                ? 'border-blue-600 bg-blue-50 font-semibold'
+                                                : 'border-gray-300 hover:border-blue-400 hover:bg-gray-50'
+                                        }`}
+                                    >
+                                        {option}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+
+                        {currentQ.type === 'fill' && (
+                            <div className="mb-6">
+                                <input
+                                    type="text"
+                                    value={answers[currentQuestion] || ''}
+                                    onChange={(e) => handleAnswer(e.target.value)}
+                                    placeholder="Type your answer here..."
+                                    className="w-full p-4 border-2 border-gray-300 rounded-xl focus:border-blue-600 focus:outline-none"
+                                />
+                            </div>
+                        )}
+
+                        <button
+                            onClick={handleNext}
+                            disabled={!isAnswered}
+                            className={`w-full py-4 px-6 rounded-xl font-bold transition-all ${
+                                isAnswered
+                                    ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg'
+                                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                            }`}
+                        >
+                            {currentQuestion < questions.length - 1 ? 'Next' : 'Finish Quiz'}
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<ICTQuiz />, document.getElementById('root'));
+    </script>
+</body>
+</html>
