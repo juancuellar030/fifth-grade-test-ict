@@ -73,10 +73,16 @@
                 },
                 {
                     id: 2,
-                    type: 'multiple',
-                    question: 'Which of these is an example of ICT hardware?',
-                    options: ['Word processor', 'Internet browser', 'Laptop', 'Social media app'],
-                    correct: 2
+                    type: 'drag-drop',
+                    question: 'Drag each item to the correct category:',
+                    items: ['Headphones', 'Google Chrome', 'Wi-Fi', 'Tablet'],
+                    categories: ['Hardware', 'Software', 'Network', 'Processing Device'],
+                    correctAnswers: {
+                        'Hardware': 'Headphones',
+                        'Software': 'Google Chrome',
+                        'Network': 'Wi-Fi',
+                        'Processing Device': 'Tablet'
+                    }
                 },
                 {
                     id: 3,
@@ -102,7 +108,7 @@
                     id: 6,
                     type: 'multiple',
                     question: 'Which of these is an example of a network?',
-                    options: ['Printer', 'Wi-Fi', 'Keyboard', 'Game'],
+                    options: ['Printer', 'Bluetooth', 'Keyboard', 'Game'],
                     correct: 1
                 },
                 {
@@ -115,32 +121,19 @@
                 {
                     id: 8,
                     type: 'multiple',
-                    question: 'What is an example of software?',
-                    options: ['Mouse', 'Word processor', 'Printer', 'Scanner'],
-                    correct: 1
-                },
-                {
-                    id: 9,
-                    type: 'fill',
-                    question: 'The _______ connects devices to share information wirelessly.',
-                    answer: 'internet'
-                },
-                {
-                    id: 10,
-                    type: 'multiple',
-                    question: 'Which is an example of OUTPUT?',
+                    question: 'What is an example of OUTPUT?',
                     options: ['Mouse clicking', 'Typing on keyboard', 'Printer printing paper', 'Touching screen'],
                     correct: 2
                 },
                 {
-                    id: 11,
+                    id: 9,
                     type: 'true-false',
                     question: 'Sending emails is an example of using ICT in daily life.',
                     options: ['True', 'False'],
                     correct: 0
                 },
                 {
-                    id: 12,
+                    id: 10,
                     type: 'multiple',
                     question: 'What does PROCESSING mean in ICT?',
                     options: [
@@ -152,13 +145,13 @@
                     correct: 2
                 },
                 {
-                    id: 13,
+                    id: 11,
                     type: 'fill',
-                    question: 'A _______ is a physical device you can touch, like a computer or tablet.',
-                    answer: 'hardware'
+                    question: 'The _______ connects devices to share information wirelessly.',
+                    answer: 'internet'
                 },
                 {
-                    id: 14,
+                    id: 12,
                     type: 'multiple',
                     question: 'How does ICT help us learn?',
                     options: [
@@ -168,13 +161,6 @@
                         'It stops communication'
                     ],
                     correct: 1
-                },
-                {
-                    id: 15,
-                    type: 'true-false',
-                    question: 'Bluetooth is a type of network that helps devices connect.',
-                    options: ['True', 'False'],
-                    correct: 0
                 }
             ];
 
