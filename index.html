@@ -193,54 +193,38 @@
                 },
                 {
                     id: 4,
-                    type: 'true-false',
-                    question: 'Software is something you can physically touch.',
-                    options: ['True', 'False'],
-                    correct: 1
+                    type: 'true-false-group',
+                    question: 'Read each statement and select True or False:',
+                    statements: [
+                        {
+                            text: 'Software is something you can physically touch.',
+                            correct: 1
+                        },
+                        {
+                            text: 'Smartphones and tablets are examples of ICT devices.',
+                            correct: 0
+                        },
+                        {
+                            text: 'Sending emails is an example of using ICT in daily life.',
+                            correct: 0
+                        }
+                    ]
                 },
                 {
                     id: 5,
-                    type: 'multiple',
-                    question: 'Which device is used for INPUT?',
-                    options: ['Printer', 'Screen', 'Keyboard', 'Speaker'],
-                    correct: 2
-                },
-                {
-                    id: 6,
                     type: 'fill',
                     question: 'A _______ is a device that shows us the results of what the computer processed.',
                     answer: 'screen'
                 },
                 {
-                    id: 7,
+                    id: 6,
                     type: 'multiple',
                     question: 'Which of these is an example of a network?',
                     options: ['Printer', 'Bluetooth', 'Keyboard', 'Game'],
                     correct: 1
                 },
                 {
-                    id: 8,
-                    type: 'true-false',
-                    question: 'Smartphones and tablets are examples of ICT devices.',
-                    options: ['True', 'False'],
-                    correct: 0
-                },
-                {
-                    id: 9,
-                    type: 'multiple',
-                    question: 'What is an example of OUTPUT?',
-                    options: ['Mouse clicking', 'Typing on keyboard', 'Printer printing paper', 'Touching screen'],
-                    correct: 2
-                },
-                {
-                    id: 10,
-                    type: 'true-false',
-                    question: 'Sending emails is an example of using ICT in daily life.',
-                    options: ['True', 'False'],
-                    correct: 0
-                },
-                {
-                    id: 11,
+                    id: 7,
                     type: 'multiple',
                     question: 'What does PROCESSING mean in ICT?',
                     options: [
@@ -252,7 +236,7 @@
                     correct: 2
                 },
                 {
-                    id: 12,
+                    id: 8,
                     type: 'fill',
                     question: 'The _______ connects devices to share information wirelessly.',
                     answer: 'internet'
@@ -486,6 +470,19 @@
                         if (allCorrect) {
                             score++;
                         }
+                    } else if (q.type === 'true-false-group') {
+                        const userAnswers = answers[index] || {};
+                        let allCorrect = true;
+                        
+                        q.statements.forEach((stmt, stmtIndex) => {
+                            if (userAnswers[stmtIndex] !== stmt.correct) {
+                                allCorrect = false;
+                            }
+                        });
+                        
+                        if (allCorrect) {
+                            score++;
+                        }
                     } else {
                         if (answers[index] === q.correct) {
                             score++;
@@ -583,7 +580,7 @@
                             <div className="bg-blue-50 rounded-lg p-6 mb-6">
                                 <p className="text-lg font-semibold text-gray-800 mb-3">📋 Instructions:</p>
                                 <ul className="space-y-2 text-gray-700">
-                                    <li>• There are 12 questions in total</li>
+                                    <li>• There are 8 questions in total</li>
                                     <li>• Different question types: multiple choice, true/false, fill in the blank, and drag & drop</li>
                                     <li>• Take your time and read each question carefully</li>
                                     <li>• Click Next to move to the next question</li>
@@ -688,6 +685,8 @@
                 : currentQ.type === 'drag-drop-images'
                 ? Object.keys(dropZones).length === currentQ.categories.length && 
                   Object.values(dropZones).every(arr => arr && arr.length > 0)
+                : currentQ.type === 'true-false-group'
+                ? Object.keys(answers[currentQuestion] || {}).length === currentQ.statements.length
                 : answers[currentQuestion] !== undefined;
 
             return (
@@ -773,6 +772,47 @@
                                     placeholder="Type your answer here..."
                                     className="w-full p-4 border-2 border-gray-300 rounded-xl focus:border-blue-600 focus:outline-none transition-all"
                                 />
+                            </div>
+                        )}
+
+                        {currentQ.type === 'true-false-group' && (
+                            <div className="mb-6 space-y-4">
+                                {currentQ.statements.map((statement, stmtIndex) => {
+                                    const currentAnswers = answers[currentQuestion] || {};
+                                    return (
+                                        <div key={stmtIndex} className="p-4 bg-gray-50 rounded-xl border-2 border-gray-200">
+                                            <p className="text-gray-800 font-medium mb-3">{stmtIndex + 1}. {statement.text}</p>
+                                            <div className="flex gap-3">
+                                                <button
+                                                    onClick={() => {
+                                                        const newAnswers = { ...currentAnswers, [stmtIndex]: 0 };
+                                                        handleAnswer(newAnswers);
+                                                    }}
+                                                    className={`flex-1 p-3 rounded-lg border-2 transition-all ${
+                                                        currentAnswers[stmtIndex] === 0
+                                                            ? 'border-blue-600 bg-blue-50 font-semibold'
+                                                            : 'border-gray-300 hover:border-blue-400 hover:bg-gray-100'
+                                                    }`}
+                                                >
+                                                    True
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        const newAnswers = { ...currentAnswers, [stmtIndex]: 1 };
+                                                        handleAnswer(newAnswers);
+                                                    }}
+                                                    className={`flex-1 p-3 rounded-lg border-2 transition-all ${
+                                                        currentAnswers[stmtIndex] === 1
+                                                            ? 'border-blue-600 bg-blue-50 font-semibold'
+                                                            : 'border-gray-300 hover:border-blue-400 hover:bg-gray-100'
+                                                    }`}
+                                                >
+                                                    False
+                                                </button>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         )}
 
