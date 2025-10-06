@@ -212,9 +212,31 @@
                 },
                 {
                     id: 5,
-                    type: 'fill',
-                    question: 'A _______ is a device that shows us the results of what the computer processed.',
-                    answer: 'screen'
+                    type: 'fill-group',
+                    question: 'Drag the correct word from the box to fill in each blank:',
+                    wordBank: ['screen', 'internet', 'software', 'processing', 'communication'],
+                    statements: [
+                        {
+                            text: 'A _______ is a device that shows us the results of what the computer processed.',
+                            answer: 'screen',
+                            blank: 0
+                        },
+                        {
+                            text: 'The _______ connects devices to share information wirelessly.',
+                            answer: 'internet',
+                            blank: 1
+                        },
+                        {
+                            text: 'Programs and apps are examples of _______.',
+                            answer: 'software',
+                            blank: 2
+                        },
+                        {
+                            text: 'When a computer thinks and works on information, this is called _______.',
+                            answer: 'processing',
+                            blank: 3
+                        }
+                    ]
                 },
                 {
                     id: 6,
@@ -234,12 +256,6 @@
                         'Connecting to Wi-Fi'
                     ],
                     correct: 2
-                },
-                {
-                    id: 8,
-                    type: 'fill',
-                    question: 'The _______ connects devices to share information wirelessly.',
-                    answer: 'internet'
                 }
             ];
 
@@ -386,6 +402,9 @@
                         }
                     });
                     return currentQ.items.filter(item => !placedItems.includes(item.name));
+                } else if (currentQ.type === 'fill-group') {
+                    const usedWords = Object.values(answers[currentQuestion] || {});
+                    return currentQ.wordBank.filter(word => !usedWords.includes(word));
                 }
                 return [];
             };
@@ -476,6 +495,19 @@
                         
                         q.statements.forEach((stmt, stmtIndex) => {
                             if (userAnswers[stmtIndex] !== stmt.correct) {
+                                allCorrect = false;
+                            }
+                        });
+                        
+                        if (allCorrect) {
+                            score++;
+                        }
+                    } else if (q.type === 'fill-group') {
+                        const userAnswers = answers[index] || {};
+                        let allCorrect = true;
+                        
+                        q.statements.forEach((stmt, stmtIndex) => {
+                            if (userAnswers[stmtIndex]?.toLowerCase() !== stmt.answer.toLowerCase()) {
                                 allCorrect = false;
                             }
                         });
@@ -580,7 +612,7 @@
                             <div className="bg-blue-50 rounded-lg p-6 mb-6">
                                 <p className="text-lg font-semibold text-gray-800 mb-3">📋 Instructions:</p>
                                 <ul className="space-y-2 text-gray-700">
-                                    <li>• There are 8 questions in total</li>
+                                    <li>• There are 7 questions in total</li>
                                     <li>• Different question types: multiple choice, true/false, fill in the blank, and drag & drop</li>
                                     <li>• Take your time and read each question carefully</li>
                                     <li>• Click Next to move to the next question</li>
@@ -686,6 +718,8 @@
                 ? Object.keys(dropZones).length === currentQ.categories.length && 
                   Object.values(dropZones).every(arr => arr && arr.length > 0)
                 : currentQ.type === 'true-false-group'
+                ? Object.keys(answers[currentQuestion] || {}).length === currentQ.statements.length
+                : currentQ.type === 'fill-group'
                 ? Object.keys(answers[currentQuestion] || {}).length === currentQ.statements.length
                 : answers[currentQuestion] !== undefined;
 
@@ -813,6 +847,85 @@
                                         </div>
                                     );
                                 })}
+                            </div>
+                        )}
+
+                        {currentQ.type === 'fill-group' && (
+                            <div className="mb-6">
+                                <div className="mb-6">
+                                    <p className="text-sm font-semibold text-gray-600 mb-3">📦 Word Bank - Drag words to fill the blanks:</p>
+                                    <div className="flex flex-wrap gap-3 p-4 bg-gray-50 rounded-xl border-2 border-gray-200 min-h-16">
+                                        {getAvailableItems().length === 0 ? (
+                                            <p className="text-gray-400 text-sm italic w-full text-center">All words used!</p>
+                                        ) : (
+                                            getAvailableItems().map((word) => (
+                                                <div
+                                                    key={word}
+                                                    draggable
+                                                    onDragStart={(e) => handleDragStart(e, word)}
+                                                    className="px-4 py-2 bg-green-500 text-white rounded-lg cursor-grab active:cursor-grabbing hover:bg-green-600 transition-all shadow-md hover:shadow-lg transform hover:scale-105 font-semibold"
+                                                >
+                                                    {word}
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="space-y-4">
+                                    {currentQ.statements.map((statement, stmtIndex) => {
+                                        const currentAnswers = answers[currentQuestion] || {};
+                                        const parts = statement.text.split('_______');
+                                        
+                                        return (
+                                            <div key={stmtIndex} className="p-4 bg-gray-50 rounded-xl border-2 border-gray-200">
+                                                <div className="flex items-center flex-wrap gap-2">
+                                                    <span className="font-semibold text-gray-700">{stmtIndex + 1}.</span>
+                                                    <span className="text-gray-800">{parts[0]}</span>
+                                                    <div
+                                                        onDragOver={handleDragOver}
+                                                        onDrop={(e) => {
+                                                            e.preventDefault();
+                                                            const word = draggedItem || e.dataTransfer.getData('text/plain');
+                                                            if (word) {
+                                                                const newAnswers = { ...currentAnswers };
+                                                                
+                                                                // Remove word from other blanks
+                                                                Object.keys(newAnswers).forEach(key => {
+                                                                    if (newAnswers[key] === word) {
+                                                                        delete newAnswers[key];
+                                                                    }
+                                                                });
+                                                                
+                                                                newAnswers[stmtIndex] = word;
+                                                                handleAnswer(newAnswers);
+                                                                setDraggedItem(null);
+                                                            }
+                                                        }}
+                                                        className={`inline-flex items-center min-w-32 px-3 py-2 border-2 border-dashed rounded-lg transition-all ${
+                                                            currentAnswers[stmtIndex]
+                                                                ? 'border-green-500 bg-green-50'
+                                                                : 'border-gray-300 bg-white hover:border-green-400'
+                                                        }`}
+                                                    >
+                                                        {currentAnswers[stmtIndex] ? (
+                                                            <span
+                                                                draggable
+                                                                onDragStart={(e) => handleDragStart(e, currentAnswers[stmtIndex])}
+                                                                className="px-2 py-1 bg-green-500 text-white rounded font-semibold cursor-grab active:cursor-grabbing"
+                                                            >
+                                                                {currentAnswers[stmtIndex]}
+                                                            </span>
+                                                        ) : (
+                                                            <span className="text-gray-400 text-sm italic">drop here</span>
+                                                        )}
+                                                    </div>
+                                                    <span className="text-gray-800">{parts[1]}</span>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             </div>
                         )}
 
