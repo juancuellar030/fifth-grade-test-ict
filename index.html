@@ -11,7 +11,6 @@
 </head>
 <body>
     <div id="root"></div>
-
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
@@ -48,117 +47,68 @@
             const inputRef = useRef(null);
 
             const studentList = [
-                "Isabella Arce Rodriguez",
-                "Valentina Arias Guevara",
-                "Maria Paz Bermeo Montealegre",
-                "Zoe Lylen Castañeda Romero",
-                "Gabriel Esteban Cuellar Salas",
-                "Dilan Camilo Cumaco Pastrana",
-                "Martín Fernández Lucuara",
-                "Derek Santiago Fierro Lopez",
-                "Simón Gonzalez Chavarro",
-                "Gerónimo Jimenez Bocanegra",
-                "Samuel José Majé Marroquín",
-                "Martín Medina Ortiz",
-                "Karen Sofia Mosquera Baylon",
-                "María Del Mar Mosquera Garzón",
-                "Santiago Motta Santofimio",
-                "Ana Lucia Murcia Guebely",
-                "Antonella Murcia Oliveros",
-                "Emmanuel Murcia Trujillo",
-                "Luciana Quesada Parra",
-                "Maria Paz Quesada Rodriguez",
-                "Miguel Ángel Ruiz Varon",
-                "Luzyana Suarez Solorzano",
-                "Santiago Tobón Castro",
-                "Sarita Vargas Carvajal",
-                "Luciana Sofia Vargas Sanchez",
-                "Julieta Alarcon Cabrera",
-                "Emmanuel Barrero Sandoval",
-                "Catalina Barreto Rivera",
-                "Khalid Bedoya Sanabria",
-                "Daniela Beron Farfan",
-                "Ana Lucia Buendía Losada",
-                "Jacobo Carvajal Jimenez",
-                "Juliana Margarita Castrillon Ramos",
-                "Isabel Cristina Cuellar Romero",
-                "Emiliano Diaz Rojas",
-                "Gabriela Echeverry Trujillo",
-                "Sara Isabella Gaitan Arango",
-                "Fabio Hernandez Galindo",
-                "Juanita Milagros Lopez Alarcon",
-                "Karla Medina Cuenca",
-                "Maria Paz Mora Caicedo",
-                "Emiliano Ortiz Ortiz",
-                "Pablo Alejandro Oviedo Barrero",
-                "Maria Lucia Perdomo Ramirez",
-                "Zamuhel Ramirez Castro",
-                "Sara Juliana Riscanevo Lopera",
-                "Maria Fernanda Rojas Castro",
-                "Santiago Trujillo Gonzalez",
-                "Juan Diego Valderrama Rodriguez",
-                "Sarah Michelle Audor Gutierrez",
-                "Santiago Chavarro Fernández",
-                "Taliana Andrea Chavarro Sanabria",
-                "Ariadna Estupiñan Borrero",
-                "Martin Eduardo Fierro Cordoba",
-                "Danna Gabriela Giraldo Leiva",
-                "Juan Ricardo Guevara Calderon",
-                "Salomon Hoyos Castillo",
-                "Jhoan Sebastian Lozano Moscoso",
-                "Sebastian Martinez Dussan",
-                "Sofia Mayorca Gonzalez",
-                "Samantha Medina Figueroa",
-                "Maria Lucia Melo Camacho",
-                "Sara Luciana Obregon Agudelo",
-                "Sara Orozco Escobar",
-                "Santiago Osorio Benavides",
-                "Angie Luciana Perez Trujillo",
-                "Santiago Polania Perdomo",
-                "Felipe Ramos Vargas",
-                "Jorge Mario Rojas Alvarez",
-                "Sofia Salazar Castañeda",
-                "Hernán Gabriel Sierra Suarez",
-                "Maria Victoria Vidal Prieto",
-                "Juan Andres Vieda Diaz",
-                "Juan Diego Albarracín Martínez",
-                "Emiliano Andrade Perez",
-                "Moises Burgos Arevalo",
-                "Jeronimo Calderón Morales",
-                "Martín Caquimbo De Castro",
-                "Salome Castro Hurtado",
-                "Ashly Dayanna Cumaco Alonso",
-                "Dylan Santiago Gomez Reyes",
-                "Salome Gutierrez Acosta",
-                "Jesus Manuel Gutierrez Vargas",
-                "Isabela Huepe Quintero",
-                "Juan Esteban Madrid Guevara",
-                "Jeronimo Mora Araujo",
-                "Silvana Moreno Pastrana",
-                "Luciana Niño Rojas",
-                "Emmanuel José Ortiz Urrego",
-                "Sara Sofia Oviedo Cajiao",
-                "Daniel Leonardo Perdomo Ochoa",
-                "Juan Matias Rodriguez Calderon",
-                "Maria Jose Rojas Castro",
-                "Gabriela Sarmiento-Perez Trujillo",
-                "Juan Felipe Tamayo Castañeda",
-                "Luciana Andrea Tellez Aviles",
+                "Isabella Arce Rodriguez", "Valentina Arias Guevara", "Maria Paz Bermeo Montealegre",
+                "Zoe Lylen Castañeda Romero", "Gabriel Esteban Cuellar Salas", "Dilan Camilo Cumaco Pastrana",
+                "Martín Fernández Lucuara", "Derek Santiago Fierro Lopez", "Simón Gonzalez Chavarro",
+                "Gerónimo Jimenez Bocanegra", "Samuel José Majé Marroquín", "Martín Medina Ortiz",
+                "Karen Sofia Mosquera Baylon", "María Del Mar Mosquera Garzón", "Santiago Motta Santofimio",
+                "Ana Lucia Murcia Guebely", "Antonella Murcia Oliveros", "Emmanuel Murcia Trujillo",
+                "Luciana Quesada Parra", "Maria Paz Quesada Rodriguez", "Miguel Ángel Ruiz Varon",
+                "Luzyana Suarez Solorzano", "Santiago Tobón Castro", "Sarita Vargas Carvajal",
+                "Luciana Sofia Vargas Sanchez", "Julieta Alarcon Cabrera", "Emmanuel Barrero Sandoval",
+                "Catalina Barreto Rivera", "Khalid Bedoya Sanabria", "Daniela Beron Farfan",
+                "Ana Lucia Buendía Losada", "Jacobo Carvajal Jimenez", "Juliana Margarita Castrillon Ramos",
+                "Isabel Cristina Cuellar Romero", "Emiliano Diaz Rojas", "Gabriela Echeverry Trujillo",
+                "Sara Isabella Gaitan Arango", "Fabio Hernandez Galindo", "Juanita Milagros Lopez Alarcon",
+                "Karla Medina Cuenca", "Maria Paz Mora Caicedo", "Emiliano Ortiz Ortiz",
+                "Pablo Alejandro Oviedo Barrero", "Maria Lucia Perdomo Ramirez", "Zamuhel Ramirez Castro",
+                "Sara Juliana Riscanevo Lopera", "Maria Fernanda Rojas Castro", "Santiago Trujillo Gonzalez",
+                "Juan Diego Valderrama Rodriguez", "Sarah Michelle Audor Gutierrez", "Santiago Chavarro Fernández",
+                "Taliana Andrea Chavarro Sanabria", "Ariadna Estupiñan Borrero", "Martin Eduardo Fierro Cordoba",
+                "Danna Gabriela Giraldo Leiva", "Juan Ricardo Guevara Calderon", "Salomon Hoyos Castillo",
+                "Jhoan Sebastian Lozano Moscoso", "Sebastian Martinez Dussan", "Sofia Mayorca Gonzalez",
+                "Samantha Medina Figueroa", "Maria Lucia Melo Camacho", "Sara Luciana Obregon Agudelo",
+                "Sara Orozco Escobar", "Santiago Osorio Benavides", "Angie Luciana Perez Trujillo",
+                "Santiago Polania Perdomo", "Felipe Ramos Vargas", "Jorge Mario Rojas Alvarez",
+                "Sofia Salazar Castañeda", "Hernán Gabriel Sierra Suarez", "Maria Victoria Vidal Prieto",
+                "Juan Andres Vieda Diaz", "Juan Diego Albarracín Martínez", "Emiliano Andrade Perez",
+                "Moises Burgos Arevalo", "Jeronimo Calderón Morales", "Martín Caquimbo De Castro",
+                "Salome Castro Hurtado", "Ashly Dayanna Cumaco Alonso", "Dylan Santiago Gomez Reyes",
+                "Salome Gutierrez Acosta", "Jesus Manuel Gutierrez Vargas", "Isabela Huepe Quintero",
+                "Juan Esteban Madrid Guevara", "Jeronimo Mora Araujo", "Silvana Moreno Pastrana",
+                "Luciana Niño Rojas", "Emmanuel José Ortiz Urrego", "Sara Sofia Oviedo Cajiao",
+                "Daniel Leonardo Perdomo Ochoa", "Juan Matias Rodriguez Calderon", "Maria Jose Rojas Castro",
+                "Gabriela Sarmiento-Perez Trujillo", "Juan Felipe Tamayo Castañeda", "Luciana Andrea Tellez Aviles",
                 "Hanna Isabella Valenzuela Paredes"
             ];
 
             const questions = [
                 {
                     id: 1,
-                    type: 'multiple',
-                    question: 'What does ICT stand for?',
-                    options: [
-                        'Internet and Computer Technology',
-                        'Information and Communication Technology',
-                        'International Computer Training',
-                        'Internet Communication Tools'
-                    ],
-                    correct: 1
+                    type: 'multiple-choice-group',
+                    question: 'Answer each question by selecting the correct option:',
+                    questions: [
+                        {
+                            text: 'What does ICT help us do?',
+                            options: ['Share and find information', 'Paint pictures', 'Ride bicycles', 'Cook food'],
+                            correct: 0
+                        },
+                        {
+                            text: 'What do we call programs that help us play games or do homework on a computer?',
+                            options: ['Hardware', 'Software', 'Network', 'Input'],
+                            correct: 1
+                        },
+                        {
+                            text: 'What is input in ICT?',
+                            options: [
+                                'Sending information to a device, like typing on a keyboard',
+                                'The computer thinking',
+                                'The screen showing information',
+                                'Printing a paper'
+                            ],
+                            correct: 0
+                        }
+                    ]
                 },
                 {
                     id: 2,
@@ -196,18 +146,9 @@
                     type: 'true-false-group',
                     question: 'Read each statement and select True or False:',
                     statements: [
-                        {
-                            text: 'Software is something you can physically touch.',
-                            correct: 1
-                        },
-                        {
-                            text: 'Smartphones and tablets are examples of ICT devices.',
-                            correct: 0
-                        },
-                        {
-                            text: 'Sending emails is an example of using ICT in daily life.',
-                            correct: 0
-                        }
+                        { text: 'Software is something you can physically touch.', correct: 1 },
+                        { text: 'Smartphones and tablets are examples of ICT devices.', correct: 0 },
+                        { text: 'Sending emails is an example of using ICT in daily life.', correct: 0 }
                     ]
                 },
                 {
@@ -216,26 +157,10 @@
                     question: 'Drag the correct word from the box to fill in each blank:',
                     wordBank: ['networks', 'internet', 'software', 'processing', 'communication'],
                     statements: [
-                        {
-                            text: 'Bluetooth and Wi-Fi are examples of wireless _______.',
-                            answer: 'networks',
-                            blank: 0
-                        },
-                        {
-                            text: 'The _______ connects multiple devices to share information.',
-                            answer: 'internet',
-                            blank: 1
-                        },
-                        {
-                            text: 'Programs and apps are examples of _______.',
-                            answer: 'software',
-                            blank: 2
-                        },
-                        {
-                            text: 'When a computer thinks and works on information, this is called _______.',
-                            answer: 'processing',
-                            blank: 3
-                        }
+                        { text: 'Bluetooth and Wi-Fi are examples of wireless _______.', answer: 'networks', blank: 0 },
+                        { text: 'The _______ connects multiple devices to share information.', answer: 'internet', blank: 1 },
+                        { text: 'Programs and apps are examples of _______.', answer: 'software', blank: 2 },
+                        { text: 'When a computer thinks and works on information, this is called _______.', answer: 'processing', blank: 3 }
                     ]
                 },
                 {
@@ -244,18 +169,6 @@
                     question: 'Which of these is an example of a network?',
                     options: ['Printer', 'Bluetooth', 'Keyboard', 'Game'],
                     correct: 1
-                },
-                {
-                    id: 7,
-                    type: 'multiple',
-                    question: 'What does PROCESSING mean in ICT?',
-                    options: [
-                        'Showing results on screen',
-                        'Typing information',
-                        'The device thinks and works on information',
-                        'Connecting to Wi-Fi'
-                    ],
-                    correct: 2
                 }
             ];
 
@@ -267,7 +180,6 @@
                 const handleFullscreenChange = () => {
                     const isCurrentlyFullscreen = !!document.fullscreenElement;
                     setIsFullscreen(isCurrentlyFullscreen);
-                    
                     if (!isCurrentlyFullscreen && hasStarted && !isCompleted) {
                         setShowWarning(true);
                     }
@@ -306,7 +218,6 @@
                         setShowSuggestions(false);
                     }
                 };
-
                 document.addEventListener('mousedown', handleClickOutside);
                 return () => document.removeEventListener('mousedown', handleClickOutside);
             }, []);
@@ -314,9 +225,7 @@
             const enterFullscreen = () => {
                 const elem = document.documentElement;
                 if (elem.requestFullscreen) {
-                    elem.requestFullscreen().then(() => {
-                        setShowWarning(false);
-                    });
+                    elem.requestFullscreen().then(() => setShowWarning(false));
                 }
             };
 
@@ -325,12 +234,10 @@
                     setShowNameError(true);
                     return;
                 }
-                
                 if (completedStudents[studentName]) {
                     alert('You have already completed this quiz! You can only take it once.');
                     return;
                 }
-                
                 setHasStarted(true);
                 enterFullscreen();
             };
@@ -358,30 +265,21 @@
                 if (item) {
                     if (currentQ.type === 'drag-drop') {
                         const newDropZones = { ...dropZones };
-                        
                         Object.keys(newDropZones).forEach(key => {
-                            if (newDropZones[key] === item) {
-                                delete newDropZones[key];
-                            }
+                            if (newDropZones[key] === item) delete newDropZones[key];
                         });
-                        
                         newDropZones[category] = item;
                         setDropZones(newDropZones);
                         setAnswers({ ...answers, [currentQuestion]: newDropZones });
                     } else if (currentQ.type === 'drag-drop-images') {
                         const newDropZones = { ...dropZones };
-                        
                         Object.keys(newDropZones).forEach(key => {
                             if (Array.isArray(newDropZones[key])) {
                                 newDropZones[key] = newDropZones[key].filter(i => i !== item);
                             }
                         });
-                        
-                        if (!newDropZones[category]) {
-                            newDropZones[category] = [];
-                        }
+                        if (!newDropZones[category]) newDropZones[category] = [];
                         newDropZones[category].push(item);
-                        
                         setDropZones(newDropZones);
                         setAnswers({ ...answers, [currentQuestion]: newDropZones });
                     }
@@ -397,9 +295,7 @@
                 } else if (currentQ.type === 'drag-drop-images') {
                     const placedItems = [];
                     Object.values(dropZones).forEach(items => {
-                        if (Array.isArray(items)) {
-                            placedItems.push(...items);
-                        }
+                        if (Array.isArray(items)) placedItems.push(...items);
                     });
                     return currentQ.items.filter(item => !placedItems.includes(item.name));
                 } else if (currentQ.type === 'fill-group') {
@@ -411,7 +307,6 @@
 
             const handleNext = () => {
                 setQuestionTransition('exit');
-                
                 setTimeout(() => {
                     if (currentQuestion < questions.length - 1) {
                         const nextQ = currentQuestion + 1;
@@ -427,9 +322,7 @@
                     } else {
                         setIsCompleted(true);
                         setCompletedStudents({ ...completedStudents, [studentName]: true });
-                        if (document.exitFullscreen) {
-                            document.exitFullscreen();
-                        }
+                        if (document.exitFullscreen) document.exitFullscreen();
                     }
                 }, 300);
             };
@@ -437,7 +330,6 @@
             const handleBack = () => {
                 if (currentQuestion > 0) {
                     setQuestionTransition('exit');
-                    
                     setTimeout(() => {
                         const prevQ = currentQuestion - 1;
                         setCurrentQuestion(prevQ);
@@ -456,69 +348,45 @@
             const calculateScore = () => {
                 let score = 0;
                 questions.forEach((q, index) => {
-                    if (q.type === 'fill') {
-                        if (answers[index]?.toLowerCase().trim() === q.answer.toLowerCase()) {
-                            score++;
-                        }
+                    if (q.type === 'multiple-choice-group') {
+                        const userAnswers = answers[index] || {};
+                        let allCorrect = true;
+                        q.questions.forEach((question, qIndex) => {
+                            if (userAnswers[qIndex] !== question.correct) allCorrect = false;
+                        });
+                        if (allCorrect) score++;
                     } else if (q.type === 'drag-drop') {
                         const userAnswers = answers[index] || {};
                         let allCorrect = true;
-                        
                         Object.keys(q.correctAnswers).forEach(category => {
-                            if (userAnswers[category] !== q.correctAnswers[category]) {
-                                allCorrect = false;
-                            }
+                            if (userAnswers[category] !== q.correctAnswers[category]) allCorrect = false;
                         });
-                        
-                        if (allCorrect && Object.keys(userAnswers).length === Object.keys(q.correctAnswers).length) {
-                            score++;
-                        }
+                        if (allCorrect && Object.keys(userAnswers).length === Object.keys(q.correctAnswers).length) score++;
                     } else if (q.type === 'drag-drop-images') {
                         const userAnswers = answers[index] || {};
                         let allCorrect = true;
-                        
                         Object.keys(q.correctAnswers).forEach(category => {
                             const correctItems = q.correctAnswers[category].sort();
                             const userItems = (userAnswers[category] || []).sort();
-                            
-                            if (JSON.stringify(correctItems) !== JSON.stringify(userItems)) {
-                                allCorrect = false;
-                            }
+                            if (JSON.stringify(correctItems) !== JSON.stringify(userItems)) allCorrect = false;
                         });
-                        
-                        if (allCorrect) {
-                            score++;
-                        }
+                        if (allCorrect) score++;
                     } else if (q.type === 'true-false-group') {
                         const userAnswers = answers[index] || {};
                         let allCorrect = true;
-                        
                         q.statements.forEach((stmt, stmtIndex) => {
-                            if (userAnswers[stmtIndex] !== stmt.correct) {
-                                allCorrect = false;
-                            }
+                            if (userAnswers[stmtIndex] !== stmt.correct) allCorrect = false;
                         });
-                        
-                        if (allCorrect) {
-                            score++;
-                        }
+                        if (allCorrect) score++;
                     } else if (q.type === 'fill-group') {
                         const userAnswers = answers[index] || {};
                         let allCorrect = true;
-                        
                         q.statements.forEach((stmt, stmtIndex) => {
-                            if (userAnswers[stmtIndex]?.toLowerCase() !== stmt.answer.toLowerCase()) {
-                                allCorrect = false;
-                            }
+                            if (userAnswers[stmtIndex]?.toLowerCase() !== stmt.answer.toLowerCase()) allCorrect = false;
                         });
-                        
-                        if (allCorrect) {
-                            score++;
-                        }
+                        if (allCorrect) score++;
                     } else {
-                        if (answers[index] === q.correct) {
-                            score++;
-                        }
+                        if (answers[index] === q.correct) score++;
                     }
                 });
                 return score;
@@ -571,7 +439,6 @@
                         .pulse { animation: pulse 2s infinite; }
                         .shake { animation: shake 0.5s; }
                     `}</style>
-                    
                     <div className="float-1 absolute top-20 left-10 opacity-20">
                         <Monitor className="w-16 h-16 text-blue-400" />
                     </div>
@@ -604,21 +471,18 @@
                                 <Monitor className="w-12 h-12 text-blue-600 mr-3" />
                                 <h1 className="text-4xl font-bold text-blue-600">ICT Quiz for 5th Grade</h1>
                             </div>
-                            
                             <p className="text-gray-700 text-center mb-6">
                                 Welcome to your Information and Communication Technology quiz! This test will help you review what you've learned about different types of ICT tools, devices, and their uses.
                             </p>
-
                             <div className="bg-blue-50 rounded-lg p-6 mb-6">
                                 <p className="text-lg font-semibold text-gray-800 mb-3">📋 Instructions:</p>
                                 <ul className="space-y-2 text-gray-700">
-                                    <li>• There are 7 questions in total</li>
+                                    <li>• There are 6 questions in total</li>
                                     <li>• Different question types: multiple choice, true/false, fill in the blank, and drag & drop</li>
                                     <li>• Take your time and read each question carefully</li>
                                     <li>• Click Next to move to the next question</li>
                                 </ul>
                             </div>
-
                             <div className="mb-6 relative" ref={inputRef}>
                                 <label className="block text-gray-700 font-semibold mb-2">Enter Your Name:</label>
                                 <input
@@ -633,7 +497,6 @@
                                     placeholder="Start typing your name..."
                                     className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
                                 />
-                                
                                 {showSuggestions && studentName && filteredStudents.length > 0 && (
                                     <div className="absolute w-full mt-1 bg-white border-2 border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto z-10">
                                         {filteredStudents.map((name) => (
@@ -656,19 +519,16 @@
                                         ))}
                                     </div>
                                 )}
-                                
                                 {showNameError && (
                                     <p className="text-red-500 text-sm mt-2">Please enter your name to start the quiz.</p>
                                 )}
                             </div>
-
                             <button
                                 onClick={handleStartQuiz}
                                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-xl transition-colors shadow-lg"
                             >
                                 Start Quiz
                             </button>
-
                             <p className="text-sm text-gray-600 text-center mt-4">
                                 ⚠️ The quiz will enter fullscreen mode. Please stay on this tab until you finish.
                             </p>
@@ -680,7 +540,6 @@
             if (isCompleted) {
                 const score = calculateScore();
                 const percentage = Math.round((score / questions.length) * 100);
-                
                 return (
                     <div className="min-h-screen bg-gradient-to-br from-green-400 via-blue-500 to-purple-500 flex items-center justify-center p-4">
                         <AnimatedBackground />
@@ -712,7 +571,9 @@
             }
 
             const currentQ = questions[currentQuestion];
-            const isAnswered = currentQ.type === 'drag-drop' 
+            const isAnswered = currentQ.type === 'multiple-choice-group'
+                ? Object.keys(answers[currentQuestion] || {}).length === currentQ.questions.length
+                : currentQ.type === 'drag-drop'
                 ? Object.keys(dropZones).length === currentQ.categories.length
                 : currentQ.type === 'drag-drop-images'
                 ? Object.keys(dropZones).length === currentQ.categories.length && 
@@ -726,7 +587,6 @@
             return (
                 <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
                     <AnimatedBackground />
-                    
                     {showWarning && (
                         <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
                             <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 text-center fade-in shake">
@@ -742,13 +602,11 @@
                                         Please return to fullscreen mode to continue the quiz.
                                     </p>
                                 </div>
-                                
                                 <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 text-left">
                                     <p className="text-sm text-gray-700">
                                         <strong>Remember:</strong> You must stay in fullscreen mode and on this tab during the entire quiz.
                                     </p>
                                 </div>
-
                                 <button
                                     onClick={enterFullscreen}
                                     className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-xl transition-all shadow-lg hover:scale-105 transform"
@@ -758,7 +616,6 @@
                             </div>
                         </div>
                     )}
-
                     <div className={`bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 ${questionTransition === 'enter' ? 'slide-in' : questionTransition === 'exit' ? 'slide-out' : ''} ${showWarning ? 'blur-sm' : ''}`}>
                         <div className="mb-6">
                             <div className="flex justify-between items-center mb-4">
@@ -776,8 +633,38 @@
                                 ></div>
                             </div>
                         </div>
-
                         <h2 className="text-2xl font-bold text-gray-800 mb-6">{currentQ.question}</h2>
+
+                        {currentQ.type === 'multiple-choice-group' && (
+                            <div className="mb-6 space-y-4">
+                                {currentQ.questions.map((q, qIndex) => {
+                                    const currentAnswers = answers[currentQuestion] || {};
+                                    return (
+                                        <div key={qIndex} className="p-4 bg-gray-50 rounded-xl border-2 border-gray-200">
+                                            <p className="text-gray-800 font-medium mb-3">{qIndex + 1}. {q.text}</p>
+                                            <div className="space-y-2">
+                                                {q.options.map((option, optIndex) => (
+                                                    <button
+                                                        key={optIndex}
+                                                        onClick={() => {
+                                                            const newAnswers = { ...currentAnswers, [qIndex]: optIndex };
+                                                            handleAnswer(newAnswers);
+                                                        }}
+                                                        className={`w-full p-3 text-left rounded-lg border-2 transition-all ${
+                                                            currentAnswers[qIndex] === optIndex
+                                                                ? 'border-blue-600 bg-blue-50 font-semibold transform scale-105'
+                                                                : 'border-gray-300 hover:border-blue-400 hover:bg-gray-100'
+                                                        }`}
+                                                    >
+                                                        {option}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
 
                         {(currentQ.type === 'multiple' || currentQ.type === 'true-false') && (
                             <div className="space-y-3 mb-6">
@@ -794,18 +681,6 @@
                                         {option}
                                     </button>
                                 ))}
-                            </div>
-                        )}
-
-                        {currentQ.type === 'fill' && (
-                            <div className="mb-6">
-                                <input
-                                    type="text"
-                                    value={answers[currentQuestion] || ''}
-                                    onChange={(e) => handleAnswer(e.target.value)}
-                                    placeholder="Type your answer here..."
-                                    className="w-full p-4 border-2 border-gray-300 rounded-xl focus:border-blue-600 focus:outline-none transition-all"
-                                />
                             </div>
                         )}
 
@@ -871,12 +746,10 @@
                                         )}
                                     </div>
                                 </div>
-
                                 <div className="space-y-4">
                                     {currentQ.statements.map((statement, stmtIndex) => {
                                         const currentAnswers = answers[currentQuestion] || {};
                                         const parts = statement.text.split('_______');
-                                        
                                         return (
                                             <div key={stmtIndex} className="p-4 bg-gray-50 rounded-xl border-2 border-gray-200">
                                                 <div className="flex items-center flex-wrap gap-2">
@@ -889,14 +762,9 @@
                                                             const word = draggedItem || e.dataTransfer.getData('text/plain');
                                                             if (word) {
                                                                 const newAnswers = { ...currentAnswers };
-                                                                
-                                                                // Remove word from other blanks
                                                                 Object.keys(newAnswers).forEach(key => {
-                                                                    if (newAnswers[key] === word) {
-                                                                        delete newAnswers[key];
-                                                                    }
+                                                                    if (newAnswers[key] === word) delete newAnswers[key];
                                                                 });
-                                                                
                                                                 newAnswers[stmtIndex] = word;
                                                                 handleAnswer(newAnswers);
                                                                 setDraggedItem(null);
@@ -950,7 +818,6 @@
                                         )}
                                     </div>
                                 </div>
-
                                 <div className="space-y-3">
                                     <p className="text-sm font-semibold text-gray-600 mb-3">🎯 Drop them in the correct category:</p>
                                     {currentQ.categories.map((category) => (
@@ -1005,7 +872,6 @@
                                         )}
                                     </div>
                                 </div>
-
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {currentQ.categories.map((category) => (
                                         <div
