@@ -67,7 +67,7 @@
             const filteredStudents = studentList.filter(name => name.toLowerCase().includes(studentName.toLowerCase()));
 
             const submitResultsToGoogleSheet = async (data) => {
-                const webAppUrl = 'https://script.google.com/macros/s/AKfycby_sLSATaF3jmv5YeasSOMLEn6RkdQT744rgRXqsQyUuxooZv7tDUMsHRdbRGlZPiIk/exec';
+                const webAppUrl = 'https://script.google.com/macros/s/AKfycbxBpLDS4AzwLJVh1IF_xdtSeBp7CCkUQxLp9bNy8qJlOKu9np0S7fdcov7GLZVWiRd4/exec';
                 try { await fetch(webAppUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); console.log('Data sent'); } catch (error) { console.error('Error sending data:', error); }
             };
 
