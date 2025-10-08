@@ -147,8 +147,8 @@
                 10: 36, 11: 38, 12: 39, 13: 40, 14: 42, 15: 43, 16: 45, 17: 46, 18: 47, 19: 49, 20: 50
             };
 
-            const getGradeFromScore = (score) => gradingScale[score] !== undefined ? gradingScale[score] : 2.0;
 
+            const getGradeFromScore = (score) => gradingScale[score] !== undefined ? gradingScale[score] : 2.0;
             const filteredStudents = studentList.filter(name => name.toLowerCase().includes(studentName.toLowerCase()));
 
             useEffect(() => {
@@ -157,7 +157,6 @@
                     setIsFullscreen(isCurrentlyFullscreen);
                     if (!isCurrentlyFullscreen && hasStarted && !isCompleted) {
                         setShowWarning(true);
-                        // --- MODIFICATION: INCREMENT EXIT COUNT ---
                         setFullscreenExitCount(prevCount => prevCount + 1);
                     }
                 };
@@ -165,7 +164,6 @@
                 const handleVisibilityChange = () => {
                     if (document.hidden && hasStarted && !isCompleted) {
                         setShowWarning(true);
-                        // --- MODIFICATION: INCREMENT EXIT COUNT ---
                         setFullscreenExitCount(prevCount => prevCount + 1);
                     }
                 };
@@ -186,12 +184,32 @@
             }, [currentQuestion]);
 
             useEffect(() => {
-                const handleClickOutside = (event) => {
-                    if (inputRef.current && !inputRef.current.contains(event.target)) setShowSuggestions(false);
-                };
+                const handleClickOutside = (event) => { if (inputRef.current && !inputRef.current.contains(event.target)) setShowSuggestions(false); };
                 document.addEventListener('mousedown', handleClickOutside);
                 return () => document.removeEventListener('mousedown', handleClickOutside);
             }, []);
+
+            // --- SOLUTION PART 1: MOVE THE SUBMISSION HOOK HERE ---
+            // This hook now runs on every render, which is safe.
+            useEffect(() => {
+                // --- SOLUTION PART 2: ADD A CONDITION *INSIDE* THE HOOK ---
+                // This ensures the code only runs ONCE when the quiz is completed.
+                if (isCompleted) {
+                    const points = calculatePoints();
+                    const grade = getGradeFromScore(points);
+                    const endTime = new Date().toISOString();
+                    
+                    const results = {
+                        studentName: studentName,
+                        startTime: startTime,
+                        endTime: endTime,
+                        score: points,
+                        grade: grade,
+                        fullscreenExits: fullscreenExitCount
+                    };
+                    submitResultsToGoogleSheet(results);
+                }
+            }, [isCompleted]); // Dependency array ensures it runs when `isCompleted` changes.
 
             const enterFullscreen = () => {
                 if (document.documentElement.requestFullscreen) {
