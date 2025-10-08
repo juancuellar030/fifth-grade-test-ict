@@ -145,10 +145,64 @@
                 10: 36, 11: 38, 12: 39, 13: 40, 14: 42, 15: 43, 16: 45, 17: 46, 18: 47, 19: 49, 20: 50
             };
 
+            // Calculate points function - DEFINED BEFORE useEffect
+            const calculatePoints = () => {
+                let points = 0;
+                questions.forEach((q, index) => {
+                    const userAnswers = answers[index] || {};
+                    if (q.type === 'multiple-choice-group') {
+                        q.questions.forEach((subQ, qIndex) => {
+                            if (userAnswers[qIndex] === subQ.correct) points++;
+                        });
+                    } else if (q.type === 'drag-drop') {
+                        Object.keys(q.correctAnswers).forEach(category => {
+                            if (userAnswers[category] === q.correctAnswers[category]) points++;
+                        });
+                    } else if (q.type === 'drag-drop-images') {
+                        q.items.forEach(item => {
+                            const correctCat = Object.keys(q.correctAnswers).find(cat => 
+                                q.correctAnswers[cat].includes(item.name)
+                            );
+                            const userCat = Object.keys(userAnswers).find(cat => 
+                                (userAnswers[cat] || []).includes(item.name)
+                            );
+                            if (correctCat === userCat) points++;
+                        });
+                    } else if (q.type === 'true-false-group') {
+                        q.statements.forEach((stmt, stmtIndex) => {
+                            if (userAnswers[stmtIndex] === stmt.correct) points++;
+                        });
+                    } else if (q.type === 'fill-group') {
+                        q.statements.forEach((stmt, stmtIndex) => {
+                            if (userAnswers[stmtIndex]?.toLowerCase().trim() === stmt.answer.toLowerCase()) points++;
+                        });
+                    }
+                });
+                return points;
+            };
+
             const getGradeFromScore = (score) => gradingScale[score] !== undefined ? gradingScale[score] : 20;
             const filteredStudents = studentList.filter(name => name.toLowerCase().includes(studentName.toLowerCase()));
 
-            // Submit data when quiz is completed (FIXED - moved outside conditional render)
+            const submitResultsToGoogleSheet = async (data) => {
+                const webAppUrl = 'https://script.google.com/macros/s/AKfycbw_tZqRkAFsymp92fY4dYHd7xAQ27KCj2JuT0FkdzktvR4_n79-QwS5VRpGNs896eEQ/exec';
+
+                try {
+                    await fetch(webAppUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    console.log('Data sent to Google Sheets:', data);
+                } catch (error) {
+                    console.error('Error sending data to Google Sheets:', error);
+                }
+            };
+
+            // Submit data when quiz is completed
             useEffect(() => {
                 if (isCompleted && !dataSubmitted) {
                     const points = calculatePoints();
@@ -167,7 +221,7 @@
                     submitResultsToGoogleSheet(results);
                     setDataSubmitted(true);
                 }
-            }, [isCompleted]);
+            }, [isCompleted, dataSubmitted, studentName, startTime, fullscreenExitCount, answers]);
 
             useEffect(() => {
                 const handleFullscreenChange = () => {
@@ -199,7 +253,7 @@
                 if (currentQ && (currentQ.type === 'drag-drop' || currentQ.type === 'drag-drop-images')) {
                     setDropZones(answers[currentQuestion] || {});
                 }
-            }, [currentQuestion]);
+            }, [currentQuestion, answers]);
 
             useEffect(() => {
                 const handleClickOutside = (event) => {
@@ -210,24 +264,6 @@
                 document.addEventListener('mousedown', handleClickOutside);
                 return () => document.removeEventListener('mousedown', handleClickOutside);
             }, []);
-
-            const submitResultsToGoogleSheet = async (data) => {
-                const webAppUrl = 'https://script.google.com/macros/s/AKfycbw_tZqRkAFsymp92fY4dYHd7xAQ27KCj2JuT0FkdzktvR4_n79-QwS5VRpGNs896eEQ/exec';
-
-                try {
-                    const response = await fetch(webAppUrl, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(data)
-                    });
-                    console.log('Data sent to Google Sheets:', data);
-                } catch (error) {
-                    console.error('Error sending data to Google Sheets:', error);
-                }
-            };
 
             const enterFullscreen = () => {
                 if (document.documentElement.requestFullscreen) {
@@ -250,11 +286,13 @@
             };
             
             const handleAnswer = (answer) => setAnswers({ ...answers, [currentQuestion]: answer });
+            
             const handleDragStart = (e, item) => {
                 setDraggedItem(item);
                 e.dataTransfer.effectAllowed = 'move';
                 e.dataTransfer.setData('text/plain', item);
             };
+            
             const handleDragOver = (e) => {
                 e.preventDefault();
                 e.dataTransfer.dropEffect = 'move';
@@ -326,41 +364,6 @@
                         setDraggedItem(null);
                     }, 300);
                 }
-            };
-
-            const calculatePoints = () => {
-                let points = 0;
-                questions.forEach((q, index) => {
-                    const userAnswers = answers[index] || {};
-                    if (q.type === 'multiple-choice-group') {
-                        q.questions.forEach((subQ, qIndex) => {
-                            if (userAnswers[qIndex] === subQ.correct) points++;
-                        });
-                    } else if (q.type === 'drag-drop') {
-                        Object.keys(q.correctAnswers).forEach(category => {
-                            if (userAnswers[category] === q.correctAnswers[category]) points++;
-                        });
-                    } else if (q.type === 'drag-drop-images') {
-                        q.items.forEach(item => {
-                            const correctCat = Object.keys(q.correctAnswers).find(cat => 
-                                q.correctAnswers[cat].includes(item.name)
-                            );
-                            const userCat = Object.keys(userAnswers).find(cat => 
-                                (userAnswers[cat] || []).includes(item.name)
-                            );
-                            if (correctCat === userCat) points++;
-                        });
-                    } else if (q.type === 'true-false-group') {
-                        q.statements.forEach((stmt, stmtIndex) => {
-                            if (userAnswers[stmtIndex] === stmt.correct) points++;
-                        });
-                    } else if (q.type === 'fill-group') {
-                        q.statements.forEach((stmt, stmtIndex) => {
-                            if (userAnswers[stmtIndex]?.toLowerCase().trim() === stmt.answer.toLowerCase()) points++;
-                        });
-                    }
-                });
-                return points;
             };
 
             const AnimatedBackground = () => (
@@ -811,7 +814,7 @@
         ReactDOM.render(<ICTQuiz />, document.getElementById('root'));
     </script>
 </body>
-</html> relative z-10 transform transition-all fade-in">
+</html>3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 transform transition-all fade-in">
                             <div className="flex items-center justify-center mb-6">
                                 <Monitor className="w-12 h-12 text-blue-600 mr-3"/>
                                 <h1 className="text-4xl font-bold text-blue-600">ICT Quiz for 5th Grade</h1>
@@ -891,4 +894,4 @@
                 return (
                     <div className="min-h-screen bg-gradient-to-br from-green-400 via-blue-500 to-purple-500 flex items-center justify-center p-4">
                         <AnimatedBackground/>
-                        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full
+                        <div className="bg-white rounded-
