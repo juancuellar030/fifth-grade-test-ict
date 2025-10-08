@@ -336,7 +336,17 @@
             }
 
             const currentQ = questions[currentQuestion];
-            const isAnswered = (() => { /* ... */ })(); // Logic is fine here
+            const isAnswered = currentQ.type === 'multiple-choice-group'
+                ? Object.keys(answers[currentQuestion] || {}).length === currentQ.questions.length
+                : currentQ.type === 'drag-drop'
+                ? Object.keys(answers[currentQuestion] || {}).length === currentQ.categories.length
+                : currentQ.type === 'drag-drop-images'
+                ? Object.values(answers[currentQuestion] || {}).flat().length === currentQ.items.length
+                : currentQ.type === 'true-false-group'
+                ? Object.keys(answers[currentQuestion] || {}).length === currentQ.statements.length
+                : currentQ.type === 'fill-group'
+                ? Object.keys(answers[currentQuestion] || {}).length === currentQ.statements.length
+                : answers[currentQuestion] !== undefined;
 
             return (
                 <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
