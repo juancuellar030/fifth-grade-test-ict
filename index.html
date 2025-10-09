@@ -252,12 +252,12 @@
             }
 
             const Confetti = () => {
-                const confettiPieces = Array.from({ length: 100 }).map((_, i) => ({
+                const confettiPieces = Array.from({ length: 250 }).map((_, i) => ({
                     id: i,
                     left: Math.random() * 100,
-                    delay: Math.random() * 0.5,
+                    delay: Math.random() * 3, // Pieces will start falling over 3 seconds
                     duration: 2 + Math.random() * 1,
-                    color: ['#4ecdc4', '#45b7d1', '#ffd93d', '#6bcf7f', '#a29bfe', '#ff6348'][Math.floor(Math.random() * 6)],
+                    color: ['#ff5353', '#ffee53', '#53ffa9', '#5395ff', '#ef53ff', '#45B7D1'][Math.floor(Math.random() * 6)],
                     rotX: Math.random() * 360,
                     rotY: Math.random() * 360,
                     rotZ: Math.random() * 360,
