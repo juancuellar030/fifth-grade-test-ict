@@ -13,7 +13,7 @@
     <!-- Tailwind Script -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Tailwind Configuration - Put font-family here -->
+    <!-- Tailwind Configuration -->
     <script>
       tailwind.config = {
         theme: {
@@ -33,79 +33,29 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
     
     <style>
-        /* Force Poppins on all elements */
         body, * {
             font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
         }
-        
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .slide-in {
-            animation: slideIn 0.3s ease-out;
-        }
-        
-        .slide-out {
-            animation: slideOut 0.3s ease-in;
-        }
-        
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(50px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        
-        @keyframes slideOut {
-            from { opacity: 1; transform: translateX(0); }
-            to { opacity: 0; transform: translateX(-50px); }
-        }
-        
-        .shake {
-            animation: shake 0.5s ease-in-out;
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-        
-        .pulse {
-            animation: pulse 2s ease-in-out infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        
-        @keyframes confettiFall {
-            0% { 
-                transform: translateY(-10px) translateX(0) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
-                opacity: 1;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% { 
-                transform: translateY(100vh) translateX(var(--sway)) rotateX(360deg) rotateY(360deg) rotateZ(720deg);
-                opacity: 0;
-            }
-        }
-        .confetti-piece {
-            animation: confettiFall linear forwards;
-        }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .slide-in { animation: slideIn 0.3s ease-out; }
+        .slide-out { animation: slideOut 0.3s ease-in; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(-50px); } }
+        .shake { animation: shake 0.5s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+        .pulse { animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes confettiFall { 0% { transform: translateY(-10px) translateX(0) rotateX(0deg) rotateY(0deg) rotateZ(0deg); opacity: 1; } 50% { opacity: 1; } 100% { transform: translateY(100vh) translateX(var(--sway)) rotateX(360deg) rotateY(360deg) rotateZ(720deg); opacity: 0; } }
+        .confetti-piece { animation: confettiFall linear forwards; }
     </style>
 </head>
 <body class="font-sans"> 
     <div id="root"></div>
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
+
+        // --- HELPER & ANIMATION COMPONENTS (MOVED OUTSIDE) ---
 
         const Monitor = ({ className }) => (
             <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -122,6 +72,71 @@
                 <line x1="12" y1="16" x2="12.01" y2="16" strokeWidth="2"/>
             </svg>
         );
+
+        const AnimatedBackground = () => {
+            const animationFrameId = useRef(null);
+            const [positions, setPositions] = useState([
+                { x: 100, y: 100, vx: 0.5, vy: 0.3 }, { x: 300, y: 200, vx: -0.4, vy: 0.5 },
+                { x: 500, y: 300, vx: 0.2, vy: -0.5 }, { x: 200, y: 400, vx: -0.5, vy: -0.2 },
+                { x: 700, y: 150, vx: 0.4, vy: 0.2 }, { x: 400, y: 500, vx: -0.2, vy: 0.4 },
+                { x: 600, y: 50, vx: 0.3, vy: 0.5 }, { x: 800, y: 450, vx: -0.3, vy: -0.4 },
+                { x: 150, y: 550, vx: 0.5, vy: -0.3 }
+            ]);
+            const svgIcons = [
+                { svg: '<svg viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M21.3911 16.3358C21.4356 16.3818 21.4579 16.4048 21.4787 16.4276C21.7998 16.7802 21.9843 17.2358 21.999 17.7124C22 17.7433 22 17.7753 22 17.8393C22 17.9885 22 18.0631 21.996 18.1261C21.9325 19.1314 21.1314 19.9325 20.1261 19.996C20.0631 20 19.9885 20 19.8393 20H4.16068C4.01148 20 3.93688 20 3.87388 19.996C2.86865 19.9325 2.06749 19.1314 2.00398 18.1261C2 18.0631 2 17.9885 2 17.8393C2 17.7753 2 17.7433 2.00096 17.7124C2.01569 17.2358 2.20022 16.7802 2.52127 16.4276C2.54208 16.4048 2.56433 16.3818 2.60883 16.3359L3.90311 15H20.0969L21.3911 16.3358ZM8.75 18C8.75 17.5858 9.08579 17.25 9.5 17.25H14.5C14.9142 17.25 15.25 17.5858 15.25 18C15.25 18.4142 14.9142 18.75 14.5 18.75H9.5C9.08579 18.75 8.75 18.4142 8.75 18Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M4.35294 7C4.35294 5.11438 4.35294 4.17157 4.93873 3.58579C5.52451 3 6.46732 3 8.35294 3H15.6471C17.5327 3 18.4755 3 19.0613 3.58579C19.6471 4.17157 19.6471 5.11438 19.6471 7V14H4.35294V7ZM12 6.5C12.4142 6.5 12.75 6.16421 12.75 5.75C12.75 5.33579 12.4142 5 12 5C11.5858 5 11.25 5.33579 11.25 5.75C11.25 6.16421 11.5858 6.5 12 6.5Z" fill="currentColor"/></svg>', color: '#93c5fd', size: 'w-36 h-36' },
+                { svg: '<svg viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M14 22H10C6.22876 22 4.34315 22 3.17157 20.7881C2 19.5763 2 17.6258 2 13.725V12.2039C2 9.91549 2 8.77128 2.5192 7.82274C3.0384 6.87421 3.98695 6.28551 5.88403 5.10813L7.88403 3.86687C9.88939 2.62229 10.8921 2 12 2C13.1079 2 14.1106 2.62229 16.116 3.86687L18.116 5.10812C20.0131 6.28551 20.9616 6.87421 21.4808 7.82274C22 8.77128 22 9.91549 22 12.2039V13.725C22 17.6258 22 19.5763 20.8284 20.7881C19.6569 22 17.7712 22 14 22ZM17.4498 12.192C14.4329 8.93571 9.56706 8.93571 6.55017 12.192C6.26866 12.4959 5.79413 12.514 5.49028 12.2325C5.18643 11.951 5.16832 11.4764 5.44983 11.1726C9.06036 7.27552 14.9396 7.27552 18.5502 11.1726C18.8317 11.4764 18.8136 11.951 18.5097 12.2325C18.2059 12.514 17.7313 12.4959 17.4498 12.192ZM15.4498 14.3505C13.5375 12.2864 10.4625 12.2864 8.55019 14.3505C8.26868 14.6544 7.79415 14.6725 7.4903 14.391C7.18645 14.1095 7.16834 13.6349 7.44985 13.3311C9.95581 10.6262 14.0442 10.6262 16.5502 13.3311C16.8317 13.6349 16.8136 14.1095 16.5097 14.391C16.2059 14.6725 15.7314 14.6544 15.4498 14.3505ZM13.4499 16.5095C12.6421 15.6377 11.358 15.6377 10.5502 16.5095C10.2687 16.8134 9.79417 16.8315 9.49031 16.55C9.18646 16.2684 9.16835 15.7939 9.44986 15.4901C10.8513 13.9775 13.1488 13.9775 14.5502 15.4901C14.8317 15.7939 14.8136 16.2684 14.5098 16.55C14.2059 16.8315 13.7314 16.8134 13.4499 16.5095Z" fill="currentColor"/> </svg>', color: '#d8b4fe', size: 'w-36 h-36' },
+                { svg: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="2" width="14" height="20" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="9" y1="18" x2="15" y2="18" stroke="currentColor" stroke-width="1.5"/><rect x="7" y="5" width="10" height="10" fill="currentColor" opacity="0.2"/></svg>', color: '#fbcfe8', size: 'w-12 h-12' },
+                { svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zM11 8h2v2h-2V8zm0 3h2v2h-2v-2z" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="4" y="6" width="16" height="3" fill="currentColor" opacity="0.2"/></svg>', color: '#a5b4fc', size: 'w-14 h-14' },
+                { svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 1.07V9h7c0-4.08-3.05-7.44-7-7.93zM4 15c0 4.42 3.58 8 8 8s8-3.58 8-8v-4H4v4zm7-13.93C7.05 1.56 4 4.92 4 9h7V1.07z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" fill="currentColor" opacity="0.3"/></svg>', color: '#67e8f9', size: 'w-16 h-16' },
+                { svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1a9 9 0 0 0-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7a9 9 0 0 0-9-9z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="7" cy="14" r="1.5" fill="currentColor"/><circle cx="17" cy="14" r="1.5" fill="currentColor"/></svg>', color: '#86efac', size: 'w-14 h-14' },
+                { svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="2" fill="currentColor" opacity="0.3"/></svg>', color: '#fcd34d', size: 'w-12 h-12' },
+                { svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 9l5-5v16l-5-5H3V9h4z" fill="currentColor" opacity="0.2"/></svg>', color: '#fca5a5', size: 'w-14 h-14' },
+                { svg: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="6" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 10h10M7 14h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="16" cy="14" r="1" fill="currentColor"/></svg>', color: '#d8b4fe', size: 'w-16 h-16' }
+            ];
+            
+            useEffect(() => {
+                const animate = () => {
+                    setPositions(prevPositions => {
+                        const width = window.innerWidth;
+                        const height = window.innerHeight;
+                        const BOUNCE = 0.85;
+                        const SIZE = 144; 
+                        return prevPositions.map((pos) => {
+                            let newVx = pos.vx; let newVy = pos.vy;
+                            let newX = pos.x + newVx; let newY = pos.y + newVy;
+                            if (newX - SIZE / 2 < 0 || newX + SIZE / 2 > width) newVx = -newVx * BOUNCE;
+                            if (newY - SIZE / 2 < 0 || newY + SIZE / 2 > height) newVy = -newVy * BOUNCE;
+                            newX = pos.x + newVx; newY = pos.y + newVy;
+                            return { ...pos, x: newX, y: newY, vx: newVx, vy: newVy };
+                        });
+                    });
+                    animationFrameId.current = requestAnimationFrame(animate);
+                };
+                animationFrameId.current = requestAnimationFrame(animate);
+                return () => cancelAnimationFrame(animationFrameId.current);
+            }, []);
+        
+            return (
+                <div className="fixed inset-0 overflow-hidden pointer-events-none">
+                    {positions.map((pos, idx) => (
+                        <div key={idx} className={`absolute opacity-10 ${svgIcons[idx % svgIcons.length].size}`} style={{ left: `${pos.x}px`, top: `${pos.y}px`, transform: 'translate(-50%, -50%)', color: svgIcons[idx % svgIcons.length].color }} dangerouslySetInnerHTML={{ __html: svgIcons[idx % svgIcons.length].svg }}/>
+                    ))}
+                </div>
+            );
+        };
+        
+        const Confetti = () => {
+            const confettiPieces = Array.from({ length: 250 }).map((_, i) => ({ id: i, left: Math.random() * 100, delay: Math.random() * 3, duration: 2 + Math.random() * 1, color: ['#ff5353', '#ffee53', '#53ffa9', '#5395ff', '#ef53ff', '#45B7D1'][Math.floor(Math.random() * 6)], rotX: Math.random() * 360, rotY: Math.random() * 360, rotZ: Math.random() * 360, swayAmount: 50 + Math.random() * 100 }));
+            return (
+                <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ perspective: '1000px' }}>
+                    {confettiPieces.map(piece => (
+                        <div key={piece.id} className="confetti-piece absolute w-3 h-3 rounded-full" style={{ left: `${piece.left}%`, top: '-10px', backgroundColor: piece.color, animationDelay: `${piece.delay}s`, animationDuration: `${piece.duration}s`, boxShadow: `0 0 8px ${piece.color}`, '--sway': `${piece.swayAmount - 50}px` }}/>
+                    ))}
+                </div>
+            );
+        };
+
+        // --- MAIN QUIZ COMPONENT ---
 
         const ICTQuiz = () => {
             const [studentName, setStudentName] = useState('');
@@ -141,18 +156,8 @@
             const [showWarning, setShowWarning] = useState(false);
             const inputRef = useRef(null);
 
-            const studentList = [
-                "Isabella Arce Rodriguez", "Valentina Arias Guevara", "Maria Paz Bermeo Montealegre", "Zoe Lylen Castañeda Romero", "Gabriel Esteban Cuellar Salas", "Dilan Camilo Cumaco Pastrana", "Martín Fernández Lucuara", "Derek Santiago Fierro Lopez", "Simón Gonzalez Chavarro", "Gerónimo Jimenez Bocanegra", "Samuel José Majé Marroquín", "Martín Medina Ortiz", "Karen Sofia Mosquera Baylon", "María Del Mar Mosquera Garzón", "Santiago Motta Santofimio", "Ana Lucia Murcia Guebely", "Antonella Murcia Oliveros", "Emmanuel Murcia Trujillo", "Luciana Quesada Parra", "Maria Paz Quesada Rodriguez", "Miguel Ángel Ruiz Varon", "Luzyana Suarez Solorzano", "Santiago Tobón Castro", "Sarita Vargas Carvajal", "Luciana Sofia Vargas Sanchez", "Julieta Alarcon Cabrera", "Emmanuel Barrero Sandoval", "Catalina Barreto Rivera", "Khalid Bedoya Sanabria", "Daniela Beron Farfan", "Ana Lucia Buendía Losada", "Jacobo Carvajal Jimenez", "Juliana Margarita Castrillon Ramos", "Isabel Cristina Cuellar Romero", "Emiliano Diaz Rojas", "Gabriela Echeverry Trujillo", "Sara Isabella Gaitan Arango", "Fabio Hernandez Galindo", "Juanita Milagros Lopez Alarcon", "Karla Medina Cuenca", "Maria Paz Mora Caicedo", "Emiliano Ortiz Ortiz", "Pablo Alejandro Oviedo Barrero", "Maria Lucia Perdomo Ramirez", "Zamuhel Ramirez Castro", "Sara Juliana Riscanevo Lopera", "Maria Fernanda Rojas Castro", "Santiago Trujillo Gonzalez", "Juan Diego Valderrama Rodriguez", "Sarah Michelle Audor Gutierrez", "Santiago Chavarro Fernández", "Taliana Andrea Chavarro Sanabria", "Ariadna Estupiñan Borrero", "Martin Eduardo Fierro Cordoba", "Danna Gabriela Giraldo Leiva", "Juan Ricardo Guevara Calderon", "Salomon Hoyos Castillo", "Jhoan Sebastian Lozano Moscoso", "Sebastian Martinez Dussan", "Sofia Mayorca Gonzalez", "Samantha Medina Figueroa", "Maria Lucia Melo Camacho", "Sara Luciana Obregon Agudelo", "Sara Orozco Escobar", "Santiago Osorio Benavides", "Angie Luciana Perez Trujillo", "Santiago Polania Perdomo", "Felipe Ramos Vargas", "Jorge Mario Rojas Alvarez", "Sofia Salazar Castañeda", "Hernán Gabriel Sierra Suarez", "Maria Victoria Vidal Prieto", "Juan Andres Vieda Diaz", "Juan Diego Albarracín Martínez", "Emiliano Andrade Perez", "Moises Burgos Arevalo", "Jeronimo Calderón Morales", "Martín Caquimbo De Castro", "Salome Castro Hurtado", "Ashly Dayanna Cumaco Alonso", "Dylan Santiago Gomez Reyes", "Salome Gutierrez Acosta", "Jesus Manuel Gutierrez Vargas", "Isabela Huepe Quintero", "Juan Esteban Madrid Guevara", "Jeronimo Mora Araujo", "Silvana Moreno Pastrana", "Luciana Niño Rojas", "Emmanuel José Ortiz Urrego", "Sara Sofia Oviedo Cajiao", "Daniel Leonardo Perdomo Ochoa", "Juan Matias Rodriguez Calderon", "Maria Jose Rojas Castro", "Gabriela Sarmiento-Perez Trujillo", "Juan Felipe Tamayo Castañeda", "Luciana Andrea Tellez Aviles", "Hanna Isabella Valenzuela Paredes"
-            ];
-
-            const questions = [
-                { id: 1, type: 'multiple-choice-group', question: 'Answer each question by selecting the correct option:', questions: [{ text: 'What does ICT help us do?', options: ['Share and find information', 'Paint pictures', 'Ride bicycles', 'Cook food'], correct: 0 }, { text: 'What do we call programs that help us play games or do homework on a computer?', options: ['Hardware', 'Software', 'Network', 'Input'], correct: 1 }, { text: 'What is input in ICT?', options: ['Sending information to a device, like typing on a keyboard', 'The computer thinking', 'The screen showing information', 'Printing a paper'], correct: 0 }] },
-                { id: 2, type: 'drag-drop', question: 'Drag each item to the correct category:', items: ['Headphones', 'Google Chrome', 'Wi-Fi', 'Tablet'], categories: ['Hardware', 'Software', 'Network', 'Processing Device'], correctAnswers: { 'Hardware': 'Headphones', 'Software': 'Google Chrome', 'Network': 'Wi-Fi', 'Processing Device': 'Tablet' } },
-                { id: 3, type: 'drag-drop-images', question: 'Drag each device to the correct group:', items: [{ name: 'Keyboard', icon: '⌨️' }, { name: 'Monitor', icon: '🖥️' }, { name: 'Mouse', icon: '🖱️' }, { name: 'Printer', icon: '🖨️' }, { name: 'Microphone', icon: '🎤' }, { name: 'Speaker', icon: '🔊' }], categories: ['Input Devices', 'Output Devices'], correctAnswers: { 'Input Devices': ['Keyboard', 'Mouse', 'Microphone'], 'Output Devices': ['Monitor', 'Printer', 'Speaker'] } },
-                { id: 4, type: 'true-false-group', question: 'Read each statement and select True or False:', statements: [{ text: 'Software is something you can physically touch.', correct: 1 }, { text: 'Smartphones and tablets are examples of ICT devices.', correct: 0 }, { text: 'Sending emails is an example of using ICT in daily life.', correct: 0 }] },
-                { id: 5, type: 'fill-group', question: 'Drag the correct word from the box to fill in each blank:', wordBank: ['networks', 'internet', 'software', 'processing', 'communication'], statements: [{ text: 'Bluetooth and Wi-Fi are examples of wireless _______.', answer: 'networks' }, { text: 'The _______ connects multiple devices to share information.', answer: 'internet' }, { text: 'Programs and apps are examples of _______.', answer: 'software' }, { text: 'When a computer thinks and works on information, this is called _______.', answer: 'processing' }] }
-            ];
-            
+            const studentList = [ "Isabella Arce Rodriguez", "Valentina Arias Guevara", "Maria Paz Bermeo Montealegre", "Zoe Lylen Castañeda Romero", "Gabriel Esteban Cuellar Salas", "Dilan Camilo Cumaco Pastrana", "Martín Fernández Lucuara", "Derek Santiago Fierro Lopez", "Simón Gonzalez Chavarro", "Gerónimo Jimenez Bocanegra", "Samuel José Majé Marroquín", "Martín Medina Ortiz", "Karen Sofia Mosquera Baylon", "María Del Mar Mosquera Garzón", "Santiago Motta Santofimio", "Ana Lucia Murcia Guebely", "Antonella Murcia Oliveros", "Emmanuel Murcia Trujillo", "Luciana Quesada Parra", "Maria Paz Quesada Rodriguez", "Miguel Ángel Ruiz Varon", "Luzyana Suarez Solorzano", "Santiago Tobón Castro", "Sarita Vargas Carvajal", "Luciana Sofia Vargas Sanchez", "Julieta Alarcon Cabrera", "Emmanuel Barrero Sandoval", "Catalina Barreto Rivera", "Khalid Bedoya Sanabria", "Daniela Beron Farfan", "Ana Lucia Buendía Losada", "Jacobo Carvajal Jimenez", "Juliana Margarita Castrillon Ramos", "Isabel Cristina Cuellar Romero", "Emiliano Diaz Rojas", "Gabriela Echeverry Trujillo", "Sara Isabella Gaitan Arango", "Fabio Hernandez Galindo", "Juanita Milagros Lopez Alarcon", "Karla Medina Cuenca", "Maria Paz Mora Caicedo", "Emiliano Ortiz Ortiz", "Pablo Alejandro Oviedo Barrero", "Maria Lucia Perdomo Ramirez", "Zamuhel Ramirez Castro", "Sara Juliana Riscanevo Lopera", "Maria Fernanda Rojas Castro", "Santiago Trujillo Gonzalez", "Juan Diego Valderrama Rodriguez", "Sarah Michelle Audor Gutierrez", "Santiago Chavarro Fernández", "Taliana Andrea Chavarro Sanabria", "Ariadna Estupiñan Borrero", "Martin Eduardo Fierro Cordoba", "Danna Gabriela Giraldo Leiva", "Juan Ricardo Guevara Calderon", "Salomon Hoyos Castillo", "Jhoan Sebastian Lozano Moscoso", "Sebastian Martinez Dussan", "Sofia Mayorca Gonzalez", "Samantha Medina Figueroa", "Maria Lucia Melo Camacho", "Sara Luciana Obregon Agudelo", "Sara Orozco Escobar", "Santiago Osorio Benavides", "Angie Luciana Perez Trujillo", "Santiago Polania Perdomo", "Felipe Ramos Vargas", "Jorge Mario Rojas Alvarez", "Sofia Salazar Castañeda", "Hernán Gabriel Sierra Suarez", "Maria Victoria Vidal Prieto", "Juan Andres Vieda Diaz", "Juan Diego Albarracín Martínez", "Emiliano Andrade Perez", "Moises Burgos Arevalo", "Jeronimo Calderón Morales", "Martín Caquimbo De Castro", "Salome Castro Hurtado", "Ashly Dayanna Cumaco Alonso", "Dylan Santiago Gomez Reyes", "Salome Gutierrez Acosta", "Jesus Manuel Gutierrez Vargas", "Isabela Huepe Quintero", "Juan Esteban Madrid Guevara", "Jeronimo Mora Araujo", "Silvana Moreno Pastrana", "Luciana Niño Rojas", "Emmanuel José Ortiz Urrego", "Sara Sofia Oviedo Cajiao", "Daniel Leonardo Perdomo Ochoa", "Juan Matias Rodriguez Calderon", "Maria Jose Rojas Castro", "Gabriela Sarmiento-Perez Trujillo", "Juan Felipe Tamayo Castañeda", "Luciana Andrea Tellez Aviles", "Hanna Isabella Valenzuela Paredes" ];
+            const questions = [ { id: 1, type: 'multiple-choice-group', question: 'Answer each question by selecting the correct option:', questions: [{ text: 'What does ICT help us do?', options: ['Share and find information', 'Paint pictures', 'Ride bicycles', 'Cook food'], correct: 0 }, { text: 'What do we call programs that help us play games or do homework on a computer?', options: ['Hardware', 'Software', 'Network', 'Input'], correct: 1 }, { text: 'What is input in ICT?', options: ['Sending information to a device, like typing on a keyboard', 'The computer thinking', 'The screen showing information', 'Printing a paper'], correct: 0 }] }, { id: 2, type: 'drag-drop', question: 'Drag each item to the correct category:', items: ['Headphones', 'Google Chrome', 'Wi-Fi', 'Tablet'], categories: ['Hardware', 'Software', 'Network', 'Processing Device'], correctAnswers: { 'Hardware': 'Headphones', 'Software': 'Google Chrome', 'Network': 'Wi-Fi', 'Processing Device': 'Tablet' } }, { id: 3, type: 'drag-drop-images', question: 'Drag each device to the correct group:', items: [{ name: 'Keyboard', icon: '⌨️' }, { name: 'Monitor', icon: '🖥️' }, { name: 'Mouse', icon: '🖱️' }, { name: 'Printer', icon: '🖨️' }, { name: 'Microphone', icon: '🎤' }, { name: 'Speaker', icon: '🔊' }], categories: ['Input Devices', 'Output Devices'], correctAnswers: { 'Input Devices': ['Keyboard', 'Mouse', 'Microphone'], 'Output Devices': ['Monitor', 'Printer', 'Speaker'] } }, { id: 4, type: 'true-false-group', question: 'Read each statement and select True or False:', statements: [{ text: 'Software is something you can physically touch.', correct: 1 }, { text: 'Smartphones and tablets are examples of ICT devices.', correct: 0 }, { text: 'Sending emails is an example of using ICT in daily life.', correct: 0 }] }, { id: 5, type: 'fill-group', question: 'Drag the correct word from the box to fill in each blank:', wordBank: ['networks', 'internet', 'software', 'processing', 'communication'], statements: [{ text: 'Bluetooth and Wi-Fi are examples of wireless _______.', answer: 'networks' }, { text: 'The _______ connects multiple devices to share information.', answer: 'internet' }, { text: 'Programs and apps are examples of _______.', answer: 'software' }, { text: 'When a computer thinks and works on information, this is called _______.', answer: 'processing' }] } ];
             const gradingScale = { 0: 2.0, 1: 2.2, 2: 2.3, 3: 2.5, 4: 2.7, 5: 2.8, 6: 3.0, 7: 3.2, 8: 3.3, 9: 3.5, 10: 3.6, 11: 3.8, 12: 3.9, 13: 4.0, 14: 4.2, 15: 4.3, 16: 4.5, 17: 4.6, 18: 4.7, 19: 4.9, 20: 5.0 };
 
             const calculatePoints = () => { let points = 0; questions.forEach((q, index) => { const userAnswers = answers[index] || {}; if (q.type === 'multiple-choice-group') q.questions.forEach((subQ, qIndex) => { if (userAnswers[qIndex] === subQ.correct) points++; }); else if (q.type === 'drag-drop') Object.keys(q.correctAnswers).forEach(category => { if (userAnswers[category] === q.correctAnswers[category]) points++; }); else if (q.type === 'drag-drop-images') { q.items.forEach(item => { const correctCat = Object.keys(q.correctAnswers).find(cat => q.correctAnswers[cat].includes(item.name)); const userCat = Object.keys(userAnswers).find(cat => (userAnswers[cat] || []).includes(item.name)); if (correctCat === userCat) points++; }); } else if (q.type === 'true-false-group') q.statements.forEach((stmt, stmtIndex) => { if (userAnswers[stmtIndex] === stmt.correct) points++; }); else if (q.type === 'fill-group') q.statements.forEach((stmt, stmtIndex) => { if (userAnswers[stmtIndex]?.toLowerCase().trim() === stmt.answer.toLowerCase()) points++; }); }); return points; };
@@ -173,7 +178,7 @@
                     submitResultsToGoogleSheet(results);
                     setDataSubmitted(true);
                 }
-            }, [isCompleted, dataSubmitted]);
+            }, [isCompleted, dataSubmitted, answers]);
 
             useEffect(() => {
                 const handleFullscreenChange = () => { if (!document.fullscreenElement && hasStarted && !isCompleted) { setShowWarning(true); setFullscreenExitCount(prev => prev + 1); }};
@@ -202,97 +207,8 @@
             const handleDrop = (e, category) => { e.preventDefault(); const item = draggedItem || e.dataTransfer.getData('text/plain'); if (item) { let newAnswers = { ...(answers[currentQuestion] || {}) }; Object.keys(newAnswers).forEach(key => { if (Array.isArray(newAnswers[key])) newAnswers[key] = newAnswers[key].filter(i => i !== item); else if (newAnswers[key] === item) delete newAnswers[key]; }); if (questions[currentQuestion].type === 'drag-drop-images') { if (!newAnswers[category]) newAnswers[category] = []; if (!newAnswers[category].includes(item)) newAnswers[category].push(item); } else { newAnswers[category] = item; } setAnswers({ ...answers, [currentQuestion]: newAnswers }); setDropZones(newAnswers); setDraggedItem(null); } };
             const getAvailableItems = () => { const currentQ = questions[currentQuestion]; const currentAnswers = answers[currentQuestion] || {}; if (currentQ.type.includes('drag-drop')) { const placedItems = Object.values(currentAnswers).flat(); return currentQ.items.filter(item => !placedItems.includes(item.name || item)); } if (currentQ.type === 'fill-group') return currentQ.wordBank.filter(word => !Object.values(currentAnswers).includes(word)); return []; };
             const handleNext = () => { setQuestionTransition('exit'); setTimeout(() => { if (currentQuestion < questions.length - 1) { setCurrentQuestion(prev => prev + 1); setQuestionTransition('enter'); } else { setIsCompleted(true); setCompletedStudents({ ...completedStudents, [studentName]: true }); if (document.exitFullscreen) document.exitFullscreen(); } }, 300); };
-            const handleBack = () => { if (currentQuestion > 0) { setQuestionTransition('exit'); setTimeout(() => { setCurrentQuestion(prev => prev - 1); setQuestionTransition('enter'); }, 300); }};
+            const handleBack = () => { if (currentQuestion > 0) { setQuestionTransition('exit'); setTimeout(() => setCurrentQuestion(prev => prev - 1), 300); }};
 
-            const AnimatedBackground = () => {
-                const animationFrameId = useRef(null);
-                const [positions, setPositions] = useState([
-                    { x: 100, y: 100, vx: 0.5, vy: 0.3 },
-                    { x: 300, y: 200, vx: -0.4, vy: 0.5 },
-                    { x: 500, y: 300, vx: 0.2, vy: -0.5 },
-                    { x: 200, y: 400, vx: -0.5, vy: -0.2 }
-                ]);
-                
-                useEffect(() => {
-                    const animate = () => {
-                        setPositions(prevPositions => {
-                            const width = window.innerWidth;
-                            const height = window.innerHeight;
-                            const BOUNCE = 0.85;
-                            const SIZE = 144;
-
-                            return prevPositions.map(pos => {
-                                let newVx = pos.vx;
-                                let newVy = pos.vy;
-                                let newX = pos.x + newVx;
-                                let newY = pos.y + newVy;
-
-                                if (newX - SIZE / 2 < 0 || newX + SIZE / 2 > width) newVx = -newVx * BOUNCE;
-                                if (newY - SIZE / 2 < 0 || newY + SIZE / 2 > height) newVy = -newVy * BOUNCE;
-
-                                newX = pos.x + newVx;
-                                newY = pos.y + newVy;
-
-                                return { ...pos, x: newX, y: newY, vx: newVx, vy: newVy };
-                            });
-                        });
-                        animationFrameId.current = requestAnimationFrame(animate);
-                    };
-
-                    animationFrameId.current = requestAnimationFrame(animate);
-                    return () => cancelAnimationFrame(animationFrameId.current);
-                }, []);
-            
-                return (
-                    <div className="fixed inset-0 overflow-hidden pointer-events-none">
-                        {positions.map((pos, idx) => (
-                            <div
-                                key={idx}
-                                className="absolute opacity-10 w-36 h-36 text-blue-300"
-                                style={{
-                                    left: `${pos.x}px`,
-                                    top: `${pos.y}px`,
-                                    transform: 'translate(-50%, -50%)'
-                                }}
-                            >
-                                <Monitor className="w-full h-full" />
-                            </div>
-                        ))}
-                    </div>
-                );
-            };
-
-            const Confetti = () => {
-                const confettiPieces = Array.from({ length: 250 }).map((_, i) => ({
-                    id: i,
-                    left: Math.random() * 100,
-                    delay: Math.random() * 3,
-                    duration: 2 + Math.random() * 1,
-                    color: ['#ff5353', '#ffee53', '#53ffa9', '#5395ff', '#ef53ff', '#45B7D1'][Math.floor(Math.random() * 6)],
-                    swayAmount: 50 + Math.random() * 100
-                }));
-
-                return (
-                    <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ perspective: '1000px' }}>
-                        {confettiPieces.map(piece => (
-                            <div
-                                key={piece.id}
-                                className="confetti-piece absolute w-3 h-3 rounded-full"
-                                style={{
-                                    left: `${piece.left}%`,
-                                    top: '-10px',
-                                    backgroundColor: piece.color,
-                                    animationDelay: `${piece.delay}s`,
-                                    animationDuration: `${piece.duration}s`,
-                                    boxShadow: `0 0 8px ${piece.color}`,
-                                    '--sway': `${piece.swayAmount - 50}px`
-                                }}
-                            />
-                        ))}
-                    </div>
-                );
-            };
-            
             if (!hasStarted && !isCompleted) {
                 return (
                     <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
@@ -300,30 +216,22 @@
                         <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 transform transition-all fade-in">
                             <div className="flex items-center justify-center mb-6">
                                 <Monitor className="w-12 h-12 text-blue-600 mr-3"/>
-                                <h1 className="text-4xl font-bold text-blue-600">ICT Quiz - 5th Grade</h1>
+                                <h1 className="text-4xl font-bold font-poppins text-blue-600">ICT Quiz - 5th Grade</h1>
                             </div>
                             <p className="text-gray-700 text-center mb-6">Welcome to the Technology quiz!</p>
                             <div className="bg-blue-50 rounded-lg p-6 mb-6">
-                                <p className="text-lg font-semibold text-gray-800 mb-3">📋 Instructions:</p>
-                                <ul className="space-y-2 text-gray-700">
-                                    <li>• There are 5 questions in total.</li>
-                                    <li>• The total score is 20 points.</li>
-                                    <li>• Read each question carefully.</li>
-                                </ul>
+                                <p className="text-lg font-semibold font-poppins text-gray-800 mb-3">📋 Instructions:</p>
+                                <ul className="space-y-2 text-gray-700"><li>• There are 5 questions.</li><li>• The total score is 20 points.</li><li>• Read each question carefully.</li></ul>
                             </div>
                             <div className="mb-6 relative" ref={inputRef}>
                                 <label className="block text-gray-700 font-semibold mb-2">Enter Your Name:</label>
                                 <input type="text" value={studentName} onChange={(e) => { setStudentName(e.target.value); setShowNameError(false); setShowSuggestions(true); }} onFocus={() => setShowSuggestions(true)} placeholder="Start typing your name..." className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"/>
                                 {showSuggestions && studentName && filteredStudents.length > 0 && (
-                                    <div className="absolute w-full mt-1 bg-white border-2 border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto z-10">
-                                        {filteredStudents.map((name) => (<button key={name} onClick={() => { setStudentName(name); setShowSuggestions(false); }} disabled={completedStudents[name]} className={`w-full text-left p-3 hover:bg-blue-50 transition-colors border-b border-gray-100 last:border-b-0 ${completedStudents[name] ? 'opacity-50 cursor-not-allowed' : ''}`}>{name}{completedStudents[name] && (<span className="text-xs text-gray-500 ml-2">(Completed)</span>)}</button>))}
-                                    </div>
+                                    <div className="absolute w-full mt-1 bg-white border-2 border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto z-10">{filteredStudents.map((name) => (<button key={name} onClick={() => { setStudentName(name); setShowSuggestions(false); }} disabled={completedStudents[name]} className={`w-full text-left p-3 hover:bg-blue-50 transition-colors border-b border-gray-100 last:border-b-0 ${completedStudents[name] ? 'opacity-50 cursor-not-allowed' : ''}`}>{name}{completedStudents[name] && (<span className="text-xs text-gray-500 ml-2">(Completed)</span>)}</button>))}</div>
                                 )}
                                 {showNameError && (<p className="text-red-500 text-sm mt-2">Please select your name from the list.</p>)}
                             </div>
-                            <button onClick={handleStartQuiz} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-xl transition-colors shadow-lg">
-                                Start Quiz
-                            </button>
+                            <button onClick={handleStartQuiz} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold font-poppins py-4 px-6 rounded-xl transition-colors shadow-lg">Start Quiz</button>
                             <p className="text-sm text-gray-600 text-center mt-4">⚠️ The quiz will enter fullscreen mode. Please stay on this tab.</p>
                         </div>
                     </div>
@@ -350,7 +258,7 @@
                                     <p className="text-3xl font-bold text-green-600 mb-3">Your Grade: {grade.toFixed(1)}</p>
                                     <p className="text-xl text-gray-700 mb-3">{percentage}%</p>
                                     <p className={`${isPerfectScore ? 'text-green-700 text-2xl font-bold' : 'text-gray-700 mt-2'} font-poppins`}>
-                                        {percentage === 100 ? 'PERFECT SCORE! AMAZING!' : percentage >= 80 ? '🌟 Excellent work!' : percentage >= 60 ? '👍 Good job!' : '💪 Keep studying!'}
+                                        {percentage === 100 ? '🎉 PERFECT SCORE! AMAZING! 🎉' : percentage >= 80 ? '🌟 Excellent work!' : percentage >= 60 ? '👍 Good job!' : '💪 Keep studying!'}
                                     </p>
                                 </div>
                                 <p className="text-gray-600">Thank you for taking the ICT quiz. You cannot retake it.</p>
@@ -381,13 +289,11 @@
                             <div className="w-full bg-gray-200 rounded-full h-2"><div className="bg-blue-600 h-2 rounded-full transition-all duration-500" style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}></div></div>
                         </div>
                         <h2 className="text-2xl font-bold font-poppins text-gray-800 mb-6">{currentQ.question}</h2>
-
                         {currentQ.type === 'multiple-choice-group' && (<div className="mb-6 space-y-4">{currentQ.questions.map((q, qIndex) => (<div key={qIndex} className="p-4 bg-gray-50 rounded-xl border-2 border-gray-200"><p className="text-gray-800 font-medium mb-3">{qIndex + 1}. {q.text}</p><div className="space-y-2">{q.options.map((option, optIndex) => (<button key={optIndex} onClick={() => { const newAnswers = { ...(answers[currentQuestion] || {}), [qIndex]: optIndex }; handleAnswer(newAnswers); }} className={`w-full p-3 text-left rounded-lg border-2 transition-all ${ (answers[currentQuestion] || {})[qIndex] === optIndex ? 'border-blue-600 bg-blue-50 font-semibold transform scale-105' : 'border-gray-300 hover:border-blue-400 hover:bg-gray-100' }`}>{option}</button>))}</div></div>))}</div>)}
                         {currentQ.type === 'true-false-group' && (<div className="mb-6 space-y-4">{currentQ.statements.map((statement, stmtIndex) => (<div key={stmtIndex} className="p-4 bg-gray-50 rounded-xl border-2 border-gray-200"><p className="text-gray-800 font-medium mb-3">{stmtIndex + 1}. {statement.text}</p><div className="flex gap-3"><button onClick={() => { const newAnswers = { ...(answers[currentQuestion] || {}), [stmtIndex]: 0 }; handleAnswer(newAnswers); }} className={`flex-1 p-3 rounded-lg border-2 transition-all ${ (answers[currentQuestion] || {})[stmtIndex] === 0 ? 'border-blue-600 bg-blue-50 font-semibold' : 'border-gray-300 hover:border-blue-400 hover:bg-gray-100' }`}>True</button><button onClick={() => { const newAnswers = { ...(answers[currentQuestion] || {}), [stmtIndex]: 1 }; handleAnswer(newAnswers); }} className={`flex-1 p-3 rounded-lg border-2 transition-all ${ (answers[currentQuestion] || {})[stmtIndex] === 1 ? 'border-blue-600 bg-blue-50 font-semibold' : 'border-gray-300 hover:border-blue-400 hover:bg-gray-100' }`}>False</button></div></div>))}</div>)}
                         {currentQ.type === 'fill-group' && (<div className="mb-6"><div className="mb-6"><p className="text-sm font-semibold text-gray-600 mb-3">📦 Word Bank - Drag words to fill the blanks:</p><div className="flex flex-wrap gap-3 p-4 bg-gray-50 rounded-xl border-2 border-gray-200 min-h-16">{getAvailableItems().length === 0 ? (<p className="text-gray-400 text-sm italic w-full text-center">All words used!</p>) : (getAvailableItems().map((word) => (<div key={word} draggable onDragStart={(e) => handleDragStart(e, word)} className="px-4 py-2 bg-green-500 text-white rounded-lg cursor-grab active:cursor-grabbing hover:bg-green-600 transition-all shadow-md hover:shadow-lg transform hover:scale-105 font-semibold font-poppins">{word}</div>)))}</div></div><div className="space-y-4">{currentQ.statements.map((statement, stmtIndex) => (<div key={stmtIndex} className="p-4 bg-gray-50 rounded-xl border-2 border-gray-200"><div className="flex items-center flex-wrap gap-2"><span className="font-semibold text-gray-700">{stmtIndex + 1}.</span><span className="text-gray-800">{statement.text.split('_______')[0]}</span><div onDragOver={handleDragOver} onDrop={(e) => { e.preventDefault(); const word = draggedItem || e.dataTransfer.getData('text/plain'); if (word) { const newAnswers = { ...(answers[currentQuestion] || {}) }; Object.keys(newAnswers).forEach(key => { if (newAnswers[key] === word) delete newAnswers[key]; }); newAnswers[stmtIndex] = word; handleAnswer(newAnswers); setDraggedItem(null); } }} className={`inline-flex items-center justify-center min-w-32 min-h-10 px-3 py-2 border-2 border-dashed rounded-lg transition-all ${ (answers[currentQuestion] || {})[stmtIndex] ? 'border-green-500 bg-green-50' : 'border-gray-300 bg-white hover:border-green-400' }`}>{(answers[currentQuestion] || {})[stmtIndex] ? (<span draggable onDragStart={(e) => handleDragStart(e, (answers[currentQuestion] || {})[stmtIndex])} className="px-2 py-1 bg-green-500 text-white rounded font-semibold cursor-grab active:cursor-grabbing font-poppins">{(answers[currentQuestion] || {})[stmtIndex]}</span>) : (<span className="text-gray-400 text-sm italic">drop here</span>)}</div><span className="text-gray-800">{statement.text.split('_______')[1]}</span></div></div>))}</div></div>)}
                         {currentQ.type === 'drag-drop' && (<div className="mb-6"><div className="mb-6"><p className="text-sm font-semibold text-gray-600 mb-3">📦 Drag these items:</p><div className="flex flex-wrap gap-3 p-4 bg-gray-50 rounded-xl border-2 border-gray-200 min-h-16">{getAvailableItems().length === 0 ? (<p className="text-gray-400 text-sm italic w-full text-center">All items placed!</p>) : (getAvailableItems().map((item) => (<div key={item} draggable onDragStart={(e) => handleDragStart(e, item)} className="px-4 py-2 bg-blue-500 text-white rounded-lg cursor-grab active:cursor-grabbing hover:bg-blue-600 transition-all shadow-md hover:shadow-lg transform hover:scale-105 font-poppins">{item}</div>)))}</div></div><div className="space-y-3"><p className="text-sm font-semibold text-gray-600 mb-3">🎯 Drop them in the correct category:</p>{currentQ.categories.map((category) => (<div key={category} onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, category)} className={`p-4 border-2 border-dashed rounded-xl min-h-20 transition-all ${ (dropZones)[category] ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-gray-50 hover:border-blue-400 hover:bg-blue-50' }`}><p className="font-semibold text-gray-700 mb-2">{category}</p>{(dropZones)[category] && (<div draggable onDragStart={(e) => handleDragStart(e, (dropZones)[category])} className="inline-block px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md cursor-grab active:cursor-grabbing hover:bg-blue-600 font-poppins">{(dropZones)[category]}</div>)}{!(dropZones)[category] && (<p className="text-gray-400 text-sm italic">Drop item here...</p>)}</div>))}</div></div>)}
                         {currentQ.type === 'drag-drop-images' && (<div className="mb-6"><div className="mb-6"><p className="text-sm font-semibold text-gray-600 mb-3">📦 Drag these devices:</p><div className="flex flex-wrap gap-3 p-4 bg-gray-50 rounded-xl border-2 border-gray-200 min-h-16">{getAvailableItems().length === 0 ? (<p className="text-gray-400 text-sm italic w-full text-center">All devices placed!</p>) : (getAvailableItems().map((item) => (<div key={item.name} draggable onDragStart={(e) => handleDragStart(e, item.name)} className="flex flex-col items-center px-4 py-3 bg-purple-500 text-white rounded-lg cursor-grab active:cursor-grabbing hover:bg-purple-600 transition-all shadow-md hover:shadow-lg transform hover:scale-105"><div className="text-3xl mb-1">{item.icon}</div><div className="text-sm font-semibold font-poppins">{item.name}</div></div>)))}</div></div><div className="grid grid-cols-1 md:grid-cols-2 gap-4">{currentQ.categories.map((category) => (<div key={category} onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, category)} className="p-4 border-2 border-dashed rounded-xl min-h-40 transition-all border-gray-300 bg-gray-50 hover:border-purple-400 hover:bg-purple-50"><p className="font-semibold text-gray-700 mb-3 text-center text-lg">{category}</p><div className="flex flex-wrap gap-2 justify-center">{dropZones[category] && dropZones[category].map((itemName) => { const item = currentQ.items.find(i => i.name === itemName); return (<div key={itemName} draggable onDragStart={(e) => handleDragStart(e, itemName)} className="flex flex-col items-center px-3 py-2 bg-purple-500 text-white rounded-lg shadow-md cursor-grab active:cursor-grabbing hover:bg-purple-600 transition-all"><div className="text-2xl mb-1">{item?.icon}</div><div className="text-xs font-semibold font-poppins">{itemName}</div></div>); })}{(!dropZones[category] || dropZones[category].length === 0) && (<p className="text-gray-400 text-sm italic">Drop devices here...</p>)}</div></div>))}</div></div>)}
-                        
                         <div className="flex gap-3 mt-8">
                             {currentQuestion > 0 && (<button onClick={handleBack} className="px-6 py-4 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded-xl transition-all shadow-lg hover:scale-105 transform font-poppins">← Back</button>)}
                             <button onClick={handleNext} disabled={!isAnswered} className={`flex-1 py-4 px-6 rounded-xl font-bold transition-all ${isAnswered ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:scale-105 transform' : 'bg-gray-300 text-gray-500 cursor-not-allowed'} font-poppins`}>{currentQuestion < questions.length - 1 ? 'Next →' : 'Finish Quiz'}</button>
