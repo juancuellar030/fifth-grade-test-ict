@@ -5,31 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ICT Quiz for 5th Grade</title>
     
-    <!-- STEP 1: Load Poppins from Google Fonts -->
+    <!-- Poppins Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
+    <!-- Library Scripts -->
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
     
-    <!-- STEP 2: Configure Tailwind to use the new fonts -->
+    <!-- Tailwind Configuration -->
     <script>
       tailwind.config = {
         theme: {
           extend: {
             fontFamily: {
-              sans: [
-                'SF UI Display', 
-                '-apple-system', 
-                'BlinkMacSystemFont', 
-                '"Segoe UI"', 
-                'Roboto', 
-                '"Helvetica Neue"', 
-                'Arial', 
-                'sans-serif'
-              ],
+              sans: ['SF UI Display', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif'],
               poppins: ['Poppins', 'sans-serif'],
             },
           },
@@ -37,7 +28,11 @@
       }
     </script>
     
+    <!-- Main Tailwind Script (Loads AFTER the config) -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Babel Script (Best placed after other head elements) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
 </head>
 <body class="font-sans"> 
     <div id="root"></div>
