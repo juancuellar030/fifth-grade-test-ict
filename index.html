@@ -112,13 +112,17 @@
             const handleBack = () => { if (currentQuestion > 0) { setQuestionTransition('exit'); setTimeout(() => setCurrentQuestion(prev => prev - 1), 300); }};
 
             const AnimatedBackground = () => {
+                const animationFrameId = useRef(null);
                 const [positions, setPositions] = useState([
-                    { x: 100, y: 100, vx: 2, vy: 1.5 },
-                    { x: 300, y: 200, vx: -1.5, vy: 2 },
-                    { x: 500, y: 300, vx: 1, vy: -2 },
-                    { x: 200, y: 400, vx: -2, vy: -1 },
-                    { x: 700, y: 150, vx: 1.5, vy: 1 },
-                    { x: 400, y: 500, vx: -1, vy: 1.5 }
+                    { x: 100, y: 100, vx: 0.5, vy: 0.3 },
+                    { x: 300, y: 200, vx: -0.4, vy: 0.5 },
+                    { x: 500, y: 300, vx: 0.2, vy: -0.5 },
+                    { x: 200, y: 400, vx: -0.5, vy: -0.2 },
+                    { x: 700, y: 150, vx: 0.4, vy: 0.2 },
+                    { x: 400, y: 500, vx: -0.2, vy: 0.4 },
+                    { x: 600, y: 50, vx: 0.3, vy: 0.5 },
+                    { x: 800, y: 450, vx: -0.3, vy: -0.4 },
+                    { x: 150, y: 550, vx: 0.5, vy: -0.3 }
                 ]);
                 const svgIcons = [
                     { 
@@ -159,91 +163,55 @@
                     }
                 ];
                 
-            useEffect(() => {
-                            const colors = ['#93c5fd'];
-                            const FRICTION = 0.99;
-                            const BOUNCE = 0.75;
-                            const SIZE = 100;
-            
-                            const animate = () => {
-                                const width = window.innerWidth;
-                                const height = window.innerHeight;
-            
-                                setPositions(prevPositions => {
-                                    return prevPositions.map((pos, idx) => {
-                                        let newX = pos.x + pos.vx;
-                                        let newY = pos.y + pos.vy;
-                                        let newVx = pos.vx * FRICTION;
-                                        let newVy = pos.vy * FRICTION;
-            
-                                        // Bounce off walls
-                                        if (newX - SIZE / 2 < 0) {
-                                            newX = SIZE / 2;
-                                            newVx = Math.abs(newVx) * BOUNCE;
-                                        }
-                                        if (newX + SIZE / 2 > width) {
-                                            newX = width - SIZE / 2;
-                                            newVx = -Math.abs(newVx) * BOUNCE;
-                                        }
-                                        if (newY - SIZE / 2 < 0) {
-                                            newY = SIZE / 2;
-                                            newVy = Math.abs(newVy) * BOUNCE;
-                                        }
-                                        if (newY + SIZE / 2 > height) {
-                                            newY = height - SIZE / 2;
-                                            newVy = -Math.abs(newVy) * BOUNCE;
-                                        }
-            
-                                        // Collision detection with other particles
-                                        prevPositions.forEach((other, otherIdx) => {
-                                            if (idx !== otherIdx) {
-                                                const dx = other.x - newX;
-                                                const dy = other.y - newY;
-                                                const dist = Math.sqrt(dx * dx + dy * dy);
-                                                const minDist = SIZE;
-            
-                                                if (dist < minDist && dist > 0) {
-                                                    const angle = Math.atan2(dy, dx);
-                                                    const sin = Math.sin(angle);
-                                                    const cos = Math.cos(angle);
-            
-                                                    const overlap = (minDist - dist) / 2;
-                                                    newX -= overlap * cos;
-                                                    newY -= overlap * sin;
-            
-                                                    newVx = -newVx * 0.5;
-                                                    newVy = -newVy * 0.5;
-                                                }
-                                            }
-                                        });
-            
-                                        return { x: newX, y: newY, vx: newVx, vy: newVy };
-                                    });
-                                });
-                            };
-            
-                            const interval = setInterval(animate, 30);
-                            return () => clearInterval(interval);
-                        }, []);
-            
-                        return (
-                            <div className="fixed inset-0 overflow-hidden pointer-events-none">
-                                {positions.map((pos, idx) => (
-                                    <div
-                                        key={idx}
-                                        className="absolute w-24 h-24 opacity-20"
-                                        style={{
-                                            left: `${pos.x}px`,
-                                            top: `${pos.y}px`,
-                                            transform: 'translate(-50%, -50%)',
-                                            color: ['#93c5fd'][idx]
-                                        }}
-                                        dangerouslySetInnerHTML={{ __html: svgIcons[idx % svgIcons.length] }}
-                                    />
-                                ))}
-                            </div>
-                        );
+                useEffect(() => {
+                    const animate = () => {
+                        setPositions(prevPositions => {
+                            const width = window.innerWidth;
+                            const height = window.innerHeight;
+                            const BOUNCE = 0.85;
+                            const SIZE = 144; // Corresponds to w-36/h-36
+
+                            return prevPositions.map((pos, idx) => {
+                                let newVx = pos.vx;
+                                let newVy = pos.vy;
+                                let newX = pos.x + newVx;
+                                let newY = pos.y + newVy;
+
+                                if (newX - SIZE / 2 < 0 || newX + SIZE / 2 > width) newVx = -newVx * BOUNCE;
+                                if (newY - SIZE / 2 < 0 || newY + SIZE / 2 > height) newVy = -newVy * BOUNCE;
+
+                                newX = pos.x + newVx;
+                                newY = pos.y + newVy;
+
+                                return { ...pos, x: newX, y: newY, vx: newVx, vy: newVy };
+                            });
+                        });
+                        animationFrameId.current = requestAnimationFrame(animate);
                     };
+
+                    animationFrameId.current = requestAnimationFrame(animate);
+                    return () => cancelAnimationFrame(animationFrameId.current);
+                }, []);
+            
+                return (
+                    <div className="fixed inset-0 overflow-hidden pointer-events-none">
+                        {positions.map((pos, idx) => (
+                            <div
+                                key={idx}
+                                className={`absolute opacity-10 ${svgIcons[idx % svgIcons.length].size}`}
+                                style={{
+                                    left: `${pos.x}px`,
+                                    top: `${pos.y}px`,
+                                    transform: 'translate(-50%, -50%)',
+                                    color: svgIcons[idx % svgIcons.length].color
+                                }}
+                                // FIX 1: Access the .svg property of the object
+                                dangerouslySetInnerHTML={{ __html: svgIcons[idx % svgIcons.length].svg }}
+                            />
+                        ))}
+                    </div>
+                );
+            };
             
             if (!hasStarted && !isCompleted) {
                 return (
