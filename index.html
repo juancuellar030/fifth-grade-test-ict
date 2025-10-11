@@ -173,6 +173,7 @@
         };
 
         const ICTQuiz = () => {
+            // ALL useState hooks first
             const [studentName, setStudentName] = useState('');
             const [showSuggestions, setShowSuggestions] = useState(false);
             const [hasStarted, setHasStarted] = useState(false);
@@ -234,9 +235,10 @@
                 });
                 setRandomizedQuestions(randomized);
             }, []);
-            
+        
+            // Now the rest of your code
             const questions = randomizedQuestions;
-            
+        
             // Don't render quiz until questions are randomized
             if (questions.length === 0) {
                 return (
