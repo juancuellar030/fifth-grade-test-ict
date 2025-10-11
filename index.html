@@ -192,6 +192,7 @@
             const [randomizedQuestions, setRandomizedQuestions] = useState([]);
             const [showReview, setShowReview] = useState(false);
             const [showExitConfirm, setShowExitConfirm] = useState(false);
+            const [previewImage, setPreviewImage] = useState(null);
             const inputRef = useRef(null);
             
             // Base questions can be defined here
@@ -778,31 +779,60 @@
                         {currentQ.type === 'drag-drop-images' && (
                             <div className="mb-6">
                                 <div className="mb-6">
-                                    <p className="text-sm font-semibold text-gray-600 mb-3">📦 Drag these devices:</p>
-                                    <div className="flex flex-wrap gap-3 p-4 bg-gray-50 rounded-xl border-2 border-gray-200 min-h-16">
+                                    <p className="text-sm font-semibold text-gray-600 mb-3">📦 Drag these devices (click to preview):</p>
+                                    <div 
+                                        onDragOver={handleDragOver}
+                                        onDrop={(e) => {
+                                            e.preventDefault();
+                                            const item = draggedItem || e.dataTransfer.getData('text/plain');
+                                            if (item) {
+                                                // Remove item from any category it's in
+                                                let newAnswers = { ...(answers[currentQuestion] || {}) };
+                                                Object.keys(newAnswers).forEach(key => {
+                                                    if (Array.isArray(newAnswers[key])) {
+                                                        newAnswers[key] = newAnswers[key].filter(i => i !== item);
+                                                        // Remove empty arrays
+                                                        if (newAnswers[key].length === 0) {
+                                                            delete newAnswers[key];
+                                                        }
+                                                    }
+                                                });
+                                                setAnswers({ ...answers, [currentQuestion]: newAnswers });
+                                                setDropZones(newAnswers);
+                                                setDraggedItem(null);
+                                            }
+                                        }}
+                                        className="flex flex-wrap gap-3 p-4 bg-gray-50 rounded-xl border-2 border-gray-200 min-h-16 transition-all hover:border-purple-300 hover:bg-purple-50"
+                                    >
                                         {getAvailableItems().length === 0 ? (
-                                            <p className="text-gray-400 text-sm italic w-full text-center">All devices placed!</p>
+                                            <p className="text-gray-400 text-sm italic w-full text-center">All devices placed! (Drag back here to remove)</p>
                                         ) : (
                                             getAvailableItems().map((item) => (
                                                 <div 
                                                     key={item.name} 
                                                     draggable 
-                                                    onDragStart={(e) => handleDragStart(e, item.name)} 
-                                                    className="flex flex-col items-center px-4 py-3 bg-white border-2 border-purple-300 rounded-xl cursor-grab active:cursor-grabbing hover:border-purple-500 hover:shadow-lg transition-all transform hover:scale-105"
+                                                    onDragStart={(e) => handleDragStart(e, item.name)}
+                                                    onClick={() => setPreviewImage({ name: item.name, icon: item.icon })}
+                                                    className="flex flex-col items-center px-4 py-3 bg-white border-2 border-purple-300 rounded-xl cursor-pointer hover:border-purple-500 hover:shadow-lg transition-all transform hover:scale-105"
+                                                    title="Click to preview, drag to place"
                                                 >
                                                     <div className="w-16 h-16 mb-2 flex items-center justify-center">
                                                         <img 
-                                                            src={`./Images/${item.name.toLowerCase()}.png`} 
+                                                            src={`Images/${item.name.toLowerCase()}.png`}
                                                             alt={item.name}
-                                                            className="max-w-full max-h-full object-contain"
+                                                            className="max-w-full max-h-full object-contain pointer-events-none"
                                                             onError={(e) => {
-                                                                // Fallback if image doesn't load
+                                                                // Fallback to emoji if image doesn't load
+                                                                e.target.onerror = null;
                                                                 e.target.style.display = 'none';
-                                                                e.target.parentElement.innerHTML = `<span class="text-4xl">${item.icon}</span>`;
+                                                                const fallback = document.createElement('span');
+                                                                fallback.className = 'text-4xl';
+                                                                fallback.textContent = item.icon;
+                                                                e.target.parentElement.appendChild(fallback);
                                                             }}
                                                         />
                                                     </div>
-                                                    <div className="text-sm font-semibold font-poppins text-gray-800">{item.name}</div>
+                                                    <div className="text-sm font-semibold font-poppins text-gray-800 pointer-events-none">{item.name}</div>
                                                 </div>
                                             ))
                                         )}
@@ -824,21 +854,27 @@
                                                         <div 
                                                             key={itemName} 
                                                             draggable 
-                                                            onDragStart={(e) => handleDragStart(e, itemName)} 
-                                                            className="flex flex-col items-center px-3 py-2 bg-white border-2 border-purple-400 rounded-xl cursor-grab active:cursor-grabbing hover:border-purple-600 hover:shadow-lg transition-all"
+                                                            onDragStart={(e) => handleDragStart(e, itemName)}
+                                                            onClick={() => setPreviewImage({ name: itemName, icon: item?.icon })}
+                                                            className="flex flex-col items-center px-3 py-2 bg-white border-2 border-purple-400 rounded-xl cursor-pointer hover:border-purple-600 hover:shadow-lg transition-all"
+                                                            title="Click to preview, drag to move"
                                                         >
                                                             <div className="w-12 h-12 mb-1 flex items-center justify-center">
                                                                 <img 
-                                                                    src={`./Images/${itemName.toLowerCase()}.png`} 
+                                                                    src={`Images/${itemName.toLowerCase()}.png`}
                                                                     alt={itemName}
-                                                                    className="max-w-full max-h-full object-contain"
+                                                                    className="max-w-full max-h-full object-contain pointer-events-none"
                                                                     onError={(e) => {
+                                                                        e.target.onerror = null;
                                                                         e.target.style.display = 'none';
-                                                                        e.target.parentElement.innerHTML = `<span class="text-2xl">${item?.icon}</span>`;
+                                                                        const fallback = document.createElement('span');
+                                                                        fallback.className = 'text-2xl';
+                                                                        fallback.textContent = item?.icon || '📦';
+                                                                        e.target.parentElement.appendChild(fallback);
                                                                     }}
                                                                 />
                                                             </div>
-                                                            <div className="text-xs font-semibold font-poppins text-gray-800">{itemName}</div>
+                                                            <div className="text-xs font-semibold font-poppins text-gray-800 pointer-events-none">{itemName}</div>
                                                         </div>
                                                     ); 
                                                 })}
@@ -849,6 +885,45 @@
                                         </div>
                                     ))}
                                 </div>
+                                
+                                {/* Image Preview Modal */}
+                                {previewImage && (
+                                    <div 
+                                        className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4"
+                                        onClick={() => setPreviewImage(null)}
+                                    >
+                                        <div 
+                                            className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-8 text-center fade-in"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            <div className="mb-6">
+                                                <h3 className="text-2xl font-bold font-poppins text-gray-800 mb-4">{previewImage.name}</h3>
+                                                <div className="flex items-center justify-center bg-gray-50 rounded-2xl p-8 min-h-80">
+                                                    <img 
+                                                        src={`Images/${previewImage.name.toLowerCase()}.png`}
+                                                        alt={previewImage.name}
+                                                        className="max-w-full max-h-96 object-contain"
+                                                        onError={(e) => {
+                                                            e.target.onerror = null;
+                                                            e.target.style.display = 'none';
+                                                            const fallback = document.createElement('div');
+                                                            fallback.className = 'text-9xl';
+                                                            fallback.textContent = previewImage.icon || '📦';
+                                                            e.target.parentElement.appendChild(fallback);
+                                                        }}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <button 
+                                                onClick={() => setPreviewImage(null)}
+                                                className="bg-purple-600 hover:bg-purple-700 text-white font-bold font-poppins py-3 px-8 rounded-xl transition-all shadow-lg hover:scale-105 transform"
+                                            >
+                                                Close Preview
+                                            </button>
+                                            <p className="text-gray-500 text-sm mt-3">Click outside or press Close to exit</p>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         )}
                         
