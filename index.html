@@ -192,9 +192,51 @@
             const inputRef = useRef(null);
 
             const studentList = [ "Isabella Arce Rodriguez", "Valentina Arias Guevara", "Maria Paz Bermeo Montealegre", "Zoe Lylen Castañeda Romero", "Gabriel Esteban Cuellar Salas", "Dilan Camilo Cumaco Pastrana", "Martín Fernández Lucuara", "Derek Santiago Fierro Lopez", "Simón Gonzalez Chavarro", "Gerónimo Jimenez Bocanegra", "Samuel José Majé Marroquín", "Martín Medina Ortiz", "Karen Sofia Mosquera Baylon", "María Del Mar Mosquera Garzón", "Santiago Motta Santofimio", "Ana Lucia Murcia Guebely", "Antonella Murcia Oliveros", "Emmanuel Murcia Trujillo", "Luciana Quesada Parra", "Maria Paz Quesada Rodriguez", "Miguel Ángel Ruiz Varon", "Luzyana Suarez Solorzano", "Santiago Tobón Castro", "Sarita Vargas Carvajal", "Luciana Sofia Vargas Sanchez", "Julieta Alarcon Cabrera", "Emmanuel Barrero Sandoval", "Catalina Barreto Rivera", "Khalid Bedoya Sanabria", "Daniela Beron Farfan", "Ana Lucia Buendía Losada", "Jacobo Carvajal Jimenez", "Juliana Margarita Castrillon Ramos", "Isabel Cristina Cuellar Romero", "Emiliano Diaz Rojas", "Gabriela Echeverry Trujillo", "Sara Isabella Gaitan Arango", "Fabio Hernandez Galindo", "Juanita Milagros Lopez Alarcon", "Karla Medina Cuenca", "Maria Paz Mora Caicedo", "Emiliano Ortiz Ortiz", "Pablo Alejandro Oviedo Barrero", "Maria Lucia Perdomo Ramirez", "Zamuhel Ramirez Castro", "Sara Juliana Riscanevo Lopera", "Maria Fernanda Rojas Castro", "Santiago Trujillo Gonzalez", "Juan Diego Valderrama Rodriguez", "Sarah Michelle Audor Gutierrez", "Santiago Chavarro Fernández", "Taliana Andrea Chavarro Sanabria", "Ariadna Estupiñan Borrero", "Martin Eduardo Fierro Cordoba", "Danna Gabriela Giraldo Leiva", "Juan Ricardo Guevara Calderon", "Salomon Hoyos Castillo", "Jhoan Sebastian Lozano Moscoso", "Sebastian Martinez Dussan", "Sofia Mayorca Gonzalez", "Samantha Medina Figueroa", "Maria Lucia Melo Camacho", "Sara Luciana Obregon Agudelo", "Sara Orozco Escobar", "Santiago Osorio Benavides", "Angie Luciana Perez Trujillo", "Santiago Polania Perdomo", "Felipe Ramos Vargas", "Jorge Mario Rojas Alvarez", "Sofia Salazar Castañeda", "Hernán Gabriel Sierra Suarez", "Maria Victoria Vidal Prieto", "Juan Andres Vieda Diaz", "Juan Diego Albarracín Martínez", "Emiliano Andrade Perez", "Moises Burgos Arevalo", "Jeronimo Calderón Morales", "Martín Caquimbo De Castro", "Salome Castro Hurtado", "Ashly Dayanna Cumaco Alonso", "Dylan Santiago Gomez Reyes", "Salome Gutierrez Acosta", "Jesus Manuel Gutierrez Vargas", "Isabela Huepe Quintero", "Juan Esteban Madrid Guevara", "Jeronimo Mora Araujo", "Silvana Moreno Pastrana", "Luciana Niño Rojas", "Emmanuel José Ortiz Urrego", "Sara Sofia Oviedo Cajiao", "Daniel Leonardo Perdomo Ochoa", "Juan Matias Rodriguez Calderon", "Maria Jose Rojas Castro", "Gabriela Sarmiento-Perez Trujillo", "Juan Felipe Tamayo Castañeda", "Luciana Andrea Tellez Aviles", "Hanna Isabella Valenzuela Paredes" ];
-            const questions = [ { id: 1, type: 'multiple-choice-group', question: 'Answer each question by selecting the correct option:', questions: [{ text: 'What does ICT help us do?', options: ['Share and find information', 'Paint pictures', 'Ride bicycles', 'Cook food'], correct: 0 }, { text: 'What do we call programs that help us play games or do homework on a computer?', options: ['Hardware', 'Software', 'Network', 'Input'], correct: 1 }, { text: 'What is a device in ICT?', options: ['A physical tool or piece of equipment like a computer or smartphone', 'A program that helps you write documents', 'A type of internet connection', 'A kind of software that plays games'], correct: 0 }] }, { id: 2, type: 'drag-drop', question: 'Drag each item to the correct category:', items: ['Headphones', 'Google Chrome', 'Wi-Fi', 'Tablet'], categories: ['Hardware', 'Software', 'Network', 'Processing Device'], correctAnswers: { 'Hardware': 'Headphones', 'Software': 'Google Chrome', 'Network': 'Wi-Fi', 'Processing Device': 'Tablet' } }, { id: 3, type: 'drag-drop-images', question: 'Drag each device to the correct group:', items: [{ name: 'Keyboard', icon: '⌨️' }, { name: 'Monitor', icon: '🖥️' }, { name: 'Mouse', icon: '🖱️' }, { name: 'Printer', icon: '🖨️' }, { name: 'Microphone', icon: '🎤' }, { name: 'Speaker', icon: '🔊' }], categories: ['Input Devices', 'Output Devices'], correctAnswers: { 'Input Devices': ['Keyboard', 'Mouse', 'Microphone'], 'Output Devices': ['Monitor', 'Printer', 'Speaker'] } }, { id: 4, type: 'true-false-group', question: 'Read each statement and select True or False:', statements: [{ text: 'Software is something you can physically touch.', correct: 1 }, { text: 'Smartphones and tablets are examples of ICT devices.', correct: 0 }, { text: 'Sending emails is an example of using ICT in daily life.', correct: 0 }] }, { id: 5, type: 'fill-group', question: 'Drag the correct word from the box to fill in each blank:', wordBank: ['networks', 'internet', 'software', 'processing', 'communication'], statements: [{ text: 'Bluetooth and Wi-Fi are examples of wireless _______.', answer: 'networks' }, { text: 'The _______ connects multiple devices to share information.', answer: 'internet' }, { text: 'Programs and apps are examples of _______.', answer: 'software' }, { text: 'When a computer thinks and works on information, this is called _______.', answer: 'processing' }] } ];
+            const baseQuestions = [ { id: 1, type: 'multiple-choice-group', question: 'Answer each question by selecting the correct option:', questions: [{ text: 'What does ICT help us do?', options: ['Share and find information', 'Paint pictures', 'Ride bicycles', 'Cook food'], correct: 0 }, { text: 'What do we call programs that help us play games or do homework on a computer?', options: ['Hardware', 'Software', 'Network', 'Input'], correct: 1 }, { text: 'What is a device in ICT?', options: ['A physical tool or piece of equipment like a computer or smartphone', 'A program that helps you write documents', 'A type of internet connection', 'A kind of software that plays games'], correct: 0 }] }, { id: 2, type: 'drag-drop', question: 'Drag each item to the correct category:', items: ['Headphones', 'Google Chrome', 'Wi-Fi', 'Tablet'], categories: ['Hardware', 'Software', 'Network', 'Processing Device'], correctAnswers: { 'Hardware': 'Headphones', 'Software': 'Google Chrome', 'Network': 'Wi-Fi', 'Processing Device': 'Tablet' } }, { id: 3, type: 'drag-drop-images', question: 'Drag each device to the correct group:', items: [{ name: 'Keyboard', icon: '⌨️' }, { name: 'Monitor', icon: '🖥️' }, { name: 'Mouse', icon: '🖱️' }, { name: 'Printer', icon: '🖨️' }, { name: 'Microphone', icon: '🎤' }, { name: 'Speaker', icon: '🔊' }], categories: ['Input Devices', 'Output Devices'], correctAnswers: { 'Input Devices': ['Keyboard', 'Mouse', 'Microphone'], 'Output Devices': ['Monitor', 'Printer', 'Speaker'] } }, { id: 4, type: 'true-false-group', question: 'Read each statement and select True or False:', statements: [{ text: 'Software is something you can physically touch.', correct: 1 }, { text: 'Smartphones and tablets are examples of ICT devices.', correct: 0 }, { text: 'Sending emails is an example of using ICT in daily life.', correct: 0 }] }, { id: 5, type: 'fill-group', question: 'Drag the correct word from the box to fill in each blank:', wordBank: ['networks', 'internet', 'software', 'processing', 'communication'], statements: [{ text: 'Bluetooth and Wi-Fi are examples of wireless _______.', answer: 'networks' }, { text: 'The _______ connects multiple devices to share information.', answer: 'internet' }, { text: 'Programs and apps are examples of _______.', answer: 'software' }, { text: 'When a computer thinks and works on information, this is called _______.', answer: 'processing' }] } ];
+            
+            // Initialize randomized questions on component mount
+            useEffect(() => {
+                const randomized = shuffleArray(baseQuestions).map(q => {
+                    if (q.type === 'multiple-choice-group') {
+                        return {
+                            ...q,
+                            questions: shuffleArray(q.questions.map(subQ => ({
+                                ...subQ,
+                                options: shuffleArray(subQ.options.map((opt, idx) => ({ text: opt, originalIndex: idx }))),
+                                correctText: subQ.options[subQ.correct]
+                            })))
+                        };
+                    } else if (q.type === 'true-false-group') {
+                        return {
+                            ...q,
+                            statements: shuffleArray(q.statements)
+                        };
+                    } else if (q.type === 'fill-group') {
+                        return {
+                            ...q,
+                            statements: shuffleArray(q.statements),
+                            wordBank: shuffleArray(q.wordBank)
+                        };
+                    } else if (q.type === 'drag-drop') {
+                        return {
+                            ...q,
+                            items: shuffleArray(q.items),
+                            categories: shuffleArray(q.categories)
+                        };
+                    } else if (q.type === 'drag-drop-images') {
+                        return {
+                            ...q,
+                            items: shuffleArray(q.items),
+                            categories: shuffleArray(q.categories)
+                        };
+                    }
+                    return q;
+                });
+                setRandomizedQuestions(randomized);
+            }, []);
+            
             const questions = randomizedQuestions;
-
+            
             // Don't render quiz until questions are randomized
             if (questions.length === 0) {
                 return (
@@ -203,12 +245,47 @@
                     </div>
                 );
             }
+            
             const gradingScale = { 0: 2.0, 1: 2.2, 2: 2.3, 3: 2.5, 4: 2.7, 5: 2.8, 6: 3.0, 7: 3.2, 8: 3.3, 9: 3.5, 10: 3.6, 11: 3.8, 12: 3.9, 13: 4.0, 14: 4.2, 15: 4.3, 16: 4.5, 17: 4.6, 18: 4.7, 19: 4.9, 20: 5.0 };
-
-            const calculatePoints = () => { let points = 0; questions.forEach((q, index) => { const userAnswers = answers[index] || {}; if (q.type === 'multiple-choice-group') q.questions.forEach((subQ, qIndex) => { if (userAnswers[qIndex] === subQ.correct) points++; }); else if (q.type === 'drag-drop') Object.keys(q.correctAnswers).forEach(category => { if (userAnswers[category] === q.correctAnswers[category]) points++; }); else if (q.type === 'drag-drop-images') { q.items.forEach(item => { const correctCat = Object.keys(q.correctAnswers).find(cat => q.correctAnswers[cat].includes(item.name)); const userCat = Object.keys(userAnswers).find(cat => (userAnswers[cat] || []).includes(item.name)); if (correctCat === userCat) points++; }); } else if (q.type === 'true-false-group') q.statements.forEach((stmt, stmtIndex) => { if (userAnswers[stmtIndex] === stmt.correct) points++; }); else if (q.type === 'fill-group') q.statements.forEach((stmt, stmtIndex) => { if (userAnswers[stmtIndex]?.toLowerCase().trim() === stmt.answer.toLowerCase()) points++; }); }); return points; };
+            
+            const calculatePoints = () => { 
+                let points = 0; 
+                questions.forEach((q, index) => { 
+                    const userAnswers = answers[index] || {}; 
+                    if (q.type === 'multiple-choice-group') {
+                        q.questions.forEach((subQ, qIndex) => { 
+                            if (userAnswers[qIndex] !== undefined) {
+                                const selectedOption = subQ.options[userAnswers[qIndex]];
+                                if (selectedOption && selectedOption.text === subQ.correctText) {
+                                    points++;
+                                }
+                            }
+                        }); 
+                    } else if (q.type === 'drag-drop') {
+                        Object.keys(q.correctAnswers).forEach(category => { 
+                            if (userAnswers[category] === q.correctAnswers[category]) points++; 
+                        }); 
+                    } else if (q.type === 'drag-drop-images') { 
+                        q.items.forEach(item => { 
+                            const correctCat = Object.keys(q.correctAnswers).find(cat => q.correctAnswers[cat].includes(item.name)); 
+                            const userCat = Object.keys(userAnswers).find(cat => (userAnswers[cat] || []).includes(item.name)); 
+                            if (correctCat === userCat) points++; 
+                        }); 
+                    } else if (q.type === 'true-false-group') {
+                        q.statements.forEach((stmt, stmtIndex) => { 
+                            if (userAnswers[stmtIndex] === stmt.correct) points++; 
+                        }); 
+                    } else if (q.type === 'fill-group') {
+                        q.statements.forEach((stmt, stmtIndex) => { 
+                            if (userAnswers[stmtIndex]?.toLowerCase().trim() === stmt.answer.toLowerCase()) points++; 
+                        }); 
+                    } 
+                }); 
+                return points; 
+            };
+            
             const getGradeFromScore = (score) => gradingScale[score] !== undefined ? gradingScale[score] : 2.0;
             const filteredStudents = studentList.filter(name => name.toLowerCase().includes(studentName.toLowerCase()));
-
             const submitResultsToGoogleSheet = async (data) => {
                 const webAppUrl = 'https://script.google.com/macros/s/AKfycbxBpLDS4AzwLJVh1IF_xdtSeBp7CCkUQxLp9bNy8qJlOKu9np0S7fdcov7GLZVWiRd4/exec';
                 try { await fetch(webAppUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); console.log('Data sent'); } catch (error) { console.error('Error sending data:', error); }
