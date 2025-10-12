@@ -871,14 +871,14 @@
                                                                 setDrawingFrom(item);
                                                             }
                                                         }}
-                                                        className={`w-full max-w-64 p-2 rounded-xl border-2 transition-all text-left font-semibold ${
+                                                        className={`p-3 rounded-xl border-2 transition-all text-left font-semibold whitespace-nowrap overflow-hidden text-ellipsis ${
                                                             isDrawing
                                                                 ? 'border-purple-500 bg-purple-100 shadow-lg scale-105 transform'
                                                                 : isMatched
                                                                 ? 'border-purple-400 bg-purple-50'
                                                                 : 'border-gray-300 bg-white hover:border-purple-300 hover:bg-purple-50'
                                                         }`}
-                                                        style={{ zIndex: 2, position: 'relative' }}
+                                                        style={{ zIndex: 2, position: 'relative', width: '180px' }}
                                                     >
                                                         {item}
                                                     </button>
