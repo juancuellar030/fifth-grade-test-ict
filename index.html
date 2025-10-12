@@ -193,6 +193,9 @@
             const [showReview, setShowReview] = useState(false);
             const [showExitConfirm, setShowExitConfirm] = useState(false);
             const [previewImage, setPreviewImage] = useState(null);
+            const [matchingLines, setMatchingLines] = useState({});
+            const [drawingFrom, setDrawingFrom] = useState(null);
+            const [currentMousePos, setCurrentMousePos] = useState(null);
             const inputRef = useRef(null);
             
             // Base questions can be defined here
@@ -759,7 +762,205 @@
                                 </div>
                             </div>
                         )}
-                        {currentQ.type === 'drag-drop' && (<div className="mb-6"><div className="mb-6"><p className="text-sm font-semibold text-gray-600 mb-3">📦 Drag these items:</p><div className="flex flex-wrap gap-3 p-4 bg-gray-50 rounded-xl border-2 border-gray-200 min-h-16">{getAvailableItems().length === 0 ? (<p className="text-gray-400 text-sm italic w-full text-center">All items placed!</p>) : (getAvailableItems().map((item) => (<div key={item} draggable onDragStart={(e) => handleDragStart(e, item)} className="px-4 py-2 bg-blue-500 text-white rounded-lg cursor-grab active:cursor-grabbing hover:bg-blue-600 transition-all shadow-md hover:shadow-lg transform hover:scale-105 font-poppins">{item}</div>)))}</div></div><div className="space-y-3"><p className="text-sm font-semibold text-gray-600 mb-3">🎯 Drop them in the correct category:</p>{currentQ.categories.map((category) => (<div key={category} onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, category)} className={`p-4 border-2 border-dashed rounded-xl min-h-20 transition-all ${ (dropZones)[category] ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-gray-50 hover:border-blue-400 hover:bg-blue-50' }`}><p className="font-semibold text-gray-700 mb-2">{category}</p>{(dropZones)[category] && (<div draggable onDragStart={(e) => handleDragStart(e, (dropZones)[category])} className="inline-block px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md cursor-grab active:cursor-grabbing hover:bg-blue-600 font-poppins">{(dropZones)[category]}</div>)}{!(dropZones)[category] && (<p className="text-gray-400 text-sm italic">Drop item here...</p>)}</div>))}</div></div>)}
+                        {currentQ.type === 'drag-drop' && (
+                            <div className="mb-6">
+                                <p className="text-sm font-semibold text-gray-600 mb-4">🎯 Click an item, then click its matching category to draw a line:</p>
+                                
+                                <div className="relative">
+                                    {/* SVG Canvas for drawing lines */}
+                                    <svg 
+                                        className="absolute inset-0 w-full h-full pointer-events-none" 
+                                        style={{ zIndex: 1 }}
+                                    >
+                                        {/* Draw completed lines */}
+                                        {Object.entries(answers[currentQuestion] || {}).map(([category, item]) => {
+                                            const itemEl = document.getElementById(`item-${currentQuestion}-${item}`);
+                                            const catEl = document.getElementById(`cat-${currentQuestion}-${category}`);
+                                            if (itemEl && catEl) {
+                                                const itemRect = itemEl.getBoundingClientRect();
+                                                const catRect = catEl.getBoundingClientRect();
+                                                const containerRect = itemEl.closest('.relative').getBoundingClientRect();
+                                                
+                                                const x1 = itemRect.left + itemRect.width - containerRect.left;
+                                                const y1 = itemRect.top + itemRect.height / 2 - containerRect.top;
+                                                const x2 = catRect.left - containerRect.left;
+                                                const y2 = catRect.top + catRect.height / 2 - containerRect.top;
+                                                
+                                                return (
+                                                    <g key={`${category}-${item}`}>
+                                                        <line
+                                                            x1={x1}
+                                                            y1={y1}
+                                                            x2={x2}
+                                                            y2={y2}
+                                                            stroke="#9333ea"
+                                                            strokeWidth="3"
+                                                            strokeLinecap="round"
+                                                        />
+                                                        <circle cx={x1} cy={y1} r="5" fill="#9333ea" />
+                                                        <circle cx={x2} cy={y2} r="5" fill="#9333ea" />
+                                                    </g>
+                                                );
+                                            }
+                                            return null;
+                                        })}
+                                        
+                                        {/* Draw line being created */}
+                                        {drawingFrom && currentMousePos && (() => {
+                                            const itemEl = document.getElementById(`item-${currentQuestion}-${drawingFrom}`);
+                                            if (itemEl) {
+                                                const itemRect = itemEl.getBoundingClientRect();
+                                                const containerRect = itemEl.closest('.relative').getBoundingClientRect();
+                                                
+                                                const x1 = itemRect.left + itemRect.width - containerRect.left;
+                                                const y1 = itemRect.top + itemRect.height / 2 - containerRect.top;
+                                                const x2 = currentMousePos.x - containerRect.left;
+                                                const y2 = currentMousePos.y - containerRect.top;
+                                                
+                                                return (
+                                                    <g>
+                                                        <line
+                                                            x1={x1}
+                                                            y1={y1}
+                                                            x2={x2}
+                                                            y2={y2}
+                                                            stroke="#c084fc"
+                                                            strokeWidth="3"
+                                                            strokeDasharray="5,5"
+                                                            strokeLinecap="round"
+                                                        />
+                                                        <circle cx={x1} cy={y1} r="5" fill="#c084fc" />
+                                                    </g>
+                                                );
+                                            }
+                                            return null;
+                                        })()}
+                                    </svg>
+                                    
+                                    <div 
+                                        className="grid grid-cols-2 gap-8"
+                                        onMouseMove={(e) => {
+                                            if (drawingFrom) {
+                                                setCurrentMousePos({ x: e.clientX, y: e.clientY });
+                                            }
+                                        }}
+                                        onMouseLeave={() => {
+                                            if (drawingFrom) {
+                                                setDrawingFrom(null);
+                                                setCurrentMousePos(null);
+                                            }
+                                        }}
+                                    >
+                                        {/* Left column - Items */}
+                                        <div className="space-y-3">
+                                            <p className="font-semibold text-gray-700 mb-3">Items:</p>
+                                            {currentQ.items.map((item) => {
+                                                const isMatched = Object.values(answers[currentQuestion] || {}).includes(item);
+                                                const isDrawing = drawingFrom === item;
+                                                
+                                                return (
+                                                    <button
+                                                        key={item}
+                                                        id={`item-${currentQuestion}-${item}`}
+                                                        onClick={() => {
+                                                            if (drawingFrom === item) {
+                                                                // Cancel drawing
+                                                                setDrawingFrom(null);
+                                                                setCurrentMousePos(null);
+                                                            } else if (!isMatched) {
+                                                                // Start drawing from this item
+                                                                setDrawingFrom(item);
+                                                            } else {
+                                                                // Remove existing match
+                                                                const newAnswers = { ...(answers[currentQuestion] || {}) };
+                                                                Object.keys(newAnswers).forEach(cat => {
+                                                                    if (newAnswers[cat] === item) {
+                                                                        delete newAnswers[cat];
+                                                                    }
+                                                                });
+                                                                handleAnswer(newAnswers);
+                                                            }
+                                                        }}
+                                                        className={`w-full p-4 rounded-xl border-2 transition-all text-left font-semibold relative ${
+                                                            isDrawing
+                                                                ? 'border-purple-500 bg-purple-100 shadow-lg scale-105 transform'
+                                                                : isMatched
+                                                                ? 'border-purple-400 bg-purple-50'
+                                                                : 'border-gray-300 bg-white hover:border-purple-300 hover:bg-purple-50'
+                                                        }`}
+                                                        style={{ zIndex: 2 }}
+                                                    >
+                                                        {item}
+                                                        {isMatched && (
+                                                            <span className="absolute top-2 right-2 text-purple-600">✓</span>
+                                                        )}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                        
+                                        {/* Right column - Categories */}
+                                        <div className="space-y-3">
+                                            <p className="font-semibold text-gray-700 mb-3">Categories:</p>
+                                            {currentQ.categories.map((category) => {
+                                                const matchedItem = (answers[currentQuestion] || {})[category];
+                                                
+                                                return (
+                                                    <button
+                                                        key={category}
+                                                        id={`cat-${currentQuestion}-${category}`}
+                                                        onClick={() => {
+                                                            if (drawingFrom) {
+                                                                // Complete the match
+                                                                const newAnswers = { ...(answers[currentQuestion] || {}) };
+                                                                
+                                                                // Remove any existing match for this item
+                                                                Object.keys(newAnswers).forEach(cat => {
+                                                                    if (newAnswers[cat] === drawingFrom) {
+                                                                        delete newAnswers[cat];
+                                                                    }
+                                                                });
+                                                                
+                                                                // Add new match
+                                                                newAnswers[category] = drawingFrom;
+                                                                handleAnswer(newAnswers);
+                                                                
+                                                                setDrawingFrom(null);
+                                                                setCurrentMousePos(null);
+                                                            } else if (matchedItem) {
+                                                                // Remove existing match for this category
+                                                                const newAnswers = { ...(answers[currentQuestion] || {}) };
+                                                                delete newAnswers[category];
+                                                                handleAnswer(newAnswers);
+                                                            }
+                                                        }}
+                                                        className={`w-full p-4 rounded-xl border-2 transition-all text-left font-semibold relative ${
+                                                            matchedItem
+                                                                ? 'border-purple-400 bg-purple-50'
+                                                                : drawingFrom
+                                                                ? 'border-purple-300 bg-purple-50 hover:border-purple-500 hover:bg-purple-100'
+                                                                : 'border-gray-300 bg-gray-50'
+                                                        }`}
+                                                        style={{ zIndex: 2 }}
+                                                    >
+                                                        <div className="font-bold text-gray-800 mb-1">{category}</div>
+                                                        {matchedItem && (
+                                                            <div className="text-sm text-purple-600 mt-1">→ {matchedItem}</div>
+                                                        )}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="mt-4 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-400">
+                                    <p className="text-sm text-gray-700">
+                                        <strong>How to use:</strong> Click an item on the left, then click its matching category on the right to draw a connection. Click a matched item or category to remove the connection.
+                                    </p>
+                                </div>
+                            </div>
+                        )}
                         {currentQ.type === 'drag-drop-images' && (
                             <div className="mb-6">
                                 <div className="mb-6">
