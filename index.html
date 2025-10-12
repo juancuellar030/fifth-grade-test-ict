@@ -774,108 +774,65 @@
                                     >
                                         {/* Draw completed lines */}
                                         {Object.entries(answers[currentQuestion] || {}).map(([category, item]) => {
-                                            setTimeout(() => {
-                                                const itemEl = document.getElementById(`item-${currentQuestion}-${item}`);
-                                                const catEl = document.getElementById(`cat-${currentQuestion}-${category}`);
-                                                if (itemEl && catEl) {
-                                                    const itemRect = itemEl.getBoundingClientRect();
-                                                    const catRect = catEl.getBoundingClientRect();
-                                                    const svgEl = itemEl.closest('.relative').querySelector('svg');
-                                                    const containerRect = svgEl.getBoundingClientRect();
-                                                    
-                                                    const x1 = itemRect.right - containerRect.left;
-                                                    const y1 = itemRect.top + itemRect.height / 2 - containerRect.top;
-                                                    const x2 = catRect.left - containerRect.left;
-                                                    const y2 = catRect.top + catRect.height / 2 - containerRect.top;
-                                                    
-                                                    // Update the line
-                                                    const lineGroup = svgEl.querySelector(`#line-${category}-${item}`);
-                                                    if (lineGroup) {
-                                                        const line = lineGroup.querySelector('line');
-                                                        const circle1 = lineGroup.querySelector('circle:first-of-type');
-                                                        const circle2 = lineGroup.querySelector('circle:last-of-type');
-                                                        
-                                                        if (line) {
-                                                            line.setAttribute('x1', x1);
-                                                            line.setAttribute('y1', y1);
-                                                            line.setAttribute('x2', x2);
-                                                            line.setAttribute('y2', y2);
-                                                        }
-                                                        if (circle1) {
-                                                            circle1.setAttribute('cx', x1);
-                                                            circle1.setAttribute('cy', y1);
-                                                        }
-                                                        if (circle2) {
-                                                            circle2.setAttribute('cx', x2);
-                                                            circle2.setAttribute('cy', y2);
-                                                        }
-                                                    }
-                                                }
-                                            }, 0);
+                                            const itemEl = document.getElementById(`item-${currentQuestion}-${item}`);
+                                            const catEl = document.getElementById(`cat-${currentQuestion}-${category}`);
+                                            
+                                            if (!itemEl || !catEl) return null;
+                                            
+                                            const itemRect = itemEl.getBoundingClientRect();
+                                            const catRect = catEl.getBoundingClientRect();
+                                            const svgEl = itemEl.closest('.relative').querySelector('svg');
+                                            const containerRect = svgEl.getBoundingClientRect();
+                                            
+                                            const x1 = itemRect.right - containerRect.left;
+                                            const y1 = itemRect.top + itemRect.height / 2 - containerRect.top;
+                                            const x2 = catRect.left - containerRect.left;
+                                            const y2 = catRect.top + catRect.height / 2 - containerRect.top;
                                             
                                             return (
-                                                <g key={`${category}-${item}`} id={`line-${category}-${item}`}>
+                                                <g key={`${category}-${item}`}>
                                                     <line
-                                                        x1="0"
-                                                        y1="0"
-                                                        x2="0"
-                                                        y2="0"
+                                                        x1={x1}
+                                                        y1={y1}
+                                                        x2={x2}
+                                                        y2={y2}
                                                         stroke="#9333ea"
                                                         strokeWidth="3"
                                                         strokeLinecap="round"
                                                     />
-                                                    <circle cx="0" cy="0" r="5" fill="#9333ea" />
-                                                    <circle cx="0" cy="0" r="5" fill="#9333ea" />
+                                                    <circle cx={x1} cy={y1} r="5" fill="#9333ea" />
+                                                    <circle cx={x2} cy={y2} r="5" fill="#9333ea" />
                                                 </g>
                                             );
                                         })}
                                         
                                         {/* Draw line being created */}
                                         {drawingFrom && currentMousePos && (() => {
-                                            setTimeout(() => {
-                                                const itemEl = document.getElementById(`item-${currentQuestion}-${drawingFrom}`);
-                                                if (itemEl) {
-                                                    const itemRect = itemEl.getBoundingClientRect();
-                                                    const svgEl = itemEl.closest('.relative').querySelector('svg');
-                                                    const containerRect = svgEl.getBoundingClientRect();
-                                                    
-                                                    const x1 = itemRect.right - containerRect.left;
-                                                    const y1 = itemRect.top + itemRect.height / 2 - containerRect.top;
-                                                    const x2 = currentMousePos.x - containerRect.left;
-                                                    const y2 = currentMousePos.y - containerRect.top;
-                                                    
-                                                    const tempLine = svgEl.querySelector('#temp-line');
-                                                    if (tempLine) {
-                                                        const line = tempLine.querySelector('line');
-                                                        const circle = tempLine.querySelector('circle');
-                                                        
-                                                        if (line) {
-                                                            line.setAttribute('x1', x1);
-                                                            line.setAttribute('y1', y1);
-                                                            line.setAttribute('x2', x2);
-                                                            line.setAttribute('y2', y2);
-                                                        }
-                                                        if (circle) {
-                                                            circle.setAttribute('cx', x1);
-                                                            circle.setAttribute('cy', y1);
-                                                        }
-                                                    }
-                                                }
-                                            }, 0);
+                                            const itemEl = document.getElementById(`item-${currentQuestion}-${drawingFrom}`);
+                                            if (!itemEl) return null;
+                                            
+                                            const itemRect = itemEl.getBoundingClientRect();
+                                            const svgEl = itemEl.closest('.relative').querySelector('svg');
+                                            const containerRect = svgEl.getBoundingClientRect();
+                                            
+                                            const x1 = itemRect.right - containerRect.left;
+                                            const y1 = itemRect.top + itemRect.height / 2 - containerRect.top;
+                                            const x2 = currentMousePos.x - containerRect.left;
+                                            const y2 = currentMousePos.y - containerRect.top;
                                             
                                             return (
-                                                <g id="temp-line">
+                                                <g>
                                                     <line
-                                                        x1="0"
-                                                        y1="0"
-                                                        x2="0"
-                                                        y2="0"
+                                                        x1={x1}
+                                                        y1={y1}
+                                                        x2={x2}
+                                                        y2={y2}
                                                         stroke="#c084fc"
                                                         strokeWidth="3"
                                                         strokeDasharray="5,5"
                                                         strokeLinecap="round"
                                                     />
-                                                    <circle cx="0" cy="0" r="5" fill="#c084fc" />
+                                                    <circle cx={x1} cy={y1} r="5" fill="#c084fc" />
                                                 </g>
                                             );
                                         })()}
@@ -924,9 +881,6 @@
                                                         style={{ zIndex: 2, position: 'relative' }}
                                                     >
                                                         {item}
-                                                        {isMatched && (
-                                                            <span className="absolute top-2 right-2 text-purple-600">✓</span>
-                                                        )}
                                                     </button>
                                                 );
                                             })}
