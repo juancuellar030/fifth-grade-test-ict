@@ -41,7 +41,7 @@
             width: 100%;
             height: 100%;
             z-index: 1;
-            opacity: 0.45;
+            opacity: 0.5;
         }
         
         .content-wrapper {
@@ -51,7 +51,7 @@
     </style>
 
 </head>
-<body class="bg-gradient-to-br from-slate-950 via-violet-950 to-slate-950 min-h-screen p-6 md:p-12">
+<body class="bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950 min-h-screen p-6 md:p-12">
     <!-- Matrix Rain Canvas -->
     <canvas id="matrix-canvas"></canvas>
     
@@ -166,7 +166,7 @@
             ctx.fillStyle = '#a855f7';
             ctx.font = `${fontSize}px monospace`;
             ctx.shadowColor = '#a855f7';
-            ctx.shadowBlur = 8;
+            ctx.shadowBlur = 6;
             
             // Draw characters
             for (let i = 0; i < drops.length; i++) {
