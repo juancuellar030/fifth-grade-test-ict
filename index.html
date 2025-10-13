@@ -41,7 +41,7 @@
             width: 100%;
             height: 100%;
             z-index: 1;
-            opacity: 0.1;
+            opacity: 0.25;
         }
         
         .content-wrapper {
@@ -51,7 +51,7 @@
     </style>
 
 </head>
-<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen p-6 md:p-12">
+<body class="bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 min-h-screen p-6 md:p-12">
     <!-- Matrix Rain Canvas -->
     <canvas id="matrix-canvas"></canvas>
     
@@ -181,7 +181,7 @@
                     drops[i] = 0;
                 }
                 
-                drops[i]++;
+                drops[i] += 0.3; // Slowed down from 1 to 0.3
             }
             
             requestAnimationFrame(drawMatrix);
