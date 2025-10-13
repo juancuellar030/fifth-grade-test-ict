@@ -25,15 +25,37 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif !important;
+            position: relative;
+            overflow-x: hidden;
         }
         .fade-in { animation: fadeIn 0.6s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .card-hover { transition: all 0.3s ease; }
         .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        
+        /* Matrix Background */
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.1;
+        }
+        
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+        }
     </style>
+
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen p-6 md:p-12">
-    <div class="max-w-7xl mx-auto">
+    <!-- Matrix Rain Canvas -->
+    <canvas id="matrix-canvas"></canvas>
+    
+    <div class="content-wrapper">
         <!-- Header -->
         <div class="text-center mb-16 fade-in">
             <h1 class="text-5xl md:text-6xl font-bold font-poppins text-white mb-4">IT Quiz Hub</h1>
@@ -111,5 +133,68 @@
             <p>IT Assessment Platform • © 2024</p>
         </div>
     </div>
+
+    <script>
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Set canvas size
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // Matrix characters (mix of numbers, letters, and symbols)
+        const matrixChars = '01アウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+        const charArray = matrixChars.split('');
+        
+        // Column setup
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+        
+        // Initialize drops
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.random() * -100;
+        }
+        
+        // Animation loop
+        function drawMatrix() {
+            // Create trailing effect
+            ctx.fillStyle = 'rgba(10, 10, 30, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Purple color for Matrix effect
+            ctx.fillStyle = '#a855f7';
+            ctx.font = `${fontSize}px monospace`;
+            ctx.shadowColor = '#a855f7';
+            ctx.shadowBlur = 10;
+            
+            // Draw characters
+            for (let i = 0; i < drops.length; i++) {
+                const char = charArray[Math.floor(Math.random() * charArray.length)];
+                const x = i * fontSize;
+                const y = drops[i] * fontSize;
+                
+                ctx.fillText(char, x, y);
+                
+                // Reset drop position randomly
+                if (y > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                
+                drops[i]++;
+            }
+            
+            requestAnimationFrame(drawMatrix);
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // Start animation
+        drawMatrix();
+    </script>
 </body>
 </html>
