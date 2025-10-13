@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Quiz Hub</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              poppins: ['Poppins', 'sans-serif'],
+            },
+          },
+        },
+      }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif !important;
+        }
+        .fade-in { animation: fadeIn 0.6s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen p-6 md:p-12">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-16 fade-in">
+            <h1 class="text-5xl md:text-6xl font-bold font-poppins text-white mb-4">IT Quiz Hub</h1>
+            <p class="text-xl text-purple-200">Assessment platform for IT students</p>
+            <div class="w-24 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto mt-6 rounded-full"></div>
+        </div>
+
+        <!-- Grid of Quizzes -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            
+            <!-- 4th Grade Quiz -->
+            <a href="quizzes/4th-grade-ict.html" class="card-hover">
+                <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-8 h-full text-white shadow-lg">
+                    <div class="text-5xl mb-4">📚</div>
+                    <h2 class="text-2xl font-bold mb-2">4th Grade ICT</h2>
+                    <p class="text-blue-100 mb-6">Introduction to Information and Communication Technology</p>
+                    <div class="flex items-center text-sm text-blue-200">
+                        <span class="mr-2">→</span>
+                        <span>Start Quiz</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- 5th Grade Quiz -->
+            <a href="quizzes/5th-grade-ict.html" class="card-hover">
+                <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-8 h-full text-white shadow-lg">
+                    <div class="text-5xl mb-4">💻</div>
+                    <h2 class="text-2xl font-bold mb-2">5th Grade ICT</h2>
+                    <p class="text-purple-100 mb-6">Understanding ICT Devices and Software</p>
+                    <div class="flex items-center text-sm text-purple-200">
+                        <span class="mr-2">→</span>
+                        <span>Start Quiz</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- 6th Grade Quiz -->
+            <a href="quizzes/6th-grade-ict.html" class="card-hover">
+                <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-8 h-full text-white shadow-lg">
+                    <div class="text-5xl mb-4">🔧</div>
+                    <h2 class="text-2xl font-bold mb-2">6th Grade ICT</h2>
+                    <p class="text-green-100 mb-6">Advanced ICT Concepts and Applications</p>
+                    <div class="flex items-center text-sm text-green-200">
+                        <span class="mr-2">→</span>
+                        <span>Start Quiz</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- 4th Grade Quiz (Alternative) - Placeholder for future use -->
+            <a href="quizzes/4th-grade-it-advanced.html" class="card-hover opacity-75 hover:opacity-100">
+                <div class="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-2xl p-8 h-full text-white shadow-lg">
+                    <div class="text-5xl mb-4">⚙️</div>
+                    <h2 class="text-2xl font-bold mb-2">4th Grade IT (Advanced)</h2>
+                    <p class="text-indigo-100 mb-6">Additional assessment and practice</p>
+                    <div class="flex items-center text-sm text-indigo-200">
+                        <span class="mr-2">→</span>
+                        <span>Coming Soon</span>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+
+        <!-- Info Section -->
+        <div class="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl p-8 text-white text-center fade-in">
+            <h3 class="text-2xl font-bold mb-3">How to Use</h3>
+            <p class="text-gray-200 max-w-2xl mx-auto">
+                Click on any quiz card above to access the assessment. You'll need your password to begin. Each quiz includes multiple question types and provides immediate feedback on your performance.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-12 text-gray-400 text-sm">
+            <p>IT Assessment Platform • © 2024</p>
+        </div>
+    </div>
+</body>
+</html>
