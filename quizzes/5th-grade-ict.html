@@ -78,11 +78,11 @@
             
             useEffect(() => {
                 // Initialize bubbles
-                const initBubbles = Array.from({ length: 12 }, (_, i) => ({
+                const initBubbles = Array.from({ length: 16 }, (_, i) => ({
                     id: i,
                     x: Math.random() * 100,
                     y: Math.random() * 100,
-                    size: 60 + Math.random() * 100,
+                    size: 40 + Math.random() * 60, // Adjusted size
                     speed: 0.02 + Math.random() * 0.03,
                     phase: Math.random() * Math.PI * 2,
                     wobble: 0.5 + Math.random() * 1,
@@ -136,28 +136,28 @@
                         <defs>
                             {/* Gooey/Slimy filter effect */}
                             <filter id="gooey">
-                                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"/>
-                                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="gooey"/>
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="7" result="blur"/> {/* Reduced blur */}
+                                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9" result="gooey"/> {/* Slightly increased contrast */}
                                 <feComposite in="SourceGraphic" in2="gooey" operator="atop"/>
                             </filter>
                             
                             {/* Gradient for bubbles */}
                             {bubbles.map(bubble => (
                                 <radialGradient key={`grad-${bubble.id}`} id={`bubble-gradient-${bubble.id}`}>
-                                    <stop offset="0%" stopColor={bubble.color} stopOpacity="0.3"/>
-                                    <stop offset="50%" stopColor={bubble.color} stopOpacity="0.2"/>
-                                    <stop offset="100%" stopColor={bubble.color} stopOpacity="0.1"/>
+                                    <stop offset="0%" stopColor={bubble.color} stopOpacity="0.8"/> {/* Increased opacity */}
+                                    <stop offset="50%" stopColor={bubble.color} stopOpacity="0.5"/> {/* Increased opacity */}
+                                    <stop offset="100%" stopColor={bubble.color} stopOpacity="0.2"/> {/* Increased opacity */}
                                 </radialGradient>
                             ))}
                             
                             {/* Gradients for slime layers */}
                             <linearGradient id="top-slime-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.3"/>
-                                <stop offset="100%" stopColor="#c4b5fd" stopOpacity="0.1"/>
+                                <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.6"/> {/* Increased opacity */}
+                                <stop offset="100%" stopColor="#c4b5fd" stopOpacity="0.2"/> {/* Increased opacity */}
                             </linearGradient>
                             <linearGradient id="bottom-slime-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stopColor="#c4b5fd" stopOpacity="0.1"/>
-                                <stop offset="100%" stopColor="#a78bfa" stopOpacity="0.3"/>
+                                <stop offset="0%" stopColor="#c4b5fd" stopOpacity="0.2"/> {/* Increased opacity */}
+                                <stop offset="100%" stopColor="#a78bfa" stopOpacity="0.6"/> {/* Increased opacity */}
                             </linearGradient>
                         </defs>
                         
@@ -185,7 +185,7 @@
                                     rx={`${bubble.size * 0.8}px`}
                                     ry={`${bubble.size}px`}
                                     fill={`url(#bubble-gradient-${bubble.id})`}
-                                    opacity="0.6"
+                                    opacity="0.8" // Adjusted base opacity
                                 />
                             ))}
                         </g>
