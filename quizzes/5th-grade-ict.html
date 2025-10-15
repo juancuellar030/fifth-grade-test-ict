@@ -82,8 +82,9 @@
                     id: i,
                     x: Math.random() * 100,
                     y: Math.random() * 100,
-                    size: 40 + Math.random() * 60, // Adjusted size
-                    speed: 0.08 + Math.random() * 0.12,
+                    size: 30 + Math.random() * 40, // Smaller, more realistic bubbles
+                    speed: 0.1 + Math.random() * 0.15,
+                    baseSpeed: 0.1 + Math.random() * 0.15, // Store original speed for easing calculations
                     phase: Math.random() * Math.PI * 2,
                     wobble: 0.5 + Math.random() * 1,
                     direction: Math.random() > 0.5 ? 1 : -1,
@@ -98,20 +99,29 @@
                         let newY = bubble.y + bubble.speed * bubble.direction;
                         let newDirection = bubble.direction;
                         
-                        // Clear bounce at top and bottom
-                        if (newY <= 5) {
-                            newY = 5;
+                        // Smooth deceleration near edges using easing
+                        const distanceFromTop = newY;
+                        const distanceFromBottom = 100 - newY;
+                        const edgeDistance = Math.min(distanceFromTop, distanceFromBottom);
+                        
+                        // Apply smooth bounce with easing
+                        if (newY <= 2) {
+                            newY = 2;
                             newDirection = 1;
-                        } else if (newY >= 95) {
-                            newY = 95;
+                        } else if (newY >= 98) {
+                            newY = 98;
                             newDirection = -1;
                         }
+                        
+                        // Smooth deceleration factor near edges (creates organic feel)
+                        const easingFactor = Math.min(1, edgeDistance / 15);
                         
                         return {
                             ...bubble,
                             y: newY,
                             direction: newDirection,
-                            wobbleOffset: Math.sin(timeRef.current * bubble.wobble + bubble.phase) * 1.5 // Reduced wobble
+                            speed: (bubble.baseSpeed || bubble.speed) * (0.5 + easingFactor * 0.5), // Slow down near edges
+                            wobbleOffset: Math.sin(timeRef.current * bubble.wobble + bubble.phase) * 2
                         };
                     }));
                     
@@ -136,8 +146,8 @@
                         <defs>
                             {/* Gooey/Slimy filter effect */}
                             <filter id="gooey">
-                                <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
-                                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -8" result="gooey"/>
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"/>
+                                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="gooey"/>
                                 <feComposite in="SourceGraphic" in2="gooey" operator="atop"/>
                             </filter>
                             
@@ -182,8 +192,8 @@
                                     key={bubble.id}
                                     cx={`${bubble.x + (bubble.wobbleOffset || 0)}%`}
                                     cy={`${bubble.y}%`}
-                                    rx={`${bubble.size * 0.8}px`}
-                                    ry={`${bubble.size}px`}
+                                    rx={`${bubble.size * 0.7}px`}
+                                    ry={`${bubble.size * 1.2}px`}
                                     fill={`url(#bubble-gradient-${bubble.id})`}
                                     opacity="0.8" // Adjusted base opacity
                                 />
