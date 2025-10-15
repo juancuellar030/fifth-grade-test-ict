@@ -74,6 +74,7 @@
             const [bubbles, setBubbles] = useState([]);
             const animationRef = useRef(null);
             const timeRef = useRef(0);
+            const [, forceUpdate] = useState(0); // Force re-render for SVG animations
             
             useEffect(() => {
                 // Initialize bubbles
@@ -114,6 +115,7 @@
                         };
                     }));
                     
+                    forceUpdate(n => n + 1); // Force re-render for SVG path updates
                     animationRef.current = requestAnimationFrame(animate);
                 };
                 
@@ -125,6 +127,8 @@
                     }
                 };
             }, []);
+            
+            const time = timeRef.current;
             
             return (
                 <div className="fixed inset-0 overflow-hidden pointer-events-none">
@@ -159,14 +163,14 @@
                         
                         {/* Top slime layer */}
                         <path
-                            d={`M 0,0 Q 25,${15 + Math.sin(timeRef.current * 0.5) * 8} 50,${10 + Math.sin(timeRef.current * 0.7) * 6} T 100,0 L 100,${20 + Math.sin(timeRef.current * 0.3) * 5} Q 75,${25 + Math.sin(timeRef.current * 0.6) * 7} 50,${20 + Math.sin(timeRef.current * 0.4) * 6} T 0,${15 + Math.sin(timeRef.current * 0.8) * 8} Z`}
+                            d={`M 0,0 Q 25,${15 + Math.sin(time * 0.5) * 8} 50,${10 + Math.sin(time * 0.7) * 6} T 100,0 L 100,${20 + Math.sin(time * 0.3) * 5} Q 75,${25 + Math.sin(time * 0.6) * 7} 50,${20 + Math.sin(time * 0.4) * 6} T 0,${15 + Math.sin(time * 0.8) * 8} Z`}
                             fill="url(#top-slime-gradient)"
                             filter="url(#gooey)"
                         />
                         
                         {/* Bottom slime layer */}
                         <path
-                            d={`M 0,100 Q 25,${85 + Math.sin(timeRef.current * 0.6 + 1) * 8} 50,${90 + Math.sin(timeRef.current * 0.8 + 1) * 6} T 100,100 L 100,${80 + Math.sin(timeRef.current * 0.4 + 1) * 5} Q 75,${75 + Math.sin(timeRef.current * 0.7 + 1) * 7} 50,${80 + Math.sin(timeRef.current * 0.5 + 1) * 6} T 0,${85 + Math.sin(timeRef.current * 0.9 + 1) * 8} Z`}
+                            d={`M 0,100 Q 25,${85 + Math.sin(time * 0.6 + 1) * 8} 50,${90 + Math.sin(time * 0.8 + 1) * 6} T 100,100 L 100,${80 + Math.sin(time * 0.4 + 1) * 5} Q 75,${75 + Math.sin(time * 0.7 + 1) * 7} 50,${80 + Math.sin(time * 0.5 + 1) * 6} T 0,${85 + Math.sin(time * 0.9 + 1) * 8} Z`}
                             fill="url(#bottom-slime-gradient)"
                             filter="url(#gooey)"
                         />
