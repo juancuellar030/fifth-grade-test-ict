@@ -83,7 +83,7 @@
                     x: Math.random() * 100,
                     y: Math.random() * 100,
                     size: 40 + Math.random() * 60, // Adjusted size
-                    speed: 0.02 + Math.random() * 0.03,
+                    speed: 0.08 + Math.random() * 0.12,
                     phase: Math.random() * Math.PI * 2,
                     wobble: 0.5 + Math.random() * 1,
                     direction: Math.random() > 0.5 ? 1 : -1,
@@ -98,12 +98,12 @@
                         let newY = bubble.y + bubble.speed * bubble.direction;
                         let newDirection = bubble.direction;
                         
-                        // Create slimy bounce effect at edges
-                        if (newY <= -5) {
-                            newY = -5;
+                        // Clear bounce at top and bottom
+                        if (newY <= 5) {
+                            newY = 5;
                             newDirection = 1;
-                        } else if (newY >= 105) {
-                            newY = 105;
+                        } else if (newY >= 95) {
+                            newY = 95;
                             newDirection = -1;
                         }
                         
@@ -111,7 +111,7 @@
                             ...bubble,
                             y: newY,
                             direction: newDirection,
-                            wobbleOffset: Math.sin(timeRef.current * bubble.wobble + bubble.phase) * 3
+                            wobbleOffset: Math.sin(timeRef.current * bubble.wobble + bubble.phase) * 1.5 // Reduced wobble
                         };
                     }));
                     
@@ -136,8 +136,8 @@
                         <defs>
                             {/* Gooey/Slimy filter effect */}
                             <filter id="gooey">
-                                <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
-                                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 25 -10" result="gooey"/>
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+                                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -8" result="gooey"/>
                                 <feComposite in="SourceGraphic" in2="gooey" operator="atop"/>
                             </filter>
                             
@@ -152,12 +152,12 @@
                             
                             {/* Gradients for slime layers */}
                             <linearGradient id="top-slime-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.85"/>
-                                <stop offset="100%" stopColor="#c4b5fd" stopOpacity="0.4"/>
+                                <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.3"/>
+                                <stop offset="100%" stopColor="#c4b5fd" stopOpacity="0.1"/>
                             </linearGradient>
                             <linearGradient id="bottom-slime-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stopColor="#c4b5fd" stopOpacity="0.4"/>
-                                <stop offset="100%" stopColor="#a78bfa" stopOpacity="0.85"/>
+                                <stop offset="0%" stopColor="#c4b5fd" stopOpacity="0.1"/>
+                                <stop offset="100%" stopColor="#a78bfa" stopOpacity="0.3"/>
                             </linearGradient>
                         </defs>
                         
