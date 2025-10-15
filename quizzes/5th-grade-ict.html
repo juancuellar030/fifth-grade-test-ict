@@ -136,28 +136,28 @@
                         <defs>
                             {/* Gooey/Slimy filter effect */}
                             <filter id="gooey">
-                                <feGaussianBlur in="SourceGraphic" stdDeviation="7" result="blur"/> {/* Reduced blur */}
-                                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9" result="gooey"/> {/* Slightly increased contrast */}
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+                                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 25 -10" result="gooey"/>
                                 <feComposite in="SourceGraphic" in2="gooey" operator="atop"/>
                             </filter>
                             
                             {/* Gradient for bubbles */}
                             {bubbles.map(bubble => (
                                 <radialGradient key={`grad-${bubble.id}`} id={`bubble-gradient-${bubble.id}`}>
-                                    <stop offset="0%" stopColor={bubble.color} stopOpacity="0.8"/> {/* Increased opacity */}
-                                    <stop offset="50%" stopColor={bubble.color} stopOpacity="0.5"/> {/* Increased opacity */}
-                                    <stop offset="100%" stopColor={bubble.color} stopOpacity="0.2"/> {/* Increased opacity */}
+                                    <stop offset="0%" stopColor={bubble.color} stopOpacity="0.95"/>
+                                    <stop offset="50%" stopColor={bubble.color} stopOpacity="0.8"/>
+                                    <stop offset="100%" stopColor={bubble.color} stopOpacity="0.5"/>
                                 </radialGradient>
                             ))}
                             
                             {/* Gradients for slime layers */}
                             <linearGradient id="top-slime-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.6"/> {/* Increased opacity */}
-                                <stop offset="100%" stopColor="#c4b5fd" stopOpacity="0.2"/> {/* Increased opacity */}
+                                <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.85"/>
+                                <stop offset="100%" stopColor="#c4b5fd" stopOpacity="0.4"/>
                             </linearGradient>
                             <linearGradient id="bottom-slime-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stopColor="#c4b5fd" stopOpacity="0.2"/> {/* Increased opacity */}
-                                <stop offset="100%" stopColor="#a78bfa" stopOpacity="0.6"/> {/* Increased opacity */}
+                                <stop offset="0%" stopColor="#c4b5fd" stopOpacity="0.4"/>
+                                <stop offset="100%" stopColor="#a78bfa" stopOpacity="0.85"/>
                             </linearGradient>
                         </defs>
                         
