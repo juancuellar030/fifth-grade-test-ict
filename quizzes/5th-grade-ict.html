@@ -139,15 +139,6 @@
             // Base questions can be defined here
             const baseQuestions = [ { id: 1, type: 'multiple-choice-group', question: 'Answer each question by selecting the correct option:', questions: [{ text: 'What does ICT help us do?', options: ['Share and find information', 'Paint pictures', 'Ride bicycles', 'Cook food'], correct: 0 }, { text: 'What do we call programs that help us play games or do homework on a computer?', options: ['Hardware', 'Software', 'Network', 'Input'], correct: 1 }, { text: 'What is a device in ICT?', options: ['A physical tool or piece of equipment like a computer or smartphone', 'A program that helps you write documents', 'A type of internet connection', 'A kind of software that plays games'], correct: 0 }] }, { id: 2, type: 'drag-drop', question: 'Drag each item to the correct category:', items: ['Headphones🎧', 'Google Chrome🌐', 'Wi-Fi🛜', 'Tablet📱'], categories: ['Hardware', 'Software App', 'Network', 'Processing Device'], correctAnswers: { 'Hardware': 'Headphones🎧', 'Software App': 'Google Chrome🌐', 'Network': 'Wi-Fi🛜', 'Processing Device': 'Tablet📱' } }, { id: 3, type: 'drag-drop-images', question: 'Drag each device to the correct group:', items: [{ name: 'Keyboard', icon: '⌨️' }, { name: 'Monitor', icon: '🖥️' }, { name: 'Mouse', icon: '🖱️' }, { name: 'Printer', icon: '🖨️' }, { name: 'Microphone', icon: '🎤' }, { name: 'Speaker', icon: '🔊' }], categories: ['Input Devices', 'Output Devices'], correctAnswers: { 'Input Devices': ['Keyboard', 'Mouse', 'Microphone'], 'Output Devices': ['Monitor', 'Printer', 'Speaker'] } }, { id: 4, type: 'true-false-group', question: 'Read each statement and select True or False:', statements: [{ text: 'Software is something you can physically touch.🫳', correct: 1 }, { text: 'Smartphones and tablets are examples of ICT devices.📲', correct: 0 }, { text: 'Sending emails is an example of using ICT in daily life.📧', correct: 0 }] }, { id: 5, type: 'fill-group', question: 'Drag the correct word from the box to fill in each blank:', wordBank: ['networks', 'internet', 'software', 'processing', 'communication'], statements: [{ text: 'Bluetooth and Wi-Fi are examples of wireless _______.', answer: 'networks' }, { text: 'Multiple devices connect to share or find information using the _______.', answer: 'internet' }, { text: 'Programs, apps and games are examples of _______.', answer: 'software' }, { text: 'When a computer thinks and works on information, this is called _______.', answer: 'processing' }] } ];
 
-            const shuffleArray = (array) => {
-                const newArray = [...array];
-                for (let i = newArray.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-                }
-                return newArray;
-            };
-
             // Initialize randomized questions on component mount
             useEffect(() => {
                 const randomized = shuffleArray(baseQuestions).map(q => {
