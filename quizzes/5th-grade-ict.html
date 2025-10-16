@@ -137,16 +137,7 @@
             const inputRef = useRef(null);
             
             // Base questions can be defined here
-            const baseQuestions = [ { id: 1, type: 'multiple-choice-group', question: 'Answer each question by selecting the correct option:', questions: [{ text: 'What does ICT help us do?', options: ['Share and find information', 'Paint pictures', 'Ride bicycles', 'Cook food'], correct: 0 }, { text: 'What do we call programs that help us play games or do homework on a computer?', options: ['Hardware', 'Software', 'Network', 'Input'], correct: 1 }, { text: 'What is a device in ICT?', options: ['A physical tool or piece of equipment like a computer or smartphone', 'A program that helps you write documents', 'A type of internet connection', 'A kind of software that plays games'], correct: 0 }] }, { id: 2, type: 'drag-drop', question: 'Drag each item to the correct category:', items: ['Headphones🎧', 'Google Chrome🌐', 'Wi-Fi🛜', 'Tablet📱'], categories: ['Hardware', 'Software App', 'Network', 'Processing Device'], correctAnswers: { 'Hardware': 'Headphones🎧', 'Software App': 'Google Chrome🌐', 'Network': 'Wi-Fi🛜', 'Processing Device': 'Tablet📱' } }, { id: 3, type: 'drag-drop-images', question: 'Drag each device to the correct group:', items: [{ name: 'Keyboard', icon: 'âŒ¨ï¸' }, { name: 'Monitor', icon: 'ðŸ–¥ï¸' }, { name: 'Mouse', icon: 'ðŸ–±ï¸' }, { name: 'Printer', icon: 'ðŸ–¨ï¸' }, { name: 'Microphone', icon: 'ðŸŽ¤' }, { name: 'Speaker', icon: 'ðŸ”Š' }], categories: ['Input Devices', 'Output Devices'], correctAnswers: { 'Input Devices': ['Keyboard', 'Mouse', 'Microphone'], 'Output Devices': ['Monitor', 'Printer', 'Speaker'] } }, { id: 4, type: 'true-false-group', question: 'Read each statement and select True or False:', statements: [{ text: 'Software is something you can physically touch.🫲', correct: 1 }, { text: 'Smartphones and tablets are examples of ICT devices.📱', correct: 0 }, { text: 'Sending emails is an example of using ICT in daily life.📧', correct: 0 }] }, { id: 5, type: 'fill-group', question: 'Drag the correct word from the box to fill in each blank:', wordBank: ['networks', 'internet', 'software', 'processing', 'communication'], statements: [{ text: 'Bluetooth and Wi-Fi are examples of wireless _______.', answer: 'networks' }, { text: 'Multiple devices connect to share or find information using the _______.', answer: 'internet' }, { text: 'Programs, apps and games are examples of _______.', answer: 'software' }, { text: 'When a computer thinks and works on information, this is called _______.', answer: 'processing' }] } ];
-
-            const shuffleArray = (array) => {
-                const newArray = [...array];
-                for (let i = newArray.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-                }
-                return newArray;
-            };
+            const baseQuestions = [ { id: 1, type: 'multiple-choice-group', question: 'Answer each question by selecting the correct option:', questions: [{ text: 'What does ICT help us do?', options: ['Share and find information', 'Paint pictures', 'Ride bicycles', 'Cook food'], correct: 0 }, { text: 'What do we call programs that help us play games or do homework on a computer?', options: ['Hardware', 'Software', 'Network', 'Input'], correct: 1 }, { text: 'What is a device in ICT?', options: ['A physical tool or piece of equipment like a computer or smartphone', 'A program that helps you write documents', 'A type of internet connection', 'A kind of software that plays games'], correct: 0 }] }, { id: 2, type: 'drag-drop', question: 'Drag each item to the correct category:', items: ['Headphones🎧', 'Google Chrome🌐', 'Wi-Fi🛜', 'Tablet📱'], categories: ['Hardware', 'Software App', 'Network', 'Processing Device'], correctAnswers: { 'Hardware': 'Headphones🎧', 'Software App': 'Google Chrome🌐', 'Network': 'Wi-Fi🛜', 'Processing Device': 'Tablet📱' } }, { id: 3, type: 'drag-drop-images', question: 'Drag each device to the correct group:', items: [{ name: 'Keyboard', icon: '⌨️' }, { name: 'Monitor', icon: '🖥️' }, { name: 'Mouse', icon: '🖱️' }, { name: 'Printer', icon: '🖨️' }, { name: 'Microphone', icon: '🎤' }, { name: 'Speaker', icon: '🔊' }], categories: ['Input Devices', 'Output Devices'], correctAnswers: { 'Input Devices': ['Keyboard', 'Mouse', 'Microphone'], 'Output Devices': ['Monitor', 'Printer', 'Speaker'] } }, { id: 4, type: 'true-false-group', question: 'Read each statement and select True or False:', statements: [{ text: 'Software is something you can physically touch.🫳', correct: 1 }, { text: 'Smartphones and tablets are examples of ICT devices.📲', correct: 0 }, { text: 'Sending emails is an example of using ICT in daily life.📧', correct: 0 }] }, { id: 5, type: 'fill-group', question: 'Drag the correct word from the box to fill in each blank:', wordBank: ['networks', 'internet', 'software', 'processing', 'communication'], statements: [{ text: 'Bluetooth and Wi-Fi are examples of wireless _______.', answer: 'networks' }, { text: 'Multiple devices connect to share or find information using the _______.', answer: 'internet' }, { text: 'Programs, apps and games are examples of _______.', answer: 'software' }, { text: 'When a computer thinks and works on information, this is called _______.', answer: 'processing' }] } ];
 
             // Initialize randomized questions on component mount
             useEffect(() => {
@@ -177,7 +168,7 @@
             // ALL other functions and variables must also be defined before any returns.
             const questions = randomizedQuestions;
             const gradingScale = { 0: 2.0, 1: 2.2, 2: 2.3, 3: 2.5, 4: 2.7, 5: 2.8, 6: 3.0, 7: 3.2, 8: 3.3, 9: 3.5, 10: 3.6, 11: 3.8, 12: 3.9, 13: 4.0, 14: 4.2, 15: 4.3, 16: 4.5, 17: 4.6, 18: 4.7, 19: 4.9, 20: 5.0 };
-            const studentList = [ "Isabella Arce Rodriguez", "Valentina Arias Guevara", "Maria Paz Bermeo Montealegre", "Zoe Lylen CastaÃ±eda Romero", "Gabriel Esteban Cuellar Salas", "Dilan Camilo Cumaco Pastrana", "MartÃ­n FernÃ¡ndez Lucuara", "Derek Santiago Fierro Lopez", "SimÃ³n Gonzalez Chavarro", "GerÃ³nimo Jimenez Bocanegra", "Samuel JosÃ© MajÃ© MarroquÃ­n", "MartÃ­n Medina Ortiz", "Karen Sofia Mosquera Baylon", "MarÃ­a Del Mar Mosquera GarzÃ³n", "Santiago Motta Santofimio", "Ana Lucia Murcia Guebely", "Antonella Murcia Oliveros", "Emmanuel Murcia Trujillo", "Luciana Quesada Parra", "Maria Paz Quesada Rodriguez", "Miguel Ãngel Ruiz Varon", "Luzyana Suarez Solorzano", "Santiago TobÃ³n Castro", "Sarita Vargas Carvajal", "Luciana Sofia Vargas Sanchez", "Julieta Alarcon Cabrera", "Emmanuel Barrero Sandoval", "Catalina Barreto Rivera", "Khalid Bedoya Sanabria", "Daniela Beron Farfan", "Ana Lucia BuendÃ­a Losada", "Jacobo Carvajal Jimenez", "Juliana Margarita Castrillon Ramos", "Isabel Cristina Cuellar Romero", "Emiliano Diaz Rojas", "Gabriela Echeverry Trujillo", "Sara Isabella Gaitan Arango", "Fabio Hernandez Galindo", "Juanita Milagros Lopez Alarcon", "Karla Medina Cuenca", "Maria Paz Mora Caicedo", "Emiliano Ortiz Ortiz", "Pablo Alejandro Oviedo Barrero", "Maria Lucia Perdomo Ramirez", "Zamuhel Ramirez Castro", "Sara Juliana Riscanevo Lopera", "Maria Fernanda Rojas Castro", "Santiago Trujillo Gonzalez", "Juan Diego Valderrama Rodriguez", "Sarah Michelle Audor Gutierrez", "Santiago Chavarro FernÃ¡ndez", "Taliana Andrea Chavarro Sanabria", "Ariadna EstupiÃ±an Borrero", "Martin Eduardo Fierro Cordoba", "Danna Gabriela Giraldo Leiva", "Juan Ricardo Guevara Calderon", "Salomon Hoyos Castillo", "Jhoan Sebastian Lozano Moscoso", "Sebastian Martinez Dussan", "Sofia Mayorca Gonzalez", "Samantha Medina Figueroa", "Maria Lucia Melo Camacho", "Sara Luciana Obregon Agudelo", "Sara Orozco Escobar", "Santiago Osorio Benavides", "Angie Luciana Perez Trujillo", "Santiago Polania Perdomo", "Felipe Ramos Vargas", "Jorge Mario Rojas Alvarez", "Sofia Salazar CastaÃ±eda", "HernÃ¡n Gabriel Sierra Suarez", "Maria Victoria Vidal Prieto", "Juan Andres Vieda Diaz", "Juan Diego AlbarracÃ­n MartÃ­nez", "Emiliano Andrade Perez", "Moises Burgos Arevalo", "Jeronimo CalderÃ³n Morales", "MartÃ­n Caquimbo De Castro", "Salome Castro Hurtado", "Ashly Dayanna Cumaco Alonso", "Dylan Santiago Gomez Reyes", "Salome Gutierrez Acosta", "Jesus Manuel Gutierrez Vargas", "Isabela Huepe Quintero", "Juan Esteban Madrid Guevara", "Jeronimo Mora Araujo", "Silvana Moreno Pastrana", "Luciana NiÃ±o Rojas", "Emmanuel JosÃ© Ortiz Urrego", "Sara Sofia Oviedo Cajiao", "Daniel Leonardo Perdomo Ochoa", "Juan Matias Rodriguez Calderon", "Maria Jose Rojas Castro", "Gabriela Sarmiento-Perez Trujillo", "Juan Felipe Tamayo CastaÃ±eda", "Luciana Andrea Tellez Aviles", "Hanna Isabella Valenzuela Paredes" ];
+            const studentList = [ "Isabella Arce Rodriguez", "Valentina Arias Guevara", "Maria Paz Bermeo Montealegre", "Zoe Lylen Castañeda Romero", "Gabriel Esteban Cuellar Salas", "Dilan Camilo Cumaco Pastrana", "Martín Fernández Lucuara", "Derek Santiago Fierro Lopez", "Simón Gonzalez Chavarro", "Gerónimo Jimenez Bocanegra", "Samuel José Majé Marroquín", "Martín Medina Ortiz", "Karen Sofia Mosquera Baylon", "María Del Mar Mosquera Garzón", "Santiago Motta Santofimio", "Ana Lucia Murcia Guebely", "Antonella Murcia Oliveros", "Emmanuel Murcia Trujillo", "Luciana Quesada Parra", "Maria Paz Quesada Rodriguez", "Miguel Ángel Ruiz Varon", "Luzyana Suarez Solorzano", "Santiago Tobón Castro", "Sarita Vargas Carvajal", "Luciana Sofia Vargas Sanchez", "Julieta Alarcon Cabrera", "Emmanuel Barrero Sandoval", "Catalina Barreto Rivera", "Khalid Bedoya Sanabria", "Daniela Beron Farfan", "Ana Lucia Buendía Losada", "Jacobo Carvajal Jimenez", "Juliana Margarita Castrillon Ramos", "Isabel Cristina Cuellar Romero", "Emiliano Diaz Rojas", "Gabriela Echeverry Trujillo", "Sara Isabella Gaitan Arango", "Fabio Hernandez Galindo", "Juanita Milagros Lopez Alarcon", "Karla Medina Cuenca", "Maria Paz Mora Caicedo", "Emiliano Ortiz Ortiz", "Pablo Alejandro Oviedo Barrero", "Maria Lucia Perdomo Ramirez", "Zamuhel Ramirez Castro", "Sara Juliana Riscanevo Lopera", "Maria Fernanda Rojas Castro", "Santiago Trujillo Gonzalez", "Juan Diego Valderrama Rodriguez", "Sarah Michelle Audor Gutierrez", "Santiago Chavarro Fernández", "Taliana Andrea Chavarro Sanabria", "Ariadna Estupiñan Borrero", "Martin Eduardo Fierro Cordoba", "Danna Gabriela Giraldo Leiva", "Juan Ricardo Guevara Calderon", "Salomon Hoyos Castillo", "Jhoan Sebastian Lozano Moscoso", "Sebastian Martinez Dussan", "Sofia Mayorca Gonzalez", "Samantha Medina Figueroa", "Maria Lucia Melo Camacho", "Sara Luciana Obregon Agudelo", "Sara Orozco Escobar", "Santiago Osorio Benavides", "Angie Luciana Perez Trujillo", "Santiago Polania Perdomo", "Felipe Ramos Vargas", "Jorge Mario Rojas Alvarez", "Sofia Salazar Castañeda", "Hernán Gabriel Sierra Suarez", "Maria Victoria Vidal Prieto", "Juan Andres Vieda Diaz", "Juan Diego Albarracín Martínez", "Emiliano Andrade Perez", "Moises Burgos Arevalo", "Jeronimo Calderón Morales", "Martín Caquimbo De Castro", "Salome Castro Hurtado", "Ashly Dayanna Cumaco Alonso", "Dylan Santiago Gomez Reyes", "Salome Gutierrez Acosta", "Jesus Manuel Gutierrez Vargas", "Isabela Huepe Quintero", "Juan Esteban Madrid Guevara", "Jeronimo Mora Araujo", "Silvana Moreno Pastrana", "Luciana Niño Rojas", "Emmanuel José Ortiz Urrego", "Sara Sofia Oviedo Cajiao", "Daniel Leonardo Perdomo Ochoa", "Juan Matias Rodriguez Calderon", "Maria Jose Rojas Castro", "Gabriela Sarmiento-Perez Trujillo", "Juan Felipe Tamayo Castañeda", "Luciana Andrea Tellez Aviles", "Hanna Isabella Valenzuela Paredes" ];
             const passwords = ['z7nt2o', '4dzvi8', '8ixiuc', '8qgl0n', 'uhbwxh', 'jmdhbk', '7wrhiq', 'dic2qx', 'ek2shq', 'c4irhu', 'mw5h6e', 'fghchr', 'r43bgp', 'dtn7mf', 'uioptq', 'vquuak', 'cz8dau', 'gkb3s2', 'gdavbu', 'ublnac', 'ctmg2r', 'z6n3ss', 'c07tfv', 'i4meff', 'u8ddkm', 'yu3iub', '3wumyu', 'qr1lu9', 'abws44', 'mzkssg', 'u6nvus', 'drwnsz', 'xoivmp', 'mxtshl', 'brpqol', 'xa7bsm', 'ciplsu', '7dkhln', 'a8djt9', 'vem8oi', 'jgtv0p', 'qrqjxt', 'bh5lv1', 'pyiar6', 'wzbyda', 'uok80y', '0grnm8', 'v54xjd', 'eqn1c7', '38cdqy', 'qmuzyx', 'nafwob', 'jb3xvc', 'jtfjm8', 'uvyagu', 'rvn59h', '6pq9zh', 'uvtipz', 'dmnhgb', 'zhxgcp', 'zwdb5k', 'qjqyja', 'b7tdwo', 'gw3lqr', '3qwp8h', 'ruqrzh', 'dmzrtb', 'kmlsxe', 'xtthin', 'wrdvai', 'aik8se', 'qmgxxi', 'a9efrh', 'ixbeao', '1yf1em', 'a1fnxs', 'nwbdff', 'qcsm1c', 'xvths8', 'urbk1c', 'h0odrv', 'evoj58', 'bat2md', 'l6ky5a', 'axg1xa', 'uvu211', 'g9xwtl', 'k1ddq2', 'lwmeo1', '2ndczg', 'v3wvc3', 'zvxuwb', '2ksq1g', 'tkpxy3'];
             const studentPasswordMap = {};
             studentList.forEach((student, index) => {
@@ -281,7 +272,8 @@
             const handleDrop = (e, category) => { e.preventDefault(); const item = draggedItem || e.dataTransfer.getData('text/plain'); if (item) { let newAnswers = { ...(answers[currentQuestion] || {}) }; Object.keys(newAnswers).forEach(key => { if (Array.isArray(newAnswers[key])) newAnswers[key] = newAnswers[key].filter(i => i !== item); else if (newAnswers[key] === item) delete newAnswers[key]; }); if (questions[currentQuestion].type === 'drag-drop-images') { if (!newAnswers[category]) newAnswers[category] = []; if (!newAnswers[category].includes(item)) newAnswers[category].push(item); } else { newAnswers[category] = item; } setAnswers({ ...answers, [currentQuestion]: newAnswers }); setDropZones(newAnswers); setDraggedItem(null); } };
             const getAvailableItems = () => { const currentQ = questions[currentQuestion]; const currentAnswers = answers[currentQuestion] || {}; if (currentQ.type.includes('drag-drop')) { const placedItems = Object.values(currentAnswers).flat(); return currentQ.items.filter(item => !placedItems.includes(item.name || item)); } if (currentQ.type === 'fill-group') return currentQ.wordBank.filter(word => !Object.values(currentAnswers).includes(word)); return []; };
             const handleNext = () => { setQuestionTransition('exit'); setTimeout(() => { if (currentQuestion < questions.length - 1) { setCurrentQuestion(prev => prev + 1); setQuestionTransition('enter'); } else { setIsCompleted(true); setCompletedStudents({ ...completedStudents, [studentName]: true }); if (document.exitFullscreen) document.exitFullscreen(); } }, 300); };
-            const handleBack = () => { if (currentQuestion > 0) { setQuestionTransition('exit'); setTimeout(() => setCurrentQuestion(prev => prev - 1), 300); }};    const DarkModeToggle = () => (
+            const handleBack = () => { if (currentQuestion > 0) { setQuestionTransition('exit'); setTimeout(() => setCurrentQuestion(prev => prev - 1), 300); }};
+            const DarkModeToggle = () => (
                 <button
                     onClick={() => setIsDarkMode(!isDarkMode)}
                     className={`fixed top-4 right-4 z-50 p-3 rounded-full shadow-lg transition-all hover:scale-110 transform ${
@@ -398,7 +390,6 @@
             // NAME CONFIRMATION AND START SCREEN - After password
             if (passwordEntered && !hasStarted && !isCompleted) {
                 return (
-                    // ===== UPDATE THIS DIV =====
                     <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
                         isDarkMode 
                             ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
@@ -418,20 +409,19 @@
                                 <p className={`text-2xl font-bold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>{studentName}</p>
                             </div>
                             <div className={`rounded-lg p-6 mb-6 ${isDarkMode ? 'bg-blue-900' : 'bg-blue-50'}`}>
-                                <p className={`text-lg font-semibold font-poppins mb-3 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>ðŸ“‹ Instructions:</p>
+                                <p className={`text-lg font-semibold font-poppins mb-3 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>📋 Instructions:</p>
                                 <ul className={`space-y-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                                    <li>â€¢ There are 5 questions in total.</li>
-                                    <li>â€¢ The total score is 20 points.</li>
-                                    <li>â€¢ Read each question carefully.</li>
+                                    <li>• There are 5 questions in total.</li>
+                                    <li>• The total score is 20 points.</li>
+                                    <li>• Read each question carefully.</li>
                                 </ul>
                             </div>
                             <button onClick={handleStartQuiz} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold font-poppins py-4 px-6 rounded-xl transition-colors shadow-lg">
                                 Start Quiz
                             </button>
-                            <p className={`text-sm text-center mt-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>âš ï¸ The quiz will enter fullscreen mode. Please stay on this tab.</p>
+                            <p className={`text-sm text-center mt-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>⚠️ The quiz will enter fullscreen mode. Please stay on this tab.</p>
                         </div>
                     </div>
-                    // ===== END NAME SCREEN UPDATE =====
                 );
             }
 
@@ -481,7 +471,7 @@
                                                                 <p className="font-semibold text-gray-800 mb-2">{subIndex + 1}. {subQ.text}</p>
                                                                 <div className="ml-4">
                                                                     <p className={`${isCorrect ? 'text-green-600' : 'text-red-600'} font-semibold mb-1`}>
-                                                                        {isCorrect ? 'âœ“ Correct!' : 'âœ— Incorrect'}
+                                                                        {isCorrect ? '✓ Correct!' : '✗ Incorrect'}
                                                                     </p>
                                                                     <p className="text-gray-700">Your answer: <span className={isCorrect ? 'text-green-600' : 'text-red-600'}>{selectedOption?.text || 'No answer'}</span></p>
                                                                     {!isCorrect && (
@@ -505,7 +495,7 @@
                                                                 <p className="font-semibold text-gray-800 mb-2">{stmtIndex + 1}. {stmt.text}</p>
                                                                 <div className="ml-4">
                                                                     <p className={`${isCorrect ? 'text-green-600' : 'text-red-600'} font-semibold mb-1`}>
-                                                                        {isCorrect ? 'âœ“ Correct!' : 'âœ— Incorrect'}
+                                                                        {isCorrect ? '✓ Correct!' : '✗ Incorrect'}
                                                                     </p>
                                                                     <p className="text-gray-700">Your answer: <span className={isCorrect ? 'text-green-600' : 'text-red-600'}>{userChoice === 0 ? 'True' : userChoice === 1 ? 'False' : 'No answer'}</span></p>
                                                                     {!isCorrect && (
@@ -530,7 +520,7 @@
                                                                 <p className="font-semibold text-gray-800 mb-2">{category}</p>
                                                                 <div className="ml-4">
                                                                     <p className={`${isCorrect ? 'text-green-600' : 'text-red-600'} font-semibold mb-1`}>
-                                                                        {isCorrect ? 'âœ“ Correct!' : 'âœ— Incorrect'}
+                                                                        {isCorrect ? '✓ Correct!' : '✗ Incorrect'}
                                                                     </p>
                                                                     <p className="text-gray-700">Your answer: <span className={isCorrect ? 'text-green-600' : 'text-red-600'}>{userAnswer || 'No answer'}</span></p>
                                                                     {!isCorrect && (
@@ -559,7 +549,7 @@
                                                                 <p className="font-semibold text-gray-800 mb-2">{item.icon} {item.name}</p>
                                                                 <div className="ml-4">
                                                                     <p className={`${isCorrect ? 'text-green-600' : 'text-red-600'} font-semibold mb-1`}>
-                                                                        {isCorrect ? 'âœ“ Correct!' : 'âœ— Incorrect'}
+                                                                        {isCorrect ? '✓ Correct!' : '✗ Incorrect'}
                                                                     </p>
                                                                     <p className="text-gray-700">Your answer: <span className={isCorrect ? 'text-green-600' : 'text-red-600'}>{userCat || 'No answer'}</span></p>
                                                                     {!isCorrect && (
@@ -583,7 +573,7 @@
                                                                 <p className="font-semibold text-gray-800 mb-2">{stmtIndex + 1}. {stmt.text}</p>
                                                                 <div className="ml-4">
                                                                     <p className={`${isCorrect ? 'text-green-600' : 'text-red-600'} font-semibold mb-1`}>
-                                                                        {isCorrect ? 'âœ“ Correct!' : 'âœ— Incorrect'}
+                                                                        {isCorrect ? '✓ Correct!' : '✗ Incorrect'}
                                                                     </p>
                                                                     <p className="text-gray-700">Your answer: <span className={isCorrect ? 'text-green-600' : 'text-red-600'}>{userAnswer || 'No answer'}</span></p>
                                                                     {!isCorrect && (
@@ -614,7 +604,6 @@
                 
                 // Results Screen with Two Buttons
                 return (
-                    // ===== UPDATE RESULTS SCREEN =====
                     <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
                         isDarkMode 
                             ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
@@ -626,7 +615,7 @@
                             isDarkMode ? 'bg-gray-800' : 'bg-white'
                         }`}>
                             <div className="text-center">
-                                <div className="text-6xl mb-4">ðŸŽ‰</div>
+                                <div className="text-6xl mb-4">🎉</div>
                                 <h2 className={`text-4xl font-bold font-poppins mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Quiz Completed!</h2>
                                 <p className={`text-xl mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Great job, {studentName}!</p>
                                 <div className={`${isPerfectScore ? (isDarkMode ? 'bg-yellow-900' : 'bg-yellow-50') : (isDarkMode ? 'bg-blue-900' : 'bg-blue-50')} rounded-lg p-6 my-6 text-center transition-all duration-300 ${isPerfectScore ? 'scale-105 transform' : ''}`}>
@@ -634,7 +623,7 @@
                                     <p className="text-3xl font-bold text-green-600 mb-3">Your Grade: {grade.toFixed(1)}</p>
                                     <p className={`text-xl mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{percentage}%</p>
                                     <p className={`${isPerfectScore ? 'text-green-700 text-2xl font-bold' : (isDarkMode ? 'text-gray-300 mt-2' : 'text-gray-700 mt-2')} font-poppins`}>
-                                        {percentage === 100 ? 'âœ… PERFECT SCORE! AMAZING! âœ…' : percentage >= 80 ? 'ðŸŒŸ Excellent work!' : percentage >= 60 ? 'ðŸ‘ Good job!' : 'ðŸ’ª Keep studying!'}
+                                        {percentage === 100 ? '✅ PERFECT SCORE! AMAZING! ✅' : percentage >= 80 ? '🌟 Excellent work!' : percentage >= 60 ? '👍 Good job!' : '💪 Keep studying!'}
                                     </p>
                                 </div>
                                 
@@ -644,21 +633,20 @@
                                         onClick={() => setShowReview(true)}
                                         className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold font-poppins py-4 px-6 rounded-xl transition-all shadow-lg hover:scale-105 transform"
                                     >
-                                        ðŸ“‹ Review My Answers
+                                        📋 Review My Answers
                                     </button>
                                     
                                     <button 
                                         onClick={() => setShowExitConfirm(true)}
                                         className="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold font-poppins py-4 px-6 rounded-xl transition-all shadow-lg hover:scale-105 transform"
                                     >
-                                        âœ–ï¸ Close Quiz
+                                        ✖️ Close Quiz
                                     </button>
                                 </div>
                                 
                                 <p className={`text-sm mt-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Thank you for taking the ICT quiz!</p>
                             </div>
                             
-                            {/* ========== EXIT CONFIRMATION MODAL - PASTE HERE ========== */}
                             {showExitConfirm && (
                                 <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
                                     <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 text-center fade-in">
@@ -673,7 +661,7 @@
                                         </div>
                                         
                                         <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6 text-left rounded-lg">
-                                            <p className="text-sm font-semibold text-gray-800 mb-2">ðŸ“Œ To close this tab:</p>
+                                            <p className="text-sm font-semibold text-gray-800 mb-2">📌 To close this tab:</p>
                                             <p className="text-sm text-gray-700">Press <kbd className="px-2 py-1 bg-white border border-gray-300 rounded shadow-sm font-mono text-xs">Ctrl</kbd> + <kbd className="px-2 py-1 bg-white border border-gray-300 rounded shadow-sm font-mono text-xs">W</kbd></p>
                                             <p className="text-xs text-gray-600 mt-2">Or click the <strong>X</strong> on your browser tab</p>
                                         </div>
@@ -691,7 +679,6 @@
                                                         document.exitFullscreen();
                                                     }
                                                     setShowExitConfirm(false);
-                                                    // Try to close (will likely not work, but worth trying)
                                                     window.close();
                                                 }}
                                                 className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold font-poppins py-3 px-6 rounded-xl transition-all shadow-lg hover:scale-105 transform"
@@ -702,15 +689,13 @@
                                     </div>
                                 </div>
                             )}
-                            {/* ========== END EXIT CONFIRMATION MODAL ========== */}
-                            
                         </div>
                     </div>
                 );
             }
 
             const currentQ = questions[currentQuestion];
-            const isAnswered = (() => { const currentAnswers = answers[currentQuestion] || {}; if (currentQ.type.includes('group')) return Object.keys(currentAnswers).length === (currentQ.questions || currentQ.statements).length; if (currentQ.type === 'drag-drop-images') return Object.values(currentAnswers).flat().length === currentQ.items.length; if (currentQ.type === 'drag-drop') return Object.keys(currentAnswers).length === currentQ.categories.length; return currentAnswers !== undefined; })();
+            const isAnswered = (() => { const currentAnswers = answers[currentQuestion] || {}; if (currentQ.type.includes('group')) return Object.keys(currentAnswers).length === (currentQ.questions || currentQ.statements).length; if (currentQ.type.includes('drag-drop-images')) return Object.values(currentAnswers).flat().length === currentQ.items.length; if (currentQ.type === 'drag-drop') return Object.keys(currentAnswers).length === currentQ.categories.length; return currentAnswers !== undefined; })();
 
             return (
                 <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
@@ -724,10 +709,9 @@
                             <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 text-center fade-in shake">
                                 <div className="mb-6">
                                     <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 pulse">
-                                        {/* --- UPDATED ICON USAGE --- */}
                                         <WarningIcon className="w-12 h-12 text-red-600" />
                                     </div>
-                                    <h2 className="text-3xl font-bold font-poppins text-gray-800 mb-3">âš ï¸ Warning!</h2>
+                                    <h2 className="text-3xl font-bold font-poppins text-gray-800 mb-3">⚠️ Warning!</h2>
                                     <p className="text-lg text-gray-700 mb-2">You have exited fullscreen mode or switched tabs.</p>
                                     <p className="text-md text-gray-600">Please return to fullscreen mode to continue.</p>
                                 </div>
@@ -826,7 +810,7 @@
                             <div className="mb-6">
                                 <div className="mb-6">
                                     <p className={`text-sm font-semibold mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                                        ðŸ“ Word Bank - Use these words to fill in the blanks:
+                                        📝 Word Bank - Use these words to fill in the blanks:
                                     </p>
                                     <div className={`flex flex-wrap gap-3 p-4 rounded-xl border-2 ${
                                         isDarkMode ? 'bg-purple-900 border-purple-700' : 'bg-purple-50 border-purple-200'
@@ -843,7 +827,7 @@
                                         ))}
                                     </div>
                                     <p className={`text-xs mt-2 italic ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                                        ðŸ’¡ Tip: Copy the spelling exactly (not case-sensitive)
+                                        💡 Tip: Copy the spelling exactly (not case-sensitive)
                                     </p>
                                 </div>
                                 <div className="space-y-4">
@@ -892,74 +876,46 @@
                         )}
                         {currentQ.type === 'drag-drop' && (
                             <div className="mb-6">
-                                <p className="text-sm font-semibold text-gray-600 mb-4">ðŸŽ¯ Click an item, then click its matching category to draw a line:</p>
+                                <p className="text-sm font-semibold text-gray-600 mb-4">🎯 Click an item, then click its matching category to draw a line:</p>
                                 
                                 <div className="relative" style={{ minHeight: '400px' }}>
-                                    {/* SVG Canvas for drawing lines */}
                                     <svg 
                                         className="absolute inset-0 w-full h-full pointer-events-none" 
                                         style={{ zIndex: 1 }}
                                     >
-                                        {/* Draw completed lines */}
                                         {Object.entries(answers[currentQuestion] || {}).map(([category, item]) => {
                                             const itemEl = document.getElementById(`item-${currentQuestion}-${item}`);
                                             const catEl = document.getElementById(`cat-${currentQuestion}-${category}`);
-                                            
                                             if (!itemEl || !catEl) return null;
-                                            
                                             const itemRect = itemEl.getBoundingClientRect();
                                             const catRect = catEl.getBoundingClientRect();
                                             const svgEl = itemEl.closest('.relative').querySelector('svg');
                                             const containerRect = svgEl.getBoundingClientRect();
-                                            
                                             const x1 = itemRect.right - containerRect.left;
                                             const y1 = itemRect.top + itemRect.height / 2 - containerRect.top;
                                             const x2 = catRect.left - containerRect.left;
                                             const y2 = catRect.top + catRect.height / 2 - containerRect.top;
-                                            
                                             return (
                                                 <g key={`${category}-${item}`}>
-                                                    <line
-                                                        x1={x1}
-                                                        y1={y1}
-                                                        x2={x2}
-                                                        y2={y2}
-                                                        stroke="#9333ea"
-                                                        strokeWidth="3"
-                                                        strokeLinecap="round"
-                                                    />
+                                                    <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#9333ea" strokeWidth="3" strokeLinecap="round" />
                                                     <circle cx={x1} cy={y1} r="5" fill="#9333ea" />
                                                     <circle cx={x2} cy={y2} r="5" fill="#9333ea" />
                                                 </g>
                                             );
                                         })}
-                                        
-                                        {/* Draw line being created */}
                                         {drawingFrom && currentMousePos && (() => {
                                             const itemEl = document.getElementById(`item-${currentQuestion}-${drawingFrom}`);
                                             if (!itemEl) return null;
-                                            
                                             const itemRect = itemEl.getBoundingClientRect();
                                             const svgEl = itemEl.closest('.relative').querySelector('svg');
                                             const containerRect = svgEl.getBoundingClientRect();
-                                            
                                             const x1 = itemRect.right - containerRect.left;
                                             const y1 = itemRect.top + itemRect.height / 2 - containerRect.top;
                                             const x2 = currentMousePos.x - containerRect.left;
                                             const y2 = currentMousePos.y - containerRect.top;
-                                            
                                             return (
                                                 <g>
-                                                    <line
-                                                        x1={x1}
-                                                        y1={y1}
-                                                        x2={x2}
-                                                        y2={y2}
-                                                        stroke="#c084fc"
-                                                        strokeWidth="3"
-                                                        strokeDasharray="5,5"
-                                                        strokeLinecap="round"
-                                                    />
+                                                    <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#c084fc" strokeWidth="3" strokeDasharray="5,5" strokeLinecap="round" />
                                                     <circle cx={x1} cy={y1} r="5" fill="#c084fc" />
                                                 </g>
                                             );
@@ -968,107 +924,33 @@
                                     
                                     <div 
                                         className="grid grid-cols-[1fr_100px_1fr] gap-4"
-                                        onMouseMove={(e) => {
-                                            if (drawingFrom) {
-                                                setCurrentMousePos({ x: e.clientX, y: e.clientY });
-                                            }
-                                        }}
-                                        onMouseLeave={() => {
-                                            if (drawingFrom) {
-                                                setDrawingFrom(null);
-                                                setCurrentMousePos(null);
-                                            }
-                                        }}
-                                    >
-                                        {/* Left column - Items */}
+                                        onMouseMove={(e) => { if (drawingFrom) { setCurrentMousePos({ x: e.clientX, y: e.clientY }); } }}
+                                        onMouseLeave={() => { if (drawingFrom) { setDrawingFrom(null); setCurrentMousePos(null); } }} >
                                         <div className="space-y-3">
                                             <p className={`font-semibold mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Items:</p>
                                             {currentQ.items.map((item) => {
                                                 const isMatched = Object.values(answers[currentQuestion] || {}).includes(item);
                                                 const isDrawing = drawingFrom === item;
-                                                
                                                 return (
-                                                    <button
-                                                        key={item}
-                                                        id={`item-${currentQuestion}-${item}`}
-                                                        onClick={() => {
-                                                            if (drawingFrom === item) {
-                                                                setDrawingFrom(null);
-                                                                setCurrentMousePos(null);
-                                                            } else if (!isMatched) {
-                                                                setDrawingFrom(item);
-                                                            }
-                                                        }}
-                                                        className={`p-3 rounded-xl border-2 transition-all text-left font-semibold whitespace-nowrap overflow-hidden text-ellipsis ${
-                                                            isDrawing
-                                                                ? 'border-purple-500 bg-purple-100 shadow-lg scale-105 transform'
-                                                                : isMatched
-                                                                ? 'border-purple-400 bg-purple-50'
-                                                                : 'border-gray-300 bg-white hover:border-purple-300 hover:bg-purple-50'
-                                                        }`}
-                                                        style={{ zIndex: 2, position: 'relative', width: '180px' }}
-                                                    >
+                                                    <button key={item} id={`item-${currentQuestion}-${item}`} onClick={() => { if (drawingFrom === item) { setDrawingFrom(null); setCurrentMousePos(null); } else if (!isMatched) { setDrawingFrom(item); } }} className={`p-3 rounded-xl border-2 transition-all text-left font-semibold whitespace-nowrap overflow-hidden text-ellipsis ${ isDrawing ? 'border-purple-500 bg-purple-100 shadow-lg scale-105 transform' : isMatched ? 'border-purple-400 bg-purple-50' : 'border-gray-300 bg-white hover:border-purple-300 hover:bg-purple-50' }`} style={{ zIndex: 2, position: 'relative', width: '180px' }} >
                                                         {item}
                                                     </button>
                                                 );
                                             })}
                                         </div>
-                                        
-                                        {/* Middle column - Empty space for lines */}
                                         <div></div>
-                                        
-                                        {/* Right column - Categories */}
                                         <div className="space-y-3">
                                             <p className="font-semibold text-gray-700 mb-3">Categories:</p>
                                             {currentQ.categories.map((category) => {
                                                 const matchedItem = (answers[currentQuestion] || {})[category];
-                                                
                                                 return (
                                                     <div key={category} className="relative">
-                                                        <button
-                                                            id={`cat-${currentQuestion}-${category}`}
-                                                            onClick={() => {
-                                                                if (drawingFrom) {
-                                                                    const newAnswers = { ...(answers[currentQuestion] || {}) };
-                                                                    
-                                                                    Object.keys(newAnswers).forEach(cat => {
-                                                                        if (newAnswers[cat] === drawingFrom) {
-                                                                            delete newAnswers[cat];
-                                                                        }
-                                                                    });
-                                                                    
-                                                                    newAnswers[category] = drawingFrom;
-                                                                    handleAnswer(newAnswers);
-                                                                    
-                                                                    setDrawingFrom(null);
-                                                                    setCurrentMousePos(null);
-                                                                }
-                                                            }}
-                                                            className={`w-full p-3 rounded-xl border-2 transition-all text-left ${
-                                                                matchedItem
-                                                                    ? 'border-purple-400 bg-purple-50 pr-12'
-                                                                    : drawingFrom
-                                                                    ? 'border-purple-300 bg-purple-50 hover:border-purple-500 hover:bg-purple-100'
-                                                                    : 'border-gray-300 bg-gray-50'
-                                                            }`}
-                                                            style={{ zIndex: 2, position: 'relative' }}
-                                                        >
+                                                        <button id={`cat-${currentQuestion}-${category}`} onClick={() => { if (drawingFrom) { const newAnswers = { ...(answers[currentQuestion] || {}) }; Object.keys(newAnswers).forEach(cat => { if (newAnswers[cat] === drawingFrom) { delete newAnswers[cat]; } }); newAnswers[category] = drawingFrom; handleAnswer(newAnswers); setDrawingFrom(null); setCurrentMousePos(null); } }} className={`w-full p-3 rounded-xl border-2 transition-all text-left ${ matchedItem ? 'border-purple-400 bg-purple-50 pr-12' : drawingFrom ? 'border-purple-300 bg-purple-50 hover:border-purple-500 hover:bg-purple-100' : 'border-gray-300 bg-gray-50' }`} style={{ zIndex: 2, position: 'relative' }} >
                                                             <div className="font-bold text-gray-800">{category}</div>
-                                                            {matchedItem && (
-                                                                <div className="text-sm text-purple-600 mt-1">â†’ {matchedItem}</div>
-                                                            )}
+                                                            {matchedItem && ( <div className="text-sm text-purple-600 mt-1">→ {matchedItem}</div> )}
                                                         </button>
                                                         {matchedItem && (
-                                                            <button
-                                                                onClick={() => {
-                                                                    const newAnswers = { ...(answers[currentQuestion] || {}) };
-                                                                    delete newAnswers[category];
-                                                                    handleAnswer(newAnswers);
-                                                                }}
-                                                                className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 hover:bg-red-100 rounded-lg transition-all"
-                                                                style={{ zIndex: 3 }}
-                                                                title="Remove connection"
-                                                            >
+                                                            <button onClick={() => { const newAnswers = { ...(answers[currentQuestion] || {}) }; delete newAnswers[category]; handleAnswer(newAnswers); }} className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 hover:bg-red-100 rounded-lg transition-all" style={{ zIndex: 3 }} title="Remove connection" >
                                                                 <svg className="w-5 h-5 text-red-500" viewBox="0 0 24 24" fill="currentColor">
                                                                     <path d="M3 6.38597C3 5.90152 3.34538 5.50879 3.77143 5.50879L6.43567 5.50832C6.96502 5.49306 7.43202 5.11033 7.61214 4.54412C7.61688 4.52923 7.62232 4.51087 7.64185 4.44424L7.75665 4.05256C7.8269 3.81241 7.8881 3.60318 7.97375 3.41617C8.31209 2.67736 8.93808 2.16432 9.66147 2.03297C9.84457 1.99972 10.0385 1.99986 10.2611 2.00002H13.7391C13.9617 1.99986 14.1556 1.99972 14.3387 2.03297C15.0621 2.16432 15.6881 2.67736 16.0264 3.41617C16.1121 3.60318 16.1733 3.81241 16.2435 4.05256L16.3583 4.44424C16.3778 4.51087 16.3833 4.52923 16.388 4.54412C16.5682 5.11033 17.1278 5.49353 17.6571 5.50879H20.2286C20.6546 5.50879 21 5.90152 21 6.38597C21 6.87043 20.6546 7.26316 20.2286 7.26316H3.77143C3.34538 7.26316 3 6.87043 3 6.38597Z"/>
                                                                     <path fillRule="evenodd" clipRule="evenodd" d="M11.5956 22.0001H12.4044C15.1871 22.0001 16.5785 22.0001 17.4831 21.1142C18.3878 20.2283 18.4803 18.7751 18.6654 15.8686L18.9321 11.6807C19.0326 10.1037 19.0828 9.31524 18.6289 8.81558C18.1751 8.31592 17.4087 8.31592 15.876 8.31592H8.12404C6.59127 8.31592 5.82488 8.31592 5.37105 8.81558C4.91722 9.31524 4.96744 10.1037 5.06788 11.6807L5.33459 15.8686C5.5197 18.7751 5.61225 20.2283 6.51689 21.1142C7.42153 22.0001 8.81289 22.0001 11.5956 22.0001ZM10.2463 12.1886C10.2051 11.7548 9.83753 11.4382 9.42537 11.4816C9.01321 11.525 8.71251 11.9119 8.75372 12.3457L9.25372 17.6089C9.29494 18.0427 9.66247 18.3593 10.0746 18.3159C10.4868 18.2725 10.7875 17.8856 10.7463 17.4518L10.2463 12.1886ZM14.5746 11.4816C14.9868 11.525 15.2875 11.9119 15.2463 12.3457L14.7463 17.6089C14.7051 18.0427 14.3375 18.3593 13.9254 18.3159C13.5132 18.2725 13.2125 17.8856 13.2537 17.4518L13.7537 12.1886C13.7949 11.7548 14.1625 11.4382 14.5746 11.4816Z"/>
@@ -1081,69 +963,23 @@
                                         </div>
                                     </div>
                                 </div>
-                                
                                 <div className="mt-4 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-400">
-                                    <p className="text-sm text-gray-700">
-                                        <strong>How to use:</strong> Click an item on the left, then click its matching category on the right to draw a connection. Click the trash icon to remove a connection.
-                                    </p>
+                                    <p className="text-sm text-gray-700"><strong>How to use:</strong> Click an item on the left, then click its matching category on the right to draw a connection. Click the trash icon to remove a connection.</p>
                                 </div>
                             </div>
                         )}
                         {currentQ.type === 'drag-drop-images' && (
                             <div className="mb-6">
                                 <div className="mb-6">
-                                    <p className="text-sm font-semibold text-gray-600 mb-3">ðŸ“¦ Drag these devices (click to preview):</p>
-                                    <div 
-                                        onDragOver={handleDragOver}
-                                        onDrop={(e) => {
-                                            e.preventDefault();
-                                            const item = draggedItem || e.dataTransfer.getData('text/plain');
-                                            if (item) {
-                                                // Remove item from any category it's in
-                                                let newAnswers = { ...(answers[currentQuestion] || {}) };
-                                                Object.keys(newAnswers).forEach(key => {
-                                                    if (Array.isArray(newAnswers[key])) {
-                                                        newAnswers[key] = newAnswers[key].filter(i => i !== item);
-                                                        // Remove empty arrays
-                                                        if (newAnswers[key].length === 0) {
-                                                            delete newAnswers[key];
-                                                        }
-                                                    }
-                                                });
-                                                setAnswers({ ...answers, [currentQuestion]: newAnswers });
-                                                setDropZones(newAnswers);
-                                                setDraggedItem(null);
-                                            }
-                                        }}
-                                        className="flex flex-wrap gap-3 p-4 bg-gray-50 rounded-xl border-2 border-gray-200 min-h-16 transition-all hover:border-purple-300 hover:bg-purple-50"
-                                    >
+                                    <p className="text-sm font-semibold text-gray-600 mb-3">📦 Drag these devices (click to preview):</p>
+                                    <div onDragOver={handleDragOver} onDrop={(e) => { e.preventDefault(); const item = draggedItem || e.dataTransfer.getData('text/plain'); if (item) { let newAnswers = { ...(answers[currentQuestion] || {}) }; Object.keys(newAnswers).forEach(key => { if (Array.isArray(newAnswers[key])) { newAnswers[key] = newAnswers[key].filter(i => i !== item); if (newAnswers[key].length === 0) { delete newAnswers[key]; } } }); setAnswers({ ...answers, [currentQuestion]: newAnswers }); setDropZones(newAnswers); setDraggedItem(null); } }} className="flex flex-wrap gap-3 p-4 bg-gray-50 rounded-xl border-2 border-gray-200 min-h-16 transition-all hover:border-purple-300 hover:bg-purple-50" >
                                         {getAvailableItems().length === 0 ? (
                                             <p className="text-gray-400 text-sm italic w-full text-center">All devices placed! (Drag back here to remove)</p>
                                         ) : (
                                             getAvailableItems().map((item) => (
-                                                <div 
-                                                    key={item.name} 
-                                                    draggable 
-                                                    onDragStart={(e) => handleDragStart(e, item.name)}
-                                                    onClick={() => setPreviewImage({ name: item.name, icon: item.icon })}
-                                                    className="flex flex-col items-center px-4 py-3 bg-white border-2 border-purple-300 rounded-xl cursor-pointer hover:border-purple-500 hover:shadow-lg transition-all transform hover:scale-105"
-                                                    title="Click to preview, drag to place"
-                                                >
+                                                <div key={item.name} draggable onDragStart={(e) => handleDragStart(e, item.name)} onClick={() => setPreviewImage({ name: item.name, icon: item.icon })} className="flex flex-col items-center px-4 py-3 bg-white border-2 border-purple-300 rounded-xl cursor-pointer hover:border-purple-500 hover:shadow-lg transition-all transform hover:scale-105" title="Click to preview, drag to place" >
                                                     <div className="w-16 h-16 mb-2 flex items-center justify-center">
-                                                        <img 
-                                                            src={`../Images/${item.name.toLowerCase()}.png`}
-                                                            alt={item.name}
-                                                            className="max-w-full max-h-full object-contain pointer-events-none"
-                                                            onError={(e) => {
-                                                                // Fallback to emoji if image doesn't load
-                                                                e.target.onerror = null;
-                                                                e.target.style.display = 'none';
-                                                                const fallback = document.createElement('span');
-                                                                fallback.className = 'text-4xl';
-                                                                fallback.textContent = item.icon;
-                                                                e.target.parentElement.appendChild(fallback);
-                                                            }}
-                                                        />
+                                                        <img src={`../Images/${item.name.toLowerCase()}.png`} alt={item.name} className="max-w-full max-h-full object-contain pointer-events-none" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; const fallback = document.createElement('span'); fallback.className = 'text-4xl'; fallback.textContent = item.icon; e.target.parentElement.appendChild(fallback); }} />
                                                     </div>
                                                     <div className="text-sm font-semibold font-poppins text-gray-800 pointer-events-none">{item.name}</div>
                                                 </div>
@@ -1153,84 +989,35 @@
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {currentQ.categories.map((category) => (
-                                        <div 
-                                            key={category} 
-                                            onDragOver={handleDragOver} 
-                                            onDrop={(e) => handleDrop(e, category)} 
-                                            className="p-4 border-2 border-dashed rounded-xl min-h-40 transition-all border-gray-300 bg-gray-50 hover:border-purple-400 hover:bg-purple-50"
-                                        >
+                                        <div key={category} onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, category)} className="p-4 border-2 border-dashed rounded-xl min-h-40 transition-all border-gray-300 bg-gray-50 hover:border-purple-400 hover:bg-purple-50" >
                                             <p className="font-semibold text-gray-700 mb-3 text-center text-lg">{category}</p>
                                             <div className="flex flex-wrap gap-2 justify-center">
                                                 {dropZones[category] && dropZones[category].map((itemName) => { 
                                                     const item = currentQ.items.find(i => i.name === itemName); 
                                                     return (
-                                                        <div 
-                                                            key={itemName} 
-                                                            draggable 
-                                                            onDragStart={(e) => handleDragStart(e, itemName)}
-                                                            onClick={() => setPreviewImage({ name: itemName, icon: item?.icon })}
-                                                            className="flex flex-col items-center px-3 py-2 bg-white border-2 border-purple-400 rounded-xl cursor-pointer hover:border-purple-600 hover:shadow-lg transition-all"
-                                                            title="Click to preview, drag to move"
-                                                        >
+                                                        <div key={itemName} draggable onDragStart={(e) => handleDragStart(e, itemName)} onClick={() => setPreviewImage({ name: itemName, icon: item?.icon })} className="flex flex-col items-center px-3 py-2 bg-white border-2 border-purple-400 rounded-xl cursor-pointer hover:border-purple-600 hover:shadow-lg transition-all" title="Click to preview, drag to move" >
                                                             <div className="w-12 h-12 mb-1 flex items-center justify-center">
-                                                                <img 
-                                                                    src={`../Images/${itemName.toLowerCase()}.png`}
-                                                                    alt={itemName}
-                                                                    className="max-w-full max-h-full object-contain pointer-events-none"
-                                                                    onError={(e) => {
-                                                                        e.target.onerror = null;
-                                                                        e.target.style.display = 'none';
-                                                                        const fallback = document.createElement('span');
-                                                                        fallback.className = 'text-2xl';
-                                                                        fallback.textContent = item?.icon || 'ðŸ“¦';
-                                                                        e.target.parentElement.appendChild(fallback);
-                                                                    }}
-                                                                />
+                                                                <img src={`../Images/${itemName.toLowerCase()}.png`} alt={itemName} className="max-w-full max-h-full object-contain pointer-events-none" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; const fallback = document.createElement('span'); fallback.className = 'text-2xl'; fallback.textContent = item?.icon || '📦'; e.target.parentElement.appendChild(fallback); }} />
                                                             </div>
                                                             <div className="text-xs font-semibold font-poppins text-gray-800 pointer-events-none">{itemName}</div>
                                                         </div>
                                                     ); 
                                                 })}
-                                                {(!dropZones[category] || dropZones[category].length === 0) && (
-                                                    <p className="text-gray-400 text-sm italic">Drop devices here...</p>
-                                                )}
+                                                {(!dropZones[category] || dropZones[category].length === 0) && ( <p className="text-gray-400 text-sm italic">Drop devices here...</p> )}
                                             </div>
                                         </div>
                                     ))}
                                 </div>
-                                
-                                {/* Image Preview Modal */}
                                 {previewImage && (
-                                    <div 
-                                        className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4"
-                                        onClick={() => setPreviewImage(null)}
-                                    >
-                                        <div 
-                                            className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-8 text-center fade-in"
-                                            onClick={(e) => e.stopPropagation()}
-                                        >
+                                    <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4" onClick={() => setPreviewImage(null)} >
+                                        <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-8 text-center fade-in" onClick={(e) => e.stopPropagation()} >
                                             <div className="mb-6">
                                                 <h3 className="text-2xl font-bold font-poppins text-gray-800 mb-4">{previewImage.name}</h3>
                                                 <div className="flex items-center justify-center bg-gray-50 rounded-2xl p-8 min-h-80">
-                                                    <img 
-                                                        src={`../Images/${previewImage.name.toLowerCase()}.png`}
-                                                        alt={previewImage.name}
-                                                        className="max-w-full max-h-96 object-contain"
-                                                        onError={(e) => {
-                                                            e.target.onerror = null;
-                                                            e.target.style.display = 'none';
-                                                            const fallback = document.createElement('div');
-                                                            fallback.className = 'text-9xl';
-                                                            fallback.textContent = previewImage.icon || 'ðŸ“¦';
-                                                            e.target.parentElement.appendChild(fallback);
-                                                        }}
-                                                    />
+                                                    <img src={`../Images/${previewImage.name.toLowerCase()}.png`} alt={previewImage.name} className="max-w-full max-h-96 object-contain" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; const fallback = document.createElement('div'); fallback.className = 'text-9xl'; fallback.textContent = previewImage.icon || '📦'; e.target.parentElement.appendChild(fallback); }} />
                                                 </div>
                                             </div>
-                                            <button 
-                                                onClick={() => setPreviewImage(null)}
-                                                className="bg-purple-600 hover:bg-purple-700 text-white font-bold font-poppins py-3 px-8 rounded-xl transition-all shadow-lg hover:scale-105 transform"
-                                            >
+                                            <button onClick={() => setPreviewImage(null)} className="bg-purple-600 hover:bg-purple-700 text-white font-bold font-poppins py-3 px-8 rounded-xl transition-all shadow-lg hover:scale-105 transform" >
                                                 Close Preview
                                             </button>
                                             <p className="text-gray-500 text-sm mt-3">Click outside or press Close to exit</p>
@@ -1241,8 +1028,8 @@
                         )}
                         
                         <div className="flex gap-3 mt-8">
-                            {currentQuestion > 0 && (<button onClick={handleBack} className="px-6 py-4 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded-xl transition-all shadow-lg hover:scale-105 transform font-poppins">â† Back</button>)}
-                            <button onClick={handleNext} disabled={!isAnswered} className={`flex-1 py-4 px-6 rounded-xl font-bold transition-all ${isAnswered ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:scale-105 transform' : 'bg-gray-300 text-gray-500 cursor-not-allowed'} font-poppins`}>{currentQuestion < questions.length - 1 ? 'Next â†’' : 'Finish Quiz'}</button>
+                            {currentQuestion > 0 && (<button onClick={handleBack} className="px-6 py-4 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded-xl transition-all shadow-lg hover:scale-105 transform font-poppins">← Back</button>)}
+                            <button onClick={handleNext} disabled={!isAnswered} className={`flex-1 py-4 px-6 rounded-xl font-bold transition-all ${isAnswered ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:scale-105 transform' : 'bg-gray-300 text-gray-500 cursor-not-allowed'} font-poppins`}>{currentQuestion < questions.length - 1 ? 'Next →' : 'Finish Quiz'}</button>
                         </div>
                     </div>
                 </div>
