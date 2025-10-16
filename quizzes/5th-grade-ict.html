@@ -398,40 +398,38 @@
             // NAME CONFIRMATION AND START SCREEN - After password
             if (passwordEntered && !hasStarted && !isCompleted) {
                 return (
-                    <>
-                        <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
-                            isDarkMode 
-                                ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
-                                : 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500'
+                    <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
+                        isDarkMode 
+                            ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+                            : 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500'
+                    }`}>
+                        <DarkModeToggle />
+                        <div className={`rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 transform transition-all fade-in ${
+                            isDarkMode ? 'bg-gray-800' : 'bg-white'
                         }`}>
-                            <DarkModeToggle />
-                            <div className={`rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 transform transition-all fade-in ${
-                                isDarkMode ? 'bg-gray-800' : 'bg-white'
-                            }`}>
-                                <div className="flex items-center justify-center mb-6">
-                                    <Monitor className="w-12 h-12 text-blue-600 mr-3"/>
-                                    <h1 className={`text-4xl font-bold font-poppins ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>ICT Quiz - 5th Grade</h1>
-                                </div>
-                                <p className={`text-center mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Welcome to the Technology quiz!</p>
-                                <div className={`rounded-lg p-6 mb-6 border-l-4 ${isDarkMode ? 'bg-yellow-900 border-yellow-600' : 'bg-yellow-50 border-yellow-400'}`}>
-                                    <p className={`text-lg font-semibold font-poppins mb-2 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>Your Name:</p>
-                                    <p className={`text-2xl font-bold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>{studentName}</p>
-                                </div>
-                                <div className={`rounded-lg p-6 mb-6 ${isDarkMode ? 'bg-blue-900' : 'bg-blue-50'}`}>
-                                    <p className={`text-lg font-semibold font-poppins mb-3 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>📋 Instructions:</p>
-                                    <ul className={`space-y-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                                        <li>• There are 5 questions in total.</li>
-                                        <li>• The total score is 20 points.</li>
-                                        <li>• Read each question carefully.</li>
-                                    </ul>
-                                </div>
-                                <button onClick={handleStartQuiz} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold font-poppins py-4 px-6 rounded-xl transition-colors shadow-lg">
-                                    Start Quiz
-                                </button>
-                                <p className={`text-sm text-center mt-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>⚠️ The quiz will enter fullscreen mode. Please stay on this tab.</p>
+                            <div className="flex items-center justify-center mb-6">
+                                <Monitor className="w-12 h-12 text-blue-600 mr-3"/>
+                                <h1 className={`text-4xl font-bold font-poppins ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>ICT Quiz - 5th Grade</h1>
                             </div>
+                            <p className={`text-center mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Welcome to the Technology quiz!</p>
+                            <div className={`rounded-lg p-6 mb-6 border-l-4 ${isDarkMode ? 'bg-yellow-900 border-yellow-600' : 'bg-yellow-50 border-yellow-400'}`}>
+                                <p className={`text-lg font-semibold font-poppins mb-2 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>Your Name:</p>
+                                <p className={`text-2xl font-bold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>{studentName}</p>
+                            </div>
+                            <div className={`rounded-lg p-6 mb-6 ${isDarkMode ? 'bg-blue-900' : 'bg-blue-50'}`}>
+                                <p className={`text-lg font-semibold font-poppins mb-3 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>📋 Instructions:</p>
+                                <ul className={`space-y-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                    <li>• There are 5 questions in total.</li>
+                                    <li>• The total score is 20 points.</li>
+                                    <li>• Read each question carefully.</li>
+                                </ul>
+                            </div>
+                            <button onClick={handleStartQuiz} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold font-poppins py-4 px-6 rounded-xl transition-colors shadow-lg">
+                                Start Quiz
+                            </button>
+                            <p className={`text-sm text-center mt-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>⚠️ The quiz will enter fullscreen mode. Please stay on this tab.</p>
                         </div>
-                    </>
+                    </div>
                 );
             }
             if (isCompleted) {
