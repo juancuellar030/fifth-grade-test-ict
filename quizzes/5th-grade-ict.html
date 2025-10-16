@@ -69,7 +69,19 @@
                 <circle cx="12" cy="16.5" r="1" fill="currentColor"></circle>
             </svg>
         );
-         
+
+        const MoonIcon = ({ className }) => (
+            <svg className={className} viewBox="0 0 24 24" fill="none">
+                <path d="M3.32031 11.6835C3.32031 16.6541 7.34975 20.6835 12.3203 20.6835C16.1075 20.6835 19.3483 18.3443 20.6768 15.032C19.6402 15.4486 18.5059 15.6834 17.3203 15.6834C12.3497 15.6834 8.32031 11.654 8.32031 6.68342C8.32031 5.50338 8.55165 4.36259 8.96453 3.32996C5.65605 4.66028 3.32031 7.89912 3.32031 11.6835Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+        );
+        
+        const SunIcon = ({ className }) => (
+            <svg className={className} viewBox="0 0 24 24" fill="none">
+                <path d="M12 3V4M12 20V21M4 12H3M6.31412 6.31412L5.5 5.5M17.6859 6.31412L18.5 5.5M6.31412 17.69L5.5 18.5001M17.6859 17.69L18.5 18.5001M21 12H20M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+        );
+           
         const Confetti = () => {
              const confettiPieces = Array.from({ length: 250 }).map((_, i) => ({ id: i, left: Math.random() * 100, delay: Math.random() * 3, duration: 2 + Math.random() * 1, color: ['#ff5353', '#ffee53', '#53ffa9', '#5395ff', '#ef53ff', '#45B7D1'][Math.floor(Math.random() * 6)], rotX: Math.random() * 360, rotY: Math.random() * 360, rotZ: Math.random() * 360, swayAmount: 50 + Math.random() * 100 }));
             return (
@@ -121,10 +133,11 @@
             const [matchingLines, setMatchingLines] = useState({});
             const [drawingFrom, setDrawingFrom] = useState(null);
             const [currentMousePos, setCurrentMousePos] = useState(null);
+            const [isDarkMode, setIsDarkMode] = useState(false);
             const inputRef = useRef(null);
             
             // Base questions can be defined here
-            const baseQuestions = [ { id: 1, type: 'multiple-choice-group', question: 'Answer each question by selecting the correct option:', questions: [{ text: 'What does ICT help us do?', options: ['Share and find information', 'Paint pictures', 'Ride bicycles', 'Cook food'], correct: 0 }, { text: 'What do we call programs that help us play games or do homework on a computer?', options: ['Hardware', 'Software', 'Network', 'Input'], correct: 1 }, { text: 'What is a device in ICT?', options: ['A physical tool or piece of equipment like a computer or smartphone', 'A program that helps you write documents', 'A type of internet connection', 'A kind of software that plays games'], correct: 0 }] }, { id: 2, type: 'drag-drop', question: 'Drag each item to the correct category:', items: ['Headphones🎧', 'Google Chrome🌐', 'Wi-Fi🛜', 'Tablet📱'], categories: ['Hardware', 'Software App', 'Network', 'Processing Device'], correctAnswers: { 'Hardware': 'Headphones🎧', 'Software App': 'Google Chrome🌐', 'Network': 'Wi-Fi🛜', 'Processing Device': 'Tablet📱' } }, { id: 3, type: 'drag-drop-images', question: 'Drag each device to the correct group:', items: [{ name: 'Keyboard', icon: '⌨️' }, { name: 'Monitor', icon: '🖥️' }, { name: 'Mouse', icon: '🖱️' }, { name: 'Printer', icon: '🖨️' }, { name: 'Microphone', icon: '🎤' }, { name: 'Speaker', icon: '🔊' }], categories: ['Input Devices', 'Output Devices'], correctAnswers: { 'Input Devices': ['Keyboard', 'Mouse', 'Microphone'], 'Output Devices': ['Monitor', 'Printer', 'Speaker'] } }, { id: 4, type: 'true-false-group', question: 'Read each statement and select True or False:', statements: [{ text: 'Software is something you can physically touch.🫳', correct: 1 }, { text: 'Smartphones and tablets are examples of ICT devices.📲', correct: 0 }, { text: 'Sending emails is an example of using ICT in daily life.📧', correct: 0 }] }, { id: 5, type: 'fill-group', question: 'Drag the correct word from the box to fill in each blank:', wordBank: ['networks', 'internet', 'software', 'processing', 'communication'], statements: [{ text: 'Bluetooth and Wi-Fi are examples of wireless _______.', answer: 'networks' }, { text: 'Multiple devices connect to share or find information using the _______.', answer: 'internet' }, { text: 'Programs, apps and games are examples of _______.', answer: 'software' }, { text: 'When a computer thinks and works on information, this is called _______.', answer: 'processing' }] } ];
+            const baseQuestions = [ { id: 1, type: 'multiple-choice-group', question: 'Answer each question by selecting the correct option:', questions: [{ text: 'What does ICT help us do?', options: ['Share and find information', 'Paint pictures', 'Ride bicycles', 'Cook food'], correct: 0 }, { text: 'What do we call programs that help us play games or do homework on a computer?', options: ['Hardware', 'Software', 'Network', 'Input'], correct: 1 }, { text: 'What is a device in ICT?', options: ['A physical tool or piece of equipment like a computer or smartphone', 'A program that helps you write documents', 'A type of internet connection', 'A kind of software that plays games'], correct: 0 }] }, { id: 2, type: 'drag-drop', question: 'Drag each item to the correct category:', items: ['Headphones🎧', 'Google Chrome🌐', 'Wi-Fi🛜', 'Tablet📱'], categories: ['Hardware', 'Software App', 'Network', 'Processing Device'], correctAnswers: { 'Hardware': 'Headphones🎧', 'Software App': 'Google Chrome🌐', 'Network': 'Wi-Fi🛜', 'Processing Device': 'Tablet📱' } }, { id: 3, type: 'drag-drop-images', question: 'Drag each device to the correct group:', items: [{ name: 'Keyboard', icon: 'âŒ¨ï¸' }, { name: 'Monitor', icon: 'ðŸ–¥ï¸' }, { name: 'Mouse', icon: 'ðŸ–±ï¸' }, { name: 'Printer', icon: 'ðŸ–¨ï¸' }, { name: 'Microphone', icon: 'ðŸŽ¤' }, { name: 'Speaker', icon: 'ðŸ”Š' }], categories: ['Input Devices', 'Output Devices'], correctAnswers: { 'Input Devices': ['Keyboard', 'Mouse', 'Microphone'], 'Output Devices': ['Monitor', 'Printer', 'Speaker'] } }, { id: 4, type: 'true-false-group', question: 'Read each statement and select True or False:', statements: [{ text: 'Software is something you can physically touch.🫲', correct: 1 }, { text: 'Smartphones and tablets are examples of ICT devices.📱', correct: 0 }, { text: 'Sending emails is an example of using ICT in daily life.📧', correct: 0 }] }, { id: 5, type: 'fill-group', question: 'Drag the correct word from the box to fill in each blank:', wordBank: ['networks', 'internet', 'software', 'processing', 'communication'], statements: [{ text: 'Bluetooth and Wi-Fi are examples of wireless _______.', answer: 'networks' }, { text: 'Multiple devices connect to share or find information using the _______.', answer: 'internet' }, { text: 'Programs, apps and games are examples of _______.', answer: 'software' }, { text: 'When a computer thinks and works on information, this is called _______.', answer: 'processing' }] } ];
 
             const shuffleArray = (array) => {
                 const newArray = [...array];
@@ -164,7 +177,7 @@
             // ALL other functions and variables must also be defined before any returns.
             const questions = randomizedQuestions;
             const gradingScale = { 0: 2.0, 1: 2.2, 2: 2.3, 3: 2.5, 4: 2.7, 5: 2.8, 6: 3.0, 7: 3.2, 8: 3.3, 9: 3.5, 10: 3.6, 11: 3.8, 12: 3.9, 13: 4.0, 14: 4.2, 15: 4.3, 16: 4.5, 17: 4.6, 18: 4.7, 19: 4.9, 20: 5.0 };
-            const studentList = [ "Isabella Arce Rodriguez", "Valentina Arias Guevara", "Maria Paz Bermeo Montealegre", "Zoe Lylen Castañeda Romero", "Gabriel Esteban Cuellar Salas", "Dilan Camilo Cumaco Pastrana", "Martín Fernández Lucuara", "Derek Santiago Fierro Lopez", "Simón Gonzalez Chavarro", "Gerónimo Jimenez Bocanegra", "Samuel José Majé Marroquín", "Martín Medina Ortiz", "Karen Sofia Mosquera Baylon", "María Del Mar Mosquera Garzón", "Santiago Motta Santofimio", "Ana Lucia Murcia Guebely", "Antonella Murcia Oliveros", "Emmanuel Murcia Trujillo", "Luciana Quesada Parra", "Maria Paz Quesada Rodriguez", "Miguel Ángel Ruiz Varon", "Luzyana Suarez Solorzano", "Santiago Tobón Castro", "Sarita Vargas Carvajal", "Luciana Sofia Vargas Sanchez", "Julieta Alarcon Cabrera", "Emmanuel Barrero Sandoval", "Catalina Barreto Rivera", "Khalid Bedoya Sanabria", "Daniela Beron Farfan", "Ana Lucia Buendía Losada", "Jacobo Carvajal Jimenez", "Juliana Margarita Castrillon Ramos", "Isabel Cristina Cuellar Romero", "Emiliano Diaz Rojas", "Gabriela Echeverry Trujillo", "Sara Isabella Gaitan Arango", "Fabio Hernandez Galindo", "Juanita Milagros Lopez Alarcon", "Karla Medina Cuenca", "Maria Paz Mora Caicedo", "Emiliano Ortiz Ortiz", "Pablo Alejandro Oviedo Barrero", "Maria Lucia Perdomo Ramirez", "Zamuhel Ramirez Castro", "Sara Juliana Riscanevo Lopera", "Maria Fernanda Rojas Castro", "Santiago Trujillo Gonzalez", "Juan Diego Valderrama Rodriguez", "Sarah Michelle Audor Gutierrez", "Santiago Chavarro Fernández", "Taliana Andrea Chavarro Sanabria", "Ariadna Estupiñan Borrero", "Martin Eduardo Fierro Cordoba", "Danna Gabriela Giraldo Leiva", "Juan Ricardo Guevara Calderon", "Salomon Hoyos Castillo", "Jhoan Sebastian Lozano Moscoso", "Sebastian Martinez Dussan", "Sofia Mayorca Gonzalez", "Samantha Medina Figueroa", "Maria Lucia Melo Camacho", "Sara Luciana Obregon Agudelo", "Sara Orozco Escobar", "Santiago Osorio Benavides", "Angie Luciana Perez Trujillo", "Santiago Polania Perdomo", "Felipe Ramos Vargas", "Jorge Mario Rojas Alvarez", "Sofia Salazar Castañeda", "Hernán Gabriel Sierra Suarez", "Maria Victoria Vidal Prieto", "Juan Andres Vieda Diaz", "Juan Diego Albarracín Martínez", "Emiliano Andrade Perez", "Moises Burgos Arevalo", "Jeronimo Calderón Morales", "Martín Caquimbo De Castro", "Salome Castro Hurtado", "Ashly Dayanna Cumaco Alonso", "Dylan Santiago Gomez Reyes", "Salome Gutierrez Acosta", "Jesus Manuel Gutierrez Vargas", "Isabela Huepe Quintero", "Juan Esteban Madrid Guevara", "Jeronimo Mora Araujo", "Silvana Moreno Pastrana", "Luciana Niño Rojas", "Emmanuel José Ortiz Urrego", "Sara Sofia Oviedo Cajiao", "Daniel Leonardo Perdomo Ochoa", "Juan Matias Rodriguez Calderon", "Maria Jose Rojas Castro", "Gabriela Sarmiento-Perez Trujillo", "Juan Felipe Tamayo Castañeda", "Luciana Andrea Tellez Aviles", "Hanna Isabella Valenzuela Paredes" ];
+            const studentList = [ "Isabella Arce Rodriguez", "Valentina Arias Guevara", "Maria Paz Bermeo Montealegre", "Zoe Lylen CastaÃ±eda Romero", "Gabriel Esteban Cuellar Salas", "Dilan Camilo Cumaco Pastrana", "MartÃ­n FernÃ¡ndez Lucuara", "Derek Santiago Fierro Lopez", "SimÃ³n Gonzalez Chavarro", "GerÃ³nimo Jimenez Bocanegra", "Samuel JosÃ© MajÃ© MarroquÃ­n", "MartÃ­n Medina Ortiz", "Karen Sofia Mosquera Baylon", "MarÃ­a Del Mar Mosquera GarzÃ³n", "Santiago Motta Santofimio", "Ana Lucia Murcia Guebely", "Antonella Murcia Oliveros", "Emmanuel Murcia Trujillo", "Luciana Quesada Parra", "Maria Paz Quesada Rodriguez", "Miguel Ãngel Ruiz Varon", "Luzyana Suarez Solorzano", "Santiago TobÃ³n Castro", "Sarita Vargas Carvajal", "Luciana Sofia Vargas Sanchez", "Julieta Alarcon Cabrera", "Emmanuel Barrero Sandoval", "Catalina Barreto Rivera", "Khalid Bedoya Sanabria", "Daniela Beron Farfan", "Ana Lucia BuendÃ­a Losada", "Jacobo Carvajal Jimenez", "Juliana Margarita Castrillon Ramos", "Isabel Cristina Cuellar Romero", "Emiliano Diaz Rojas", "Gabriela Echeverry Trujillo", "Sara Isabella Gaitan Arango", "Fabio Hernandez Galindo", "Juanita Milagros Lopez Alarcon", "Karla Medina Cuenca", "Maria Paz Mora Caicedo", "Emiliano Ortiz Ortiz", "Pablo Alejandro Oviedo Barrero", "Maria Lucia Perdomo Ramirez", "Zamuhel Ramirez Castro", "Sara Juliana Riscanevo Lopera", "Maria Fernanda Rojas Castro", "Santiago Trujillo Gonzalez", "Juan Diego Valderrama Rodriguez", "Sarah Michelle Audor Gutierrez", "Santiago Chavarro FernÃ¡ndez", "Taliana Andrea Chavarro Sanabria", "Ariadna EstupiÃ±an Borrero", "Martin Eduardo Fierro Cordoba", "Danna Gabriela Giraldo Leiva", "Juan Ricardo Guevara Calderon", "Salomon Hoyos Castillo", "Jhoan Sebastian Lozano Moscoso", "Sebastian Martinez Dussan", "Sofia Mayorca Gonzalez", "Samantha Medina Figueroa", "Maria Lucia Melo Camacho", "Sara Luciana Obregon Agudelo", "Sara Orozco Escobar", "Santiago Osorio Benavides", "Angie Luciana Perez Trujillo", "Santiago Polania Perdomo", "Felipe Ramos Vargas", "Jorge Mario Rojas Alvarez", "Sofia Salazar CastaÃ±eda", "HernÃ¡n Gabriel Sierra Suarez", "Maria Victoria Vidal Prieto", "Juan Andres Vieda Diaz", "Juan Diego AlbarracÃ­n MartÃ­nez", "Emiliano Andrade Perez", "Moises Burgos Arevalo", "Jeronimo CalderÃ³n Morales", "MartÃ­n Caquimbo De Castro", "Salome Castro Hurtado", "Ashly Dayanna Cumaco Alonso", "Dylan Santiago Gomez Reyes", "Salome Gutierrez Acosta", "Jesus Manuel Gutierrez Vargas", "Isabela Huepe Quintero", "Juan Esteban Madrid Guevara", "Jeronimo Mora Araujo", "Silvana Moreno Pastrana", "Luciana NiÃ±o Rojas", "Emmanuel JosÃ© Ortiz Urrego", "Sara Sofia Oviedo Cajiao", "Daniel Leonardo Perdomo Ochoa", "Juan Matias Rodriguez Calderon", "Maria Jose Rojas Castro", "Gabriela Sarmiento-Perez Trujillo", "Juan Felipe Tamayo CastaÃ±eda", "Luciana Andrea Tellez Aviles", "Hanna Isabella Valenzuela Paredes" ];
             const passwords = ['z7nt2o', '4dzvi8', '8ixiuc', '8qgl0n', 'uhbwxh', 'jmdhbk', '7wrhiq', 'dic2qx', 'ek2shq', 'c4irhu', 'mw5h6e', 'fghchr', 'r43bgp', 'dtn7mf', 'uioptq', 'vquuak', 'cz8dau', 'gkb3s2', 'gdavbu', 'ublnac', 'ctmg2r', 'z6n3ss', 'c07tfv', 'i4meff', 'u8ddkm', 'yu3iub', '3wumyu', 'qr1lu9', 'abws44', 'mzkssg', 'u6nvus', 'drwnsz', 'xoivmp', 'mxtshl', 'brpqol', 'xa7bsm', 'ciplsu', '7dkhln', 'a8djt9', 'vem8oi', 'jgtv0p', 'qrqjxt', 'bh5lv1', 'pyiar6', 'wzbyda', 'uok80y', '0grnm8', 'v54xjd', 'eqn1c7', '38cdqy', 'qmuzyx', 'nafwob', 'jb3xvc', 'jtfjm8', 'uvyagu', 'rvn59h', '6pq9zh', 'uvtipz', 'dmnhgb', 'zhxgcp', 'zwdb5k', 'qjqyja', 'b7tdwo', 'gw3lqr', '3qwp8h', 'ruqrzh', 'dmzrtb', 'kmlsxe', 'xtthin', 'wrdvai', 'aik8se', 'qmgxxi', 'a9efrh', 'ixbeao', '1yf1em', 'a1fnxs', 'nwbdff', 'qcsm1c', 'xvths8', 'urbk1c', 'h0odrv', 'evoj58', 'bat2md', 'l6ky5a', 'axg1xa', 'uvu211', 'g9xwtl', 'k1ddq2', 'lwmeo1', '2ndczg', 'v3wvc3', 'zvxuwb', '2ksq1g', 'tkpxy3'];
             const studentPasswordMap = {};
             studentList.forEach((student, index) => {
@@ -268,20 +281,41 @@
             const handleDrop = (e, category) => { e.preventDefault(); const item = draggedItem || e.dataTransfer.getData('text/plain'); if (item) { let newAnswers = { ...(answers[currentQuestion] || {}) }; Object.keys(newAnswers).forEach(key => { if (Array.isArray(newAnswers[key])) newAnswers[key] = newAnswers[key].filter(i => i !== item); else if (newAnswers[key] === item) delete newAnswers[key]; }); if (questions[currentQuestion].type === 'drag-drop-images') { if (!newAnswers[category]) newAnswers[category] = []; if (!newAnswers[category].includes(item)) newAnswers[category].push(item); } else { newAnswers[category] = item; } setAnswers({ ...answers, [currentQuestion]: newAnswers }); setDropZones(newAnswers); setDraggedItem(null); } };
             const getAvailableItems = () => { const currentQ = questions[currentQuestion]; const currentAnswers = answers[currentQuestion] || {}; if (currentQ.type.includes('drag-drop')) { const placedItems = Object.values(currentAnswers).flat(); return currentQ.items.filter(item => !placedItems.includes(item.name || item)); } if (currentQ.type === 'fill-group') return currentQ.wordBank.filter(word => !Object.values(currentAnswers).includes(word)); return []; };
             const handleNext = () => { setQuestionTransition('exit'); setTimeout(() => { if (currentQuestion < questions.length - 1) { setCurrentQuestion(prev => prev + 1); setQuestionTransition('enter'); } else { setIsCompleted(true); setCompletedStudents({ ...completedStudents, [studentName]: true }); if (document.exitFullscreen) document.exitFullscreen(); } }, 300); };
-            const handleBack = () => { if (currentQuestion > 0) { setQuestionTransition('exit'); setTimeout(() => setCurrentQuestion(prev => prev - 1), 300); }};
-
+            const handleBack = () => { if (currentQuestion > 0) { setQuestionTransition('exit'); setTimeout(() => setCurrentQuestion(prev => prev - 1), 300); }};    const DarkModeToggle = () => (
+                <button
+                    onClick={() => setIsDarkMode(!isDarkMode)}
+                    className={`fixed top-4 right-4 z-50 p-3 rounded-full shadow-lg transition-all hover:scale-110 transform ${
+                        isDarkMode 
+                            ? 'bg-gray-800 text-yellow-400 hover:bg-gray-700' 
+                            : 'bg-white text-gray-800 hover:bg-gray-100'
+                    }`}
+                    title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                    aria-label="Toggle dark mode"
+                >
+                    {isDarkMode ? <SunIcon className="w-6 h-6" /> : <MoonIcon className="w-6 h-6" />}
+                </button>
+            );
+            
             // PASSWORD SCREEN - First screen shown
             if (!passwordEntered && !hasStarted && !isCompleted) {
                 return (
-                    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
-                        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 transform transition-all fade-in">
+                    <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
+                        isDarkMode 
+                            ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+                            : 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500'
+                    }`}>
+                        <DarkModeToggle />
+                        <div className={`rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 transform transition-all fade-in ${
+                            isDarkMode ? 'bg-gray-800' : 'bg-white'
+                        }`}>
+                            {/* ===== UPDATE TEXT COLORS FOR DARK MODE ===== */}
                             <div className="flex items-center justify-center mb-6">
                                 <Monitor className="w-12 h-12 text-blue-600 mr-3"/>
-                                <h1 className="text-4xl font-bold font-poppins text-blue-600">ICT Quiz - 5th Grade</h1>
+                                <h1 className={`text-4xl font-bold font-poppins ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>ICT Quiz - 5th Grade</h1>
                             </div>
-                            <p className="text-gray-700 text-center mb-6">Enter your password to access the quiz</p>
+                            <p className={`text-center mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Enter your password to access the quiz</p>
                             <div className="mb-6">
-                                <label className="block text-gray-700 font-semibold mb-2">Password:</label>
+                                <label className={`block font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Password:</label>
                                 <div className="relative">
                                     <input 
                                         type={showPassword ? 'text' : 'password'} 
@@ -296,7 +330,9 @@
                                             }
                                         }}
                                         placeholder="Enter your password..."
-                                        className="w-full p-3 pr-12 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
+                                        className={`w-full p-3 pr-12 border-2 rounded-lg focus:border-blue-500 focus:outline-none ${
+                                            isDarkMode ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'border-gray-300 bg-white'
+                                        }`}
                                         autoFocus
                                     />
                                     <button
@@ -351,8 +387,10 @@
 
             if (questions.length === 0) {
                 return (
-                    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center">
-                        <div className="text-white text-2xl font-poppins">Loading Quiz...</div>
+                    <div className={`min-h-screen flex items-center justify-center transition-colors duration-300 ${
+                        isDarkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500'
+                    }`}>
+                        <div className={`text-2xl font-poppins ${isDarkMode ? 'text-white' : 'text-white'}`}>Loading Quiz...</div>
                     </div>
                 );
             }
@@ -360,31 +398,40 @@
             // NAME CONFIRMATION AND START SCREEN - After password
             if (passwordEntered && !hasStarted && !isCompleted) {
                 return (
-                    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
-                        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 transform transition-all fade-in">
+                    // ===== UPDATE THIS DIV =====
+                    <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
+                        isDarkMode 
+                            ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+                            : 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500'
+                    }`}>
+                        <DarkModeToggle />
+                        <div className={`rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 transform transition-all fade-in ${
+                            isDarkMode ? 'bg-gray-800' : 'bg-white'
+                        }`}>
                             <div className="flex items-center justify-center mb-6">
                                 <Monitor className="w-12 h-12 text-blue-600 mr-3"/>
-                                <h1 className="text-4xl font-bold font-poppins text-blue-600">ICT Quiz - 5th Grade</h1>
+                                <h1 className={`text-4xl font-bold font-poppins ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>ICT Quiz - 5th Grade</h1>
                             </div>
-                            <p className="text-gray-700 text-center mb-6">Welcome to the Technology quiz!</p>
-                            <div className="bg-yellow-50 rounded-lg p-6 mb-6 border-l-4 border-yellow-400">
-                                <p className="text-lg font-semibold font-poppins text-gray-800 mb-2">Your Name:</p>
-                                <p className="text-2xl font-bold text-blue-600">{studentName}</p>
+                            <p className={`text-center mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Welcome to the Technology quiz!</p>
+                            <div className={`rounded-lg p-6 mb-6 border-l-4 ${isDarkMode ? 'bg-yellow-900 border-yellow-600' : 'bg-yellow-50 border-yellow-400'}`}>
+                                <p className={`text-lg font-semibold font-poppins mb-2 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>Your Name:</p>
+                                <p className={`text-2xl font-bold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>{studentName}</p>
                             </div>
-                            <div className="bg-blue-50 rounded-lg p-6 mb-6">
-                                <p className="text-lg font-semibold font-poppins text-gray-800 mb-3">📋 Instructions:</p>
-                                <ul className="space-y-2 text-gray-700">
-                                    <li>• There are 5 questions in total.</li>
-                                    <li>• The total score is 20 points.</li>
-                                    <li>• Read each question carefully.</li>
+                            <div className={`rounded-lg p-6 mb-6 ${isDarkMode ? 'bg-blue-900' : 'bg-blue-50'}`}>
+                                <p className={`text-lg font-semibold font-poppins mb-3 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>ðŸ“‹ Instructions:</p>
+                                <ul className={`space-y-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                    <li>â€¢ There are 5 questions in total.</li>
+                                    <li>â€¢ The total score is 20 points.</li>
+                                    <li>â€¢ Read each question carefully.</li>
                                 </ul>
                             </div>
                             <button onClick={handleStartQuiz} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold font-poppins py-4 px-6 rounded-xl transition-colors shadow-lg">
                                 Start Quiz
                             </button>
-                            <p className="text-sm text-gray-600 text-center mt-4">⚠️ The quiz will enter fullscreen mode. Please stay on this tab.</p>
+                            <p className={`text-sm text-center mt-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>âš ï¸ The quiz will enter fullscreen mode. Please stay on this tab.</p>
                         </div>
                     </div>
+                    // ===== END NAME SCREEN UPDATE =====
                 );
             }
 
@@ -398,18 +445,27 @@
                 if (showReview) {
                     // Review Mode - Show answers with feedback
                     return (
-                        <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 p-4 overflow-y-auto">
-                            <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl mx-auto my-8 relative z-10">
+                        <div className={`min-h-screen p-4 overflow-y-auto transition-colors duration-300 ${
+                            isDarkMode 
+                                ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+                                : 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500'
+                        }`}>
+                            <DarkModeToggle />
+                            <div className={`rounded-3xl shadow-2xl p-8 max-w-4xl mx-auto my-8 relative z-10 ${
+                                isDarkMode ? 'bg-gray-800' : 'bg-white'
+                            }`}>
                                 <div className="text-center mb-6">
-                                    <h2 className="text-3xl font-bold font-poppins text-gray-800 mb-2">Review Your Answers</h2>
-                                    <p className="text-gray-600">See which answers were correct and incorrect</p>
+                                    <h2 className={`text-3xl font-bold font-poppins mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Review Your Answers</h2>
+                                    <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>See which answers were correct and incorrect</p>
                                 </div>
                                 
                                 {questions.map((q, qIndex) => {
                                     const userAnswers = answers[qIndex] || {};
                                     return (
-                                        <div key={qIndex} className="mb-8 p-6 bg-gray-50 rounded-xl border-2 border-gray-200">
-                                            <h3 className="text-xl font-bold font-poppins text-gray-800 mb-4">
+                                        <div key={qIndex} className={`mb-8 p-6 rounded-xl border-2 ${
+                                            isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
+                                        }`}>
+                                            <h3 className={`text-xl font-bold font-poppins mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                                                 Question {qIndex + 1}: {q.question}
                                             </h3>
                                             
@@ -425,7 +481,7 @@
                                                                 <p className="font-semibold text-gray-800 mb-2">{subIndex + 1}. {subQ.text}</p>
                                                                 <div className="ml-4">
                                                                     <p className={`${isCorrect ? 'text-green-600' : 'text-red-600'} font-semibold mb-1`}>
-                                                                        {isCorrect ? '✓ Correct!' : '✗ Incorrect'}
+                                                                        {isCorrect ? 'âœ“ Correct!' : 'âœ— Incorrect'}
                                                                     </p>
                                                                     <p className="text-gray-700">Your answer: <span className={isCorrect ? 'text-green-600' : 'text-red-600'}>{selectedOption?.text || 'No answer'}</span></p>
                                                                     {!isCorrect && (
@@ -449,7 +505,7 @@
                                                                 <p className="font-semibold text-gray-800 mb-2">{stmtIndex + 1}. {stmt.text}</p>
                                                                 <div className="ml-4">
                                                                     <p className={`${isCorrect ? 'text-green-600' : 'text-red-600'} font-semibold mb-1`}>
-                                                                        {isCorrect ? '✓ Correct!' : '✗ Incorrect'}
+                                                                        {isCorrect ? 'âœ“ Correct!' : 'âœ— Incorrect'}
                                                                     </p>
                                                                     <p className="text-gray-700">Your answer: <span className={isCorrect ? 'text-green-600' : 'text-red-600'}>{userChoice === 0 ? 'True' : userChoice === 1 ? 'False' : 'No answer'}</span></p>
                                                                     {!isCorrect && (
@@ -474,7 +530,7 @@
                                                                 <p className="font-semibold text-gray-800 mb-2">{category}</p>
                                                                 <div className="ml-4">
                                                                     <p className={`${isCorrect ? 'text-green-600' : 'text-red-600'} font-semibold mb-1`}>
-                                                                        {isCorrect ? '✓ Correct!' : '✗ Incorrect'}
+                                                                        {isCorrect ? 'âœ“ Correct!' : 'âœ— Incorrect'}
                                                                     </p>
                                                                     <p className="text-gray-700">Your answer: <span className={isCorrect ? 'text-green-600' : 'text-red-600'}>{userAnswer || 'No answer'}</span></p>
                                                                     {!isCorrect && (
@@ -503,7 +559,7 @@
                                                                 <p className="font-semibold text-gray-800 mb-2">{item.icon} {item.name}</p>
                                                                 <div className="ml-4">
                                                                     <p className={`${isCorrect ? 'text-green-600' : 'text-red-600'} font-semibold mb-1`}>
-                                                                        {isCorrect ? '✓ Correct!' : '✗ Incorrect'}
+                                                                        {isCorrect ? 'âœ“ Correct!' : 'âœ— Incorrect'}
                                                                     </p>
                                                                     <p className="text-gray-700">Your answer: <span className={isCorrect ? 'text-green-600' : 'text-red-600'}>{userCat || 'No answer'}</span></p>
                                                                     {!isCorrect && (
@@ -527,7 +583,7 @@
                                                                 <p className="font-semibold text-gray-800 mb-2">{stmtIndex + 1}. {stmt.text}</p>
                                                                 <div className="ml-4">
                                                                     <p className={`${isCorrect ? 'text-green-600' : 'text-red-600'} font-semibold mb-1`}>
-                                                                        {isCorrect ? '✓ Correct!' : '✗ Incorrect'}
+                                                                        {isCorrect ? 'âœ“ Correct!' : 'âœ— Incorrect'}
                                                                     </p>
                                                                     <p className="text-gray-700">Your answer: <span className={isCorrect ? 'text-green-600' : 'text-red-600'}>{userAnswer || 'No answer'}</span></p>
                                                                     {!isCorrect && (
@@ -558,19 +614,27 @@
                 
                 // Results Screen with Two Buttons
                 return (
-                    <div className="min-h-screen bg-gradient-to-br from-green-400 via-blue-500 to-purple-500 flex items-center justify-center p-4">
+                    // ===== UPDATE RESULTS SCREEN =====
+                    <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
+                        isDarkMode 
+                            ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+                            : 'bg-gradient-to-br from-green-400 via-blue-500 to-purple-500'
+                    }`}>
+                        <DarkModeToggle />
                         {isPerfectScore && <Confetti />}
-                        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 fade-in">
+                        <div className={`rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 fade-in ${
+                            isDarkMode ? 'bg-gray-800' : 'bg-white'
+                        }`}>
                             <div className="text-center">
-                                <div className="text-6xl mb-4">🎉</div>
-                                <h2 className="text-4xl font-bold font-poppins text-gray-800 mb-4">Quiz Completed!</h2>
-                                <p className="text-xl text-gray-700 mb-2">Great job, {studentName}!</p>
-                                <div className={`${isPerfectScore ? 'bg-yellow-50 scale-105 transform' : 'bg-blue-50'} rounded-lg p-6 my-6 text-center transition-all duration-300`}>
-                                    <p className="text-2xl font-bold text-blue-600 mb-2">Your Score: {points} / {totalPoints}</p>
+                                <div className="text-6xl mb-4">ðŸŽ‰</div>
+                                <h2 className={`text-4xl font-bold font-poppins mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Quiz Completed!</h2>
+                                <p className={`text-xl mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Great job, {studentName}!</p>
+                                <div className={`${isPerfectScore ? (isDarkMode ? 'bg-yellow-900' : 'bg-yellow-50') : (isDarkMode ? 'bg-blue-900' : 'bg-blue-50')} rounded-lg p-6 my-6 text-center transition-all duration-300 ${isPerfectScore ? 'scale-105 transform' : ''}`}>
+                                    <p className={`text-2xl font-bold mb-2 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>Your Score: {points} / {totalPoints}</p>
                                     <p className="text-3xl font-bold text-green-600 mb-3">Your Grade: {grade.toFixed(1)}</p>
-                                    <p className="text-xl text-gray-700 mb-3">{percentage}%</p>
-                                    <p className={`${isPerfectScore ? 'text-green-700 text-2xl font-bold' : 'text-gray-700 mt-2'} font-poppins`}>
-                                        {percentage === 100 ? '✅ PERFECT SCORE! AMAZING! ✅' : percentage >= 80 ? '🌟 Excellent work!' : percentage >= 60 ? '👍 Good job!' : '💪 Keep studying!'}
+                                    <p className={`text-xl mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{percentage}%</p>
+                                    <p className={`${isPerfectScore ? 'text-green-700 text-2xl font-bold' : (isDarkMode ? 'text-gray-300 mt-2' : 'text-gray-700 mt-2')} font-poppins`}>
+                                        {percentage === 100 ? 'âœ… PERFECT SCORE! AMAZING! âœ…' : percentage >= 80 ? 'ðŸŒŸ Excellent work!' : percentage >= 60 ? 'ðŸ‘ Good job!' : 'ðŸ’ª Keep studying!'}
                                     </p>
                                 </div>
                                 
@@ -580,18 +644,18 @@
                                         onClick={() => setShowReview(true)}
                                         className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold font-poppins py-4 px-6 rounded-xl transition-all shadow-lg hover:scale-105 transform"
                                     >
-                                        📋 Review My Answers
+                                        ðŸ“‹ Review My Answers
                                     </button>
                                     
                                     <button 
                                         onClick={() => setShowExitConfirm(true)}
                                         className="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold font-poppins py-4 px-6 rounded-xl transition-all shadow-lg hover:scale-105 transform"
                                     >
-                                        ✖️ Close Quiz
+                                        âœ–ï¸ Close Quiz
                                     </button>
                                 </div>
                                 
-                                <p className="text-gray-600 text-sm mt-4">Thank you for taking the ICT quiz!</p>
+                                <p className={`text-sm mt-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Thank you for taking the ICT quiz!</p>
                             </div>
                             
                             {/* ========== EXIT CONFIRMATION MODAL - PASTE HERE ========== */}
@@ -609,7 +673,7 @@
                                         </div>
                                         
                                         <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6 text-left rounded-lg">
-                                            <p className="text-sm font-semibold text-gray-800 mb-2">📌 To close this tab:</p>
+                                            <p className="text-sm font-semibold text-gray-800 mb-2">ðŸ“Œ To close this tab:</p>
                                             <p className="text-sm text-gray-700">Press <kbd className="px-2 py-1 bg-white border border-gray-300 rounded shadow-sm font-mono text-xs">Ctrl</kbd> + <kbd className="px-2 py-1 bg-white border border-gray-300 rounded shadow-sm font-mono text-xs">W</kbd></p>
                                             <p className="text-xs text-gray-600 mt-2">Or click the <strong>X</strong> on your browser tab</p>
                                         </div>
@@ -649,7 +713,12 @@
             const isAnswered = (() => { const currentAnswers = answers[currentQuestion] || {}; if (currentQ.type.includes('group')) return Object.keys(currentAnswers).length === (currentQ.questions || currentQ.statements).length; if (currentQ.type === 'drag-drop-images') return Object.values(currentAnswers).flat().length === currentQ.items.length; if (currentQ.type === 'drag-drop') return Object.keys(currentAnswers).length === currentQ.categories.length; return currentAnswers !== undefined; })();
 
             return (
-                <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
+                <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
+                    isDarkMode 
+                        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+                        : 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500'
+                }`}>
+                    <DarkModeToggle />
                     {showWarning && (
                         <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
                             <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 text-center fade-in shake">
@@ -658,7 +727,7 @@
                                         {/* --- UPDATED ICON USAGE --- */}
                                         <WarningIcon className="w-12 h-12 text-red-600" />
                                     </div>
-                                    <h2 className="text-3xl font-bold font-poppins text-gray-800 mb-3">⚠️ Warning!</h2>
+                                    <h2 className="text-3xl font-bold font-poppins text-gray-800 mb-3">âš ï¸ Warning!</h2>
                                     <p className="text-lg text-gray-700 mb-2">You have exited fullscreen mode or switched tabs.</p>
                                     <p className="text-md text-gray-600">Please return to fullscreen mode to continue.</p>
                                 </div>
@@ -667,43 +736,133 @@
                             </div>
                         </div>
                     )}
-                    <div className={`bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 ${questionTransition === 'enter' ? 'slide-in' : 'slide-out'} ${showWarning ? 'blur-sm' : ''}`}>
-                        <div className="mb-6">
-                            <div className="flex justify-between items-center mb-4"><span className="text-sm font-semibold text-gray-500">Question {currentQuestion + 1} of {questions.length}</span><span className="text-sm font-semibold text-blue-600">{studentName}</span></div>
-                            <div className="w-full bg-gray-200 rounded-full h-2"><div className="bg-blue-600 h-2 rounded-full transition-all duration-500" style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}></div></div>
+                    <div className={`rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 ${questionTransition === 'enter' ? 'slide-in' : 'slide-out'} ${showWarning ? 'blur-sm' : ''} ${
+                        isDarkMode ? 'bg-gray-800' : 'bg-white'
+                    }`}>
+                       <div className="mb-6">
+                            <div className="flex justify-between items-center mb-4">
+                                <span className={`text-sm font-semibold ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Question {currentQuestion + 1} of {questions.length}</span>
+                                <span className={`text-sm font-semibold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>{studentName}</span>
+                            </div>
+                            <div className={`w-full rounded-full h-2 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
+                                <div className="bg-blue-600 h-2 rounded-full transition-all duration-500" style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}></div>
+                            </div>
                         </div>
-                        <h2 className="text-2xl font-bold font-poppins text-gray-800 mb-6">{currentQ.question}</h2>
+                        <h2 className={`text-2xl font-bold font-poppins mb-6 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{currentQ.question}</h2>
 
-                        {currentQ.type === 'multiple-choice-group' && (<div className="mb-6 space-y-4">{currentQ.questions.map((q, qIndex) => (<div key={qIndex} className="p-4 bg-gray-50 rounded-xl border-2 border-gray-200"><p className="text-gray-800 font-medium mb-3">{qIndex + 1}. {q.text}</p><div className="space-y-2">{q.options.map((option, optIndex) => (<button key={optIndex} onClick={() => { const newAnswers = { ...(answers[currentQuestion] || {}), [qIndex]: optIndex }; handleAnswer(newAnswers); }} className={`w-full p-3 text-left rounded-lg border-2 transition-all bg-blue-50 ${(answers[currentQuestion] || {})[qIndex] === optIndex ? 'border-blue-600 bg-blue-100 font-semibold transform scale-105' : 'border-gray-300 hover:border-blue-400 hover:bg-blue-100' }`}>{option.text}</button>))}</div></div>))}</div>)}
-                        {currentQ.type === 'true-false-group' && (<div className="mb-6 space-y-4">{currentQ.statements.map((statement, stmtIndex) => (<div key={stmtIndex} className="p-4 bg-gray-50 rounded-xl border-2 border-gray-200"><p className="text-gray-800 font-medium mb-3">{stmtIndex + 1}. {statement.text}</p><div className="flex gap-3"><button onClick={() => { const newAnswers = { ...(answers[currentQuestion] || {}), [stmtIndex]: 0 }; handleAnswer(newAnswers); }} className={`flex-1 p-3 rounded-lg border-2 transition-all ${ (answers[currentQuestion] || {})[stmtIndex] === 0 ? 'border-blue-600 bg-blue-50 font-semibold' : 'border-gray-300 hover:border-blue-400 hover:bg-gray-100' }`}>True</button><button onClick={() => { const newAnswers = { ...(answers[currentQuestion] || {}), [stmtIndex]: 1 }; handleAnswer(newAnswers); }} className={`flex-1 p-3 rounded-lg border-2 transition-all ${ (answers[currentQuestion] || {})[stmtIndex] === 1 ? 'border-blue-600 bg-blue-50 font-semibold' : 'border-gray-300 hover:border-blue-400 hover:bg-gray-100' }`}>False</button></div></div>))}</div>)}
+                        {currentQ.type === 'multiple-choice-group' && (
+                            <div className="mb-6 space-y-4">
+                                {currentQ.questions.map((q, qIndex) => (
+                                    <div key={qIndex} className={`p-4 rounded-xl border-2 ${
+                                        isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
+                                    }`}>
+                                        <p className={`font-medium mb-3 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+                                            {qIndex + 1}. {q.text}
+                                        </p>
+                                        <div className="space-y-2">
+                                            {q.options.map((option, optIndex) => (
+                                                <button 
+                                                    key={optIndex} 
+                                                    onClick={() => { 
+                                                        const newAnswers = { ...(answers[currentQuestion] || {}), [qIndex]: optIndex }; 
+                                                        handleAnswer(newAnswers); 
+                                                    }} 
+                                                    className={`w-full p-3 text-left rounded-lg border-2 transition-all ${
+                                                        (answers[currentQuestion] || {})[qIndex] === optIndex 
+                                                            ? `border-blue-600 font-semibold transform scale-105 ${isDarkMode ? 'bg-blue-900 text-white' : 'bg-blue-100 text-gray-800'}` 
+                                                            : `border-gray-300 hover:border-blue-400 ${isDarkMode ? 'bg-gray-600 text-gray-200 hover:bg-gray-500' : 'bg-blue-50 text-gray-800 hover:bg-blue-100'}`
+                                                    }`}
+                                                >
+                                                    {option.text}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        {currentQ.type === 'true-false-group' && (
+                            <div className="mb-6 space-y-4">
+                                {currentQ.statements.map((statement, stmtIndex) => (
+                                    <div key={stmtIndex} className={`p-4 rounded-xl border-2 ${
+                                        isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
+                                    }`}>
+                                        <p className={`font-medium mb-3 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+                                            {stmtIndex + 1}. {statement.text}
+                                        </p>
+                                        <div className="flex gap-3">
+                                            <button 
+                                                onClick={() => { 
+                                                    const newAnswers = { ...(answers[currentQuestion] || {}), [stmtIndex]: 0 }; 
+                                                    handleAnswer(newAnswers); 
+                                                }} 
+                                                className={`flex-1 p-3 rounded-lg border-2 transition-all ${
+                                                    (answers[currentQuestion] || {})[stmtIndex] === 0 
+                                                        ? `border-blue-600 font-semibold ${isDarkMode ? 'bg-blue-900 text-white' : 'bg-blue-50 text-gray-800'}` 
+                                                        : `border-gray-300 hover:border-blue-400 ${isDarkMode ? 'bg-gray-600 text-gray-200 hover:bg-gray-500' : 'bg-white text-gray-800 hover:bg-gray-100'}`
+                                                }`}
+                                            >
+                                                True
+                                            </button>
+                                            <button 
+                                                onClick={() => { 
+                                                    const newAnswers = { ...(answers[currentQuestion] || {}), [stmtIndex]: 1 }; 
+                                                    handleAnswer(newAnswers); 
+                                                }} 
+                                                className={`flex-1 p-3 rounded-lg border-2 transition-all ${
+                                                    (answers[currentQuestion] || {})[stmtIndex] === 1 
+                                                        ? `border-blue-600 font-semibold ${isDarkMode ? 'bg-blue-900 text-white' : 'bg-blue-50 text-gray-800'}` 
+                                                        : `border-gray-300 hover:border-blue-400 ${isDarkMode ? 'bg-gray-600 text-gray-200 hover:bg-gray-500' : 'bg-white text-gray-800 hover:bg-gray-100'}`
+                                                }`}
+                                            >
+                                                False
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                         {currentQ.type === 'fill-group' && (
                             <div className="mb-6">
                                 <div className="mb-6">
-                                    <p className="text-sm font-semibold text-gray-600 mb-3">📝 Word Bank - Use these words to fill in the blanks:</p>
-                                    <div className="flex flex-wrap gap-3 p-4 bg-purple-50 rounded-xl border-2 border-purple-200">
+                                    <p className={`text-sm font-semibold mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                                        ðŸ“ Word Bank - Use these words to fill in the blanks:
+                                    </p>
+                                    <div className={`flex flex-wrap gap-3 p-4 rounded-xl border-2 ${
+                                        isDarkMode ? 'bg-purple-900 border-purple-700' : 'bg-purple-50 border-purple-200'
+                                    }`}>
                                         {currentQ.wordBank.map((word) => (
                                             <div 
                                                 key={word}
-                                                className="px-4 py-2 bg-purple-200 text-purple-800 rounded-lg font-semibold font-poppins"
+                                                className={`px-4 py-2 rounded-lg font-semibold font-poppins ${
+                                                    isDarkMode ? 'bg-purple-700 text-purple-200' : 'bg-purple-200 text-purple-800'
+                                                }`}
                                             >
                                                 {word}
                                             </div>
                                         ))}
                                     </div>
-                                    <p className="text-xs text-gray-500 mt-2 italic">💡 Tip: Copy the spelling exactly (not case-sensitive)</p>
+                                    <p className={`text-xs mt-2 italic ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                        ðŸ’¡ Tip: Copy the spelling exactly (not case-sensitive)
+                                    </p>
                                 </div>
                                 <div className="space-y-4">
                                     {currentQ.statements.map((statement, stmtIndex) => {
                                         const parts = statement.text.split('_______');
                                         const userAnswer = (answers[currentQuestion] || {})[stmtIndex] || '';
-                                        const isCorrect = userAnswer.toLowerCase().trim() === statement.answer.toLowerCase();
                                         const isAnswered = userAnswer.trim() !== '';
                                         
                                         return (
-                                            <div key={stmtIndex} className="p-4 bg-gray-50 rounded-xl border-2 border-gray-200">
+                                            <div key={stmtIndex} className={`p-4 rounded-xl border-2 ${
+                                                isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
+                                            }`}>
                                                 <div className="flex items-center flex-wrap gap-2">
-                                                    <span className="font-semibold text-gray-700">{stmtIndex + 1}.</span>
-                                                    <span className="text-gray-800">{parts[0]}</span>
+                                                    <span className={`font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                                        {stmtIndex + 1}.
+                                                    </span>
+                                                    <span className={isDarkMode ? 'text-gray-200' : 'text-gray-800'}>
+                                                        {parts[0]}
+                                                    </span>
                                                     <input
                                                         type="text"
                                                         value={userAnswer}
@@ -713,13 +872,17 @@
                                                             handleAnswer(newAnswers);
                                                         }}
                                                         placeholder="type here..."
-                                                        className={`w-36 px-3 py-2 border-2 rounded-lg focus:outline-none focus:border-purple-400 bg-white ${
-                                                            isAnswered
-                                                                ? 'border-purple-400 bg-purple-50' 
-                                                                : 'border-gray-300 bg-white'
+                                                        className={`w-36 px-3 py-2 border-2 rounded-lg focus:outline-none focus:border-purple-400 ${
+                                                            isDarkMode 
+                                                                ? `bg-gray-600 text-white placeholder-gray-400 ${isAnswered ? 'border-purple-500 bg-purple-900' : 'border-gray-500'}` 
+                                                                : `bg-white text-gray-800 ${isAnswered ? 'border-purple-400 bg-purple-50' : 'border-gray-300'}`
                                                         }`}
                                                     />
-                                                    {parts[1] && <span className="text-gray-800">{parts[1]}</span>}
+                                                    {parts[1] && (
+                                                        <span className={isDarkMode ? 'text-gray-200' : 'text-gray-800'}>
+                                                            {parts[1]}
+                                                        </span>
+                                                    )}
                                                 </div>
                                             </div>
                                         );
@@ -729,7 +892,7 @@
                         )}
                         {currentQ.type === 'drag-drop' && (
                             <div className="mb-6">
-                                <p className="text-sm font-semibold text-gray-600 mb-4">🎯 Click an item, then click its matching category to draw a line:</p>
+                                <p className="text-sm font-semibold text-gray-600 mb-4">ðŸŽ¯ Click an item, then click its matching category to draw a line:</p>
                                 
                                 <div className="relative" style={{ minHeight: '400px' }}>
                                     {/* SVG Canvas for drawing lines */}
@@ -819,7 +982,7 @@
                                     >
                                         {/* Left column - Items */}
                                         <div className="space-y-3">
-                                            <p className="font-semibold text-gray-700 mb-3">Items:</p>
+                                            <p className={`font-semibold mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Items:</p>
                                             {currentQ.items.map((item) => {
                                                 const isMatched = Object.values(answers[currentQuestion] || {}).includes(item);
                                                 const isDrawing = drawingFrom === item;
@@ -892,7 +1055,7 @@
                                                         >
                                                             <div className="font-bold text-gray-800">{category}</div>
                                                             {matchedItem && (
-                                                                <div className="text-sm text-purple-600 mt-1">→ {matchedItem}</div>
+                                                                <div className="text-sm text-purple-600 mt-1">â†’ {matchedItem}</div>
                                                             )}
                                                         </button>
                                                         {matchedItem && (
@@ -929,7 +1092,7 @@
                         {currentQ.type === 'drag-drop-images' && (
                             <div className="mb-6">
                                 <div className="mb-6">
-                                    <p className="text-sm font-semibold text-gray-600 mb-3">📦 Drag these devices (click to preview):</p>
+                                    <p className="text-sm font-semibold text-gray-600 mb-3">ðŸ“¦ Drag these devices (click to preview):</p>
                                     <div 
                                         onDragOver={handleDragOver}
                                         onDrop={(e) => {
@@ -1019,7 +1182,7 @@
                                                                         e.target.style.display = 'none';
                                                                         const fallback = document.createElement('span');
                                                                         fallback.className = 'text-2xl';
-                                                                        fallback.textContent = item?.icon || '📦';
+                                                                        fallback.textContent = item?.icon || 'ðŸ“¦';
                                                                         e.target.parentElement.appendChild(fallback);
                                                                     }}
                                                                 />
@@ -1058,7 +1221,7 @@
                                                             e.target.style.display = 'none';
                                                             const fallback = document.createElement('div');
                                                             fallback.className = 'text-9xl';
-                                                            fallback.textContent = previewImage.icon || '📦';
+                                                            fallback.textContent = previewImage.icon || 'ðŸ“¦';
                                                             e.target.parentElement.appendChild(fallback);
                                                         }}
                                                     />
@@ -1078,8 +1241,8 @@
                         )}
                         
                         <div className="flex gap-3 mt-8">
-                            {currentQuestion > 0 && (<button onClick={handleBack} className="px-6 py-4 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded-xl transition-all shadow-lg hover:scale-105 transform font-poppins">← Back</button>)}
-                            <button onClick={handleNext} disabled={!isAnswered} className={`flex-1 py-4 px-6 rounded-xl font-bold transition-all ${isAnswered ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:scale-105 transform' : 'bg-gray-300 text-gray-500 cursor-not-allowed'} font-poppins`}>{currentQuestion < questions.length - 1 ? 'Next →' : 'Finish Quiz'}</button>
+                            {currentQuestion > 0 && (<button onClick={handleBack} className="px-6 py-4 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded-xl transition-all shadow-lg hover:scale-105 transform font-poppins">â† Back</button>)}
+                            <button onClick={handleNext} disabled={!isAnswered} className={`flex-1 py-4 px-6 rounded-xl font-bold transition-all ${isAnswered ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:scale-105 transform' : 'bg-gray-300 text-gray-500 cursor-not-allowed'} font-poppins`}>{currentQuestion < questions.length - 1 ? 'Next â†’' : 'Finish Quiz'}</button>
                         </div>
                     </div>
                 </div>
