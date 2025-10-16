@@ -721,18 +721,40 @@
                     <DarkModeToggle />
                     {showWarning && (
                         <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
-                            <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 text-center fade-in shake">
+                            <div className={`rounded-3xl shadow-2xl max-w-md w-full p-8 text-center fade-in shake ${
+                                isDarkMode ? 'bg-gray-800' : 'bg-white'
+                            }`}>
                                 <div className="mb-6">
-                                    <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 pulse">
-                                        {/* --- UPDATED ICON USAGE --- */}
+                                    <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 pulse ${
+                                        isDarkMode ? 'bg-red-900' : 'bg-red-100'
+                                    }`}>
                                         <WarningIcon className="w-12 h-12 text-red-600" />
                                     </div>
-                                    <h2 className="text-3xl font-bold font-poppins text-gray-800 mb-3">⚠️ Warning!</h2>
-                                    <p className="text-lg text-gray-700 mb-2">You have exited fullscreen mode or switched tabs.</p>
-                                    <p className="text-md text-gray-600">Please return to fullscreen mode to continue.</p>
+                                    <h2 className={`text-3xl font-bold font-poppins mb-3 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                                        ⚠️ Warning!
+                                    </h2>
+                                    <p className={`text-lg mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                        You have exited fullscreen mode or switched tabs.
+                                    </p>
+                                    <p className={`text-md ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                                        Please return to fullscreen mode to continue.
+                                    </p>
                                 </div>
-                                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 text-left"><p className="text-sm text-gray-700"><strong>Remember:</strong> You must stay in fullscreen during the entire quiz.</p></div>
-                                <button onClick={enterFullscreen} className="w-full bg-red-600 hover:bg-red-700 text-white font-bold font-poppins py-4 px-6 rounded-xl transition-all shadow-lg hover:scale-105 transform">Return to Fullscreen</button>
+                                <div className={`border-l-4 p-4 mb-6 text-left ${
+                                    isDarkMode 
+                                        ? 'bg-yellow-900 border-yellow-600' 
+                                        : 'bg-yellow-50 border-yellow-400'
+                                }`}>
+                                    <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                        <strong>Remember:</strong> You must stay in fullscreen during the entire quiz.
+                                    </p>
+                                </div>
+                                <button 
+                                    onClick={enterFullscreen} 
+                                    className="w-full bg-red-600 hover:bg-red-700 text-white font-bold font-poppins py-4 px-6 rounded-xl transition-all shadow-lg hover:scale-105 transform"
+                                >
+                                    Return to Fullscreen
+                                </button>
                             </div>
                         </div>
                     )}
@@ -1115,10 +1137,16 @@
                                                 setDraggedItem(null);
                                             }
                                         }}
-                                        className="flex flex-wrap gap-3 p-4 bg-gray-50 rounded-xl border-2 border-gray-200 min-h-16 transition-all hover:border-purple-300 hover:bg-purple-50"
-                                    >
+                                        <div className={`flex flex-wrap gap-3 p-4 rounded-xl border-2 min-h-16 transition-all ${
+                                            isDarkMode 
+                                                ? 'bg-gray-700 border-gray-600 hover:border-purple-500 hover:bg-gray-600' 
+                                                : 'bg-gray-50 border-gray-200 hover:border-purple-300 hover:bg-purple-50'
+                                        }`}>
+                                    
                                         {getAvailableItems().length === 0 ? (
-                                            <p className="text-gray-400 text-sm italic w-full text-center">All devices placed! (Drag back here to remove)</p>
+                                            <p className={`text-sm italic w-full text-center ${isDarkMode ? 'text-gray-400' : 'text-gray-400'}`}>
+                                                All devices placed! (Drag back here to remove)
+                                            </p>
                                         ) : (
                                             getAvailableItems().map((item) => (
                                                 <div 
@@ -1126,7 +1154,11 @@
                                                     draggable 
                                                     onDragStart={(e) => handleDragStart(e, item.name)}
                                                     onClick={() => setPreviewImage({ name: item.name, icon: item.icon })}
-                                                    className="flex flex-col items-center px-4 py-3 bg-white border-2 border-purple-300 rounded-xl cursor-pointer hover:border-purple-500 hover:shadow-lg transition-all transform hover:scale-105"
+                                                    className={`flex flex-col items-center px-4 py-3 border-2 rounded-xl cursor-pointer hover:shadow-lg transition-all transform hover:scale-105 ${
+                                                        isDarkMode 
+                                                            ? 'bg-gray-600 border-purple-400 hover:border-purple-300' 
+                                                            : 'bg-white border-purple-300 hover:border-purple-500'
+                                                    }`}
                                                     title="Click to preview, drag to place"
                                                 >
                                                     <div className="w-16 h-16 mb-2 flex items-center justify-center">
@@ -1157,9 +1189,15 @@
                                             key={category} 
                                             onDragOver={handleDragOver} 
                                             onDrop={(e) => handleDrop(e, category)} 
-                                            className="p-4 border-2 border-dashed rounded-xl min-h-40 transition-all border-gray-300 bg-gray-50 hover:border-purple-400 hover:bg-purple-50"
+                                            className={`p-4 border-2 border-dashed rounded-xl min-h-40 transition-all ${
+                                                isDarkMode 
+                                                    ? 'border-gray-600 bg-gray-700 hover:border-purple-400 hover:bg-gray-600' 
+                                                    : 'border-gray-300 bg-gray-50 hover:border-purple-400 hover:bg-purple-50'
+                                            }`}
                                         >
-                                            <p className="font-semibold text-gray-700 mb-3 text-center text-lg">{category}</p>
+                                            <p className={`font-semibold mb-3 text-center text-lg ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+                                                {category}
+                                            </p>
                                             <div className="flex flex-wrap gap-2 justify-center">
                                                 {dropZones[category] && dropZones[category].map((itemName) => { 
                                                     const item = currentQ.items.find(i => i.name === itemName); 
@@ -1169,7 +1207,11 @@
                                                             draggable 
                                                             onDragStart={(e) => handleDragStart(e, itemName)}
                                                             onClick={() => setPreviewImage({ name: itemName, icon: item?.icon })}
-                                                            className="flex flex-col items-center px-3 py-2 bg-white border-2 border-purple-400 rounded-xl cursor-pointer hover:border-purple-600 hover:shadow-lg transition-all"
+                                                            className={`flex flex-col items-center px-3 py-2 border-2 rounded-xl cursor-pointer hover:shadow-lg transition-all ${
+                                                                isDarkMode 
+                                                                    ? 'bg-gray-600 border-purple-400 hover:border-purple-300' 
+                                                                    : 'bg-white border-purple-400 hover:border-purple-600'
+                                                            }`}
                                                             title="Click to preview, drag to move"
                                                         >
                                                             <div className="w-12 h-12 mb-1 flex items-center justify-center">
@@ -1192,7 +1234,9 @@
                                                     ); 
                                                 })}
                                                 {(!dropZones[category] || dropZones[category].length === 0) && (
-                                                    <p className="text-gray-400 text-sm italic">Drop devices here...</p>
+                                                    <p className={`text-sm italic ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                                                        Drop devices here...
+                                                    </p>
                                                 )}
                                             </div>
                                         </div>
@@ -1206,12 +1250,18 @@
                                         onClick={() => setPreviewImage(null)}
                                     >
                                         <div 
-                                            className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-8 text-center fade-in"
+                                            className={`rounded-3xl shadow-2xl max-w-2xl w-full p-8 text-center fade-in ${
+                                                isDarkMode ? 'bg-gray-800' : 'bg-white'
+                                            }`}
                                             onClick={(e) => e.stopPropagation()}
                                         >
                                             <div className="mb-6">
-                                                <h3 className="text-2xl font-bold font-poppins text-gray-800 mb-4">{previewImage.name}</h3>
-                                                <div className="flex items-center justify-center bg-gray-50 rounded-2xl p-8 min-h-80">
+                                                <h3 className={`text-2xl font-bold font-poppins mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                                                    {previewImage.name}
+                                                </h3>
+                                                <div className={`flex items-center justify-center rounded-2xl p-8 min-h-80 ${
+                                                    isDarkMode ? 'bg-gray-700' : 'bg-gray-50'
+                                                }`}>
                                                     <img 
                                                         src={`../Images/${previewImage.name.toLowerCase()}.png`}
                                                         alt={previewImage.name}
