@@ -69,19 +69,189 @@
                 <circle cx="12" cy="16.5" r="1" fill="currentColor"></circle>
             </svg>
         );
-
-        const MoonIcon = ({ className }) => (
-            <svg className={className} viewBox="0 0 24 24" fill="none">
-                <path d="M3.32031 11.6835C3.32031 16.6541 7.34975 20.6835 12.3203 20.6835C16.1075 20.6835 19.3483 18.3443 20.6768 15.032C19.6402 15.4486 18.5059 15.6834 17.3203 15.6834C12.3497 15.6834 8.32031 11.654 8.32031 6.68342C8.32031 5.50338 8.55165 4.36259 8.96453 3.32996C5.65605 4.66028 3.32031 7.89912 3.32031 11.6835Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-        );
         
-        const SunIcon = ({ className }) => (
-            <svg className={className} viewBox="0 0 24 24" fill="none">
-                <path d="M12 3V4M12 20V21M4 12H3M6.31412 6.31412L5.5 5.5M17.6859 6.31412L18.5 5.5M6.31412 17.69L5.5 18.5001M17.6859 17.69L18.5 18.5001M21 12H20M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-        );        
- 
+        const AnimatedBackground = () => {
+            const [bubbles, setBubbles] = useState([]);
+            const animationRef = useRef(null);
+            const timeRef = useRef(0);
+            const [, forceUpdate] = useState(0); // Force re-render for SVG animations
+
+        // Helper function to interpolate between two hex colors
+        const interpolateColor = (color1, color2, factor) => {
+            const c1 = parseInt(color1.slice(1), 16);
+            const c2 = parseInt(color2.slice(1), 16);
+            
+            const r1 = (c1 >> 16) & 0xff;
+            const g1 = (c1 >> 8) & 0xff;
+            const b1 = c1 & 0xff;
+            
+            const r2 = (c2 >> 16) & 0xff;
+            const g2 = (c2 >> 8) & 0xff;
+            const b2 = c2 & 0xff;
+            
+            const r = Math.round(r1 + (r2 - r1) * factor);
+            const g = Math.round(g1 + (g2 - g1) * factor);
+            const b = Math.round(b1 + (b2 - b1) * factor);
+            
+            return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
+        };
+            
+            useEffect(() => {
+                // Initialize bubbles
+                const colorPalette = ['#93c5fd', '#c4b5fd', '#f9a8d4', '#fdba74', '#a78bfa', '#fbbf24'];
+                
+                const initBubbles = Array.from({ length: 8 }, (_, i) => ({
+                    id: i,
+                    x: 20 + Math.random() * 60,
+                    y: Math.random() * 100,
+                    size: 30 + Math.random() * 40,
+                    speed: 0.1 + Math.random() * 0.15,
+                    baseSpeed: 0.1 + Math.random() * 0.15,
+                    phase: Math.random() * Math.PI * 2,
+                    wobble: 0.5 + Math.random() * 1,
+                    direction: Math.random() > 0.5 ? 1 : -1,
+                    colorIndex: Math.floor(Math.random() * colorPalette.length),
+                    nextColorIndex: Math.floor(Math.random() * colorPalette.length),
+                    colorTransition: 0, // 0 to 1, tracks transition progress
+                    colorChangeSpeed: 0.002 + Math.random() * 0.003 // How fast colors change
+                }));
+                setBubbles(initBubbles);
+                
+                const animate = () => {
+                    timeRef.current += 0.01;
+                    
+                    setBubbles(prev => prev.map(bubble => {
+                        let newY = bubble.y + bubble.speed * bubble.direction;
+                        let newDirection = bubble.direction;
+                        
+                        const distanceFromTop = newY;
+                        const distanceFromBottom = 100 - newY;
+                        const edgeDistance = Math.min(distanceFromTop, distanceFromBottom);
+                        
+                        if (newY <= 2) {
+                            newY = 2;
+                            newDirection = 1;
+                        } else if (newY >= 98) {
+                            newY = 98;
+                            newDirection = -1;
+                        }
+                        
+                        const easingFactor = Math.min(1, edgeDistance / 15);
+                        
+                        // Update color transition
+                        let newColorTransition = bubble.colorTransition + bubble.colorChangeSpeed;
+                        let newColorIndex = bubble.colorIndex;
+                        let newNextColorIndex = bubble.nextColorIndex;
+                        
+                        // When transition is complete, pick a new target color
+                        if (newColorTransition >= 1) {
+                            newColorTransition = 0;
+                            newColorIndex = bubble.nextColorIndex;
+                            // Pick a different color than current
+                            do {
+                                newNextColorIndex = Math.floor(Math.random() * colorPalette.length);
+                            } while (newNextColorIndex === newColorIndex);
+                        }
+                        
+                        // Calculate current interpolated color
+                        const currentColor = interpolateColor(
+                            colorPalette[newColorIndex],
+                            colorPalette[newNextColorIndex],
+                            newColorTransition
+                        );
+                        
+                        return {
+                            ...bubble,
+                            y: newY,
+                            direction: newDirection,
+                            speed: bubble.baseSpeed * (0.5 + easingFactor * 0.5),
+                            wobbleOffset: Math.sin(timeRef.current * bubble.wobble + bubble.phase) * 2,
+                            colorIndex: newColorIndex,
+                            nextColorIndex: newNextColorIndex,
+                            colorTransition: newColorTransition,
+                            color: currentColor
+                        };
+                    }));
+                    
+                    forceUpdate(n => n + 1); // Force re-render for SVG path updates
+                    animationRef.current = requestAnimationFrame(animate);
+                };
+                
+                animationRef.current = requestAnimationFrame(animate);
+                
+                return () => {
+                    if (animationRef.current) {
+                        cancelAnimationFrame(animationRef.current);
+                    }
+                };
+            }, []);
+            
+            const time = timeRef.current;
+            
+            return (
+                <div className="fixed inset-0 overflow-hidden pointer-events-none">
+                    <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        <defs>
+                            {/* Gooey/Slimy filter effect */}
+                            <filter id="gooey">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"/>
+                                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="gooey"/>
+                                <feComposite in="SourceGraphic" in2="gooey" operator="atop"/>
+                            </filter>
+                            
+                            {/* Gradient for bubbles */}
+                            {bubbles.map(bubble => (
+                                <radialGradient key={`grad-${bubble.id}`} id={`bubble-gradient-${bubble.id}`}>
+                                    <stop offset="0%" stopColor={bubble.color} stopOpacity="0.95"/>
+                                    <stop offset="50%" stopColor={bubble.color} stopOpacity="0.8"/>
+                                    <stop offset="100%" stopColor={bubble.color} stopOpacity="0.5"/>
+                                </radialGradient>
+                            ))}
+                            
+                            {/* Gradients for slime layers */}
+                            <linearGradient id="top-slime-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.3"/>
+                                <stop offset="100%" stopColor="#c4b5fd" stopOpacity="0.1"/>
+                            </linearGradient>
+                            <linearGradient id="bottom-slime-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stopColor="#c4b5fd" stopOpacity="0.1"/>
+                                <stop offset="100%" stopColor="#a78bfa" stopOpacity="0.3"/>
+                            </linearGradient>
+                        </defs>
+                        
+                        {/* Top slime layer */}
+                        <path
+                            d={`M 0,0 Q 25,${15 + Math.sin(time * 0.5) * 8} 50,${10 + Math.sin(time * 0.7) * 6} T 100,0 L 100,${20 + Math.sin(time * 0.3) * 5} Q 75,${25 + Math.sin(time * 0.6) * 7} 50,${20 + Math.sin(time * 0.4) * 6} T 0,${15 + Math.sin(time * 0.8) * 8} Z`}
+                            fill="url(#top-slime-gradient)"
+                            filter="url(#gooey)"
+                        />
+                        
+                        {/* Bottom slime layer */}
+                        <path
+                            d={`M 0,100 Q 25,${85 + Math.sin(time * 0.6 + 1) * 8} 50,${90 + Math.sin(time * 0.8 + 1) * 6} T 100,100 L 100,${80 + Math.sin(time * 0.4 + 1) * 5} Q 75,${75 + Math.sin(time * 0.7 + 1) * 7} 50,${80 + Math.sin(time * 0.5 + 1) * 6} T 0,${85 + Math.sin(time * 0.9 + 1) * 8} Z`}
+                            fill="url(#bottom-slime-gradient)"
+                            filter="url(#gooey)"
+                        />
+                        
+                        {/* Bubbles with gooey filter */}
+                        <g filter="url(#gooey)">
+                            {bubbles.map(bubble => (
+                                <ellipse
+                                    key={bubble.id}
+                                    cx={`${bubble.x + (bubble.wobbleOffset || 0)}%`}
+                                    cy={`${bubble.y}%`}
+                                    rx={`${bubble.size * 0.7}px`}
+                                    ry={`${bubble.size * 1.2}px`}
+                                    fill={`url(#bubble-gradient-${bubble.id})`}
+                                    opacity="0.8" // Adjusted base opacity
+                                />
+                            ))}
+                        </g>
+                    </svg>
+                </div>
+            );
+        };
+        
         const Confetti = () => {
              const confettiPieces = Array.from({ length: 250 }).map((_, i) => ({ id: i, left: Math.random() * 100, delay: Math.random() * 3, duration: 2 + Math.random() * 1, color: ['#ff5353', '#ffee53', '#53ffa9', '#5395ff', '#ef53ff', '#45B7D1'][Math.floor(Math.random() * 6)], rotX: Math.random() * 360, rotY: Math.random() * 360, rotZ: Math.random() * 360, swayAmount: 50 + Math.random() * 100 }));
             return (
@@ -133,11 +303,19 @@
             const [matchingLines, setMatchingLines] = useState({});
             const [drawingFrom, setDrawingFrom] = useState(null);
             const [currentMousePos, setCurrentMousePos] = useState(null);
-            const [isDarkMode, setIsDarkMode] = useState(false);
             const inputRef = useRef(null);
             
             // Base questions can be defined here
-            const baseQuestions = [ { id: 1, type: 'multiple-choice-group', question: 'Answer each question by selecting the correct option:', questions: [{ text: 'What does ICT help us do?', options: ['Share and find information', 'Paint pictures', 'Ride bicycles', 'Cook food'], correct: 0 }, { text: 'What do we call programs that help us play games or do homework on a computer?', options: ['Hardware', 'Software', 'Network', 'Input'], correct: 1 }, { text: 'What is a device in ICT?', options: ['A physical tool or piece of equipment like a computer or smartphone', 'A program that helps you write documents', 'A type of internet connection', 'A kind of software that plays games'], correct: 0 }] }, { id: 2, type: 'drag-drop', question: 'Drag each item to the correct category:', items: ['Headphones🎧', 'Google Chrome🌐', 'Wi-Fi🛜', 'Tablet📱'], categories: ['Hardware', 'Software App', 'Network', 'Processing Device'], correctAnswers: { 'Hardware': 'Headphones🎧', 'Software App': 'Google Chrome🌐', 'Network': 'Wi-Fi🛜', 'Processing Device': 'Tablet📱' } }, { id: 3, type: 'drag-drop-images', question: 'Drag each device to the correct group:', items: [{ name: 'Keyboard', icon: '⌨️' }, { name: 'Monitor', icon: '🖥️' }, { name: 'Mouse', icon: '🖱️' }, { name: 'Printer', icon: '🖨️' }, { name: 'Microphone', icon: '🎤' }, { name: 'Speaker', icon: '🔊' }], categories: ['Input Devices', 'Output Devices'], correctAnswers: { 'Input Devices': ['Keyboard', 'Mouse', 'Microphone'], 'Output Devices': ['Monitor', 'Printer', 'Speaker'] } }, { id: 4, type: 'true-false-group', question: 'Read each statement and select True or False:', statements: [{ text: 'Software is something you can physically touch.🫳', correct: 1 }, { text: 'Smartphones and tablets are examples of ICT devices.📲', correct: 0 }, { text: 'Sending emails is an example of using ICT in daily life.📧', correct: 0 }] }, { id: 5, type: 'fill-group', question: 'Drag the correct word from the box to fill in each blank:', wordBank: ['networks', 'internet', 'software', 'processing', 'communication'], statements: [{ text: 'Bluetooth and Wi-Fi are examples of wireless _______.', answer: 'networks' }, { text: 'Multiple devices connect to share or find information using the _______.', answer: 'internet' }, { text: 'Programs, apps and games are examples of _______.', answer: 'software' }, { text: 'When a computer thinks and works on information, this is called _______.', answer: 'processing' }] } ];
+            const baseQuestions = [ { id: 1, type: 'multiple-choice-group', question: 'Answer each question by selecting the correct option:', questions: [{ text: 'What does ICT help us do?', options: ['Share and find information', 'Paint pictures', 'Ride bicycles', 'Cook food'], correct: 0 }, { text: 'What do we call programs that help us play games or do homework on a computer?', options: ['Hardware', 'Software', 'Network', 'Input'], correct: 1 }, { text: 'What is a device in ICT?', options: ['A physical tool or piece of equipment like a computer or smartphone', 'A program that helps you write documents', 'A type of internet connection', 'A kind of software that plays games'], correct: 0 }] }, { id: 2, type: 'drag-drop', question: 'Drag each item to the correct category:', items: ['Headphones🎧', 'Google Chrome🌐', 'Wi-Fi🛜', 'Tablet📱'], categories: ['Hardware', 'Software App', 'Network', 'Processing Device'], correctAnswers: { 'Hardware': 'Headphones🎧', 'Software': 'Google Chrome🌐', 'Network': 'Wi-Fi🛜', 'Processing Device': 'Tablet📱' } }, { id: 3, type: 'drag-drop-images', question: 'Drag each device to the correct group:', items: [{ name: 'Keyboard', icon: '⌨️' }, { name: 'Monitor', icon: '🖥️' }, { name: 'Mouse', icon: '🖱️' }, { name: 'Printer', icon: '🖨️' }, { name: 'Microphone', icon: '🎤' }, { name: 'Speaker', icon: '🔊' }], categories: ['Input Devices', 'Output Devices'], correctAnswers: { 'Input Devices': ['Keyboard', 'Mouse', 'Microphone'], 'Output Devices': ['Monitor', 'Printer', 'Speaker'] } }, { id: 4, type: 'true-false-group', question: 'Read each statement and select True or False:', statements: [{ text: 'Software is something you can physically touch.🫳', correct: 1 }, { text: 'Smartphones and tablets are examples of ICT devices.📲', correct: 0 }, { text: 'Sending emails is an example of using ICT in daily life.📧', correct: 0 }] }, { id: 5, type: 'fill-group', question: 'Drag the correct word from the box to fill in each blank:', wordBank: ['networks', 'internet', 'software', 'processing', 'communication'], statements: [{ text: 'Bluetooth and Wi-Fi are examples of wireless _______.', answer: 'networks' }, { text: 'Multiple devices connect to share or find information using the _______.', answer: 'internet' }, { text: 'Programs, apps and games are examples of _______.', answer: 'software' }, { text: 'When a computer thinks and works on information, this is called _______.', answer: 'processing' }] } ];
+
+            const shuffleArray = (array) => {
+                const newArray = [...array];
+                for (let i = newArray.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+                }
+                return newArray;
+            };
 
             // Initialize randomized questions on component mount
             useEffect(() => {
@@ -269,84 +447,23 @@
             const handleAnswer = (answer) => setAnswers({ ...answers, [currentQuestion]: answer });
             const handleDragStart = (e, item) => { setDraggedItem(item); e.dataTransfer.setData('text/plain', item); };
             const handleDragOver = (e) => e.preventDefault();
-            const handleDrop = (e, category) => {
-                e.preventDefault();
-                const item = draggedItem || e.dataTransfer.getData('text/plain');
-                if (item) {
-                    let newAnswers = { ...(answers[currentQuestion] || {}) };
-                    Object.keys(newAnswers).forEach(key => {
-                        if (Array.isArray(newAnswers[key])) {
-                            newAnswers[key] = newAnswers[key].filter(i => i !== item);
-                        } else if (newAnswers[key] === item) {
-                            delete newAnswers[key];
-                        }
-                    });
-                    if (questions[currentQuestion].type === 'drag-drop-images') {
-                        if (!newAnswers[category]) newAnswers[category] = [];
-                        if (!newAnswers[category].includes(item)) newAnswers[category].push(item);
-                    } else {
-                        newAnswers[category] = item;
-                    }
-                    setAnswers({ ...answers, [currentQuestion]: newAnswers });
-                    setDropZones(newAnswers);
-                    setDraggedItem(null);
-                }
-            };
-            const getAvailableItems = () => {
-                const currentQ = questions[currentQuestion];
-                const currentAnswers = answers[currentQuestion] || {};
-                if (currentQ.type.includes('drag-drop')) {
-                    const placedItems = Object.values(currentAnswers).flat();
-                    return currentQ.items.filter(item => !placedItems.includes(item.name || item));
-                }
-                if (currentQ.type === 'fill-group') {
-                    return currentQ.wordBank.filter(word => !Object.values(currentAnswers).includes(word));
-                }
-                return [];
-            };
+            const handleDrop = (e, category) => { e.preventDefault(); const item = draggedItem || e.dataTransfer.getData('text/plain'); if (item) { let newAnswers = { ...(answers[currentQuestion] || {}) }; Object.keys(newAnswers).forEach(key => { if (Array.isArray(newAnswers[key])) newAnswers[key] = newAnswers[key].filter(i => i !== item); else if (newAnswers[key] === item) delete newAnswers[key]; }); if (questions[currentQuestion].type === 'drag-drop-images') { if (!newAnswers[category]) newAnswers[category] = []; if (!newAnswers[category].includes(item)) newAnswers[category].push(item); } else { newAnswers[category] = item; } setAnswers({ ...answers, [currentQuestion]: newAnswers }); setDropZones(newAnswers); setDraggedItem(null); } };
+            const getAvailableItems = () => { const currentQ = questions[currentQuestion]; const currentAnswers = answers[currentQuestion] || {}; if (currentQ.type.includes('drag-drop')) { const placedItems = Object.values(currentAnswers).flat(); return currentQ.items.filter(item => !placedItems.includes(item.name || item)); } if (currentQ.type === 'fill-group') return currentQ.wordBank.filter(word => !Object.values(currentAnswers).includes(word)); return []; };
             const handleNext = () => { setQuestionTransition('exit'); setTimeout(() => { if (currentQuestion < questions.length - 1) { setCurrentQuestion(prev => prev + 1); setQuestionTransition('enter'); } else { setIsCompleted(true); setCompletedStudents({ ...completedStudents, [studentName]: true }); if (document.exitFullscreen) document.exitFullscreen(); } }, 300); };
-            const handleBack = () => { 
-                if (currentQuestion > 0) { 
-                    setQuestionTransition('exit'); 
-                    setTimeout(() => setCurrentQuestion(prev => prev - 1), 300); 
-                }
-            };
-            
-            const DarkModeToggle = () => (
-                <button
-                    onClick={() => setIsDarkMode(!isDarkMode)}
-                    className={`fixed top-4 right-4 z-50 p-3 rounded-full shadow-lg transition-all hover:scale-110 transform ${
-                        isDarkMode 
-                            ? 'bg-gray-800 text-yellow-400 hover:bg-gray-700' 
-                            : 'bg-white text-gray-800 hover:bg-gray-100'
-                    }`}
-                    title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-                    aria-label="Toggle dark mode"
-                >
-                    {isDarkMode ? <SunIcon className="w-6 h-6" /> : <MoonIcon className="w-6 h-6" />}
-                </button>
-            );
-            
+            const handleBack = () => { if (currentQuestion > 0) { setQuestionTransition('exit'); setTimeout(() => setCurrentQuestion(prev => prev - 1), 300); }};
+
             // PASSWORD SCREEN - First screen shown
             if (!passwordEntered && !hasStarted && !isCompleted) {
                 return (
-                    <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
-                        isDarkMode 
-                            ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
-                            : 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500'
-                    }`}>
-                        <DarkModeToggle />
-                        <div className={`rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 transform transition-all fade-in ${
-                            isDarkMode ? 'bg-gray-800' : 'bg-white'
-                        }`}>
-                            {/* ===== UPDATE TEXT COLORS FOR DARK MODE ===== */}
+                    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
+                        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 transform transition-all fade-in">
                             <div className="flex items-center justify-center mb-6">
                                 <Monitor className="w-12 h-12 text-blue-600 mr-3"/>
-                                <h1 className={`text-4xl font-bold font-poppins ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>ICT Quiz - 5th Grade</h1>
+                                <h1 className="text-4xl font-bold font-poppins text-blue-600">ICT Quiz - 5th Grade</h1>
                             </div>
-                            <p className={`text-center mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Enter your password to access the quiz</p>
+                            <p className="text-gray-700 text-center mb-6">Enter your password to access the quiz</p>
                             <div className="mb-6">
-                                <label className={`block font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Password:</label>
+                                <label className="block text-gray-700 font-semibold mb-2">Password:</label>
                                 <div className="relative">
                                     <input 
                                         type={showPassword ? 'text' : 'password'} 
@@ -361,9 +478,7 @@
                                             }
                                         }}
                                         placeholder="Enter your password..."
-                                        className={`w-full p-3 pr-12 border-2 rounded-lg focus:border-blue-500 focus:outline-none ${
-                                            isDarkMode ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'border-gray-300 bg-white'
-                                        }`}
+                                        className="w-full p-3 pr-12 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
                                         autoFocus
                                     />
                                     <button
@@ -418,10 +533,8 @@
 
             if (questions.length === 0) {
                 return (
-                    <div className={`min-h-screen flex items-center justify-center transition-colors duration-300 ${
-                        isDarkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500'
-                    }`}>
-                        <div className={`text-2xl font-poppins ${isDarkMode ? 'text-white' : 'text-white'}`}>Loading Quiz...</div>
+                    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center">
+                        <div className="text-white text-2xl font-poppins">Loading Quiz...</div>
                     </div>
                 );
             }
@@ -429,27 +542,20 @@
             // NAME CONFIRMATION AND START SCREEN - After password
             if (passwordEntered && !hasStarted && !isCompleted) {
                 return (
-                    <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
-                        isDarkMode 
-                            ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
-                            : 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500'
-                    }`}>
-                        <DarkModeToggle />
-                        <div className={`rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 transform transition-all fade-in ${
-                            isDarkMode ? 'bg-gray-800' : 'bg-white'
-                        }`}>
+                    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
+                        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 transform transition-all fade-in">
                             <div className="flex items-center justify-center mb-6">
                                 <Monitor className="w-12 h-12 text-blue-600 mr-3"/>
-                                <h1 className={`text-4xl font-bold font-poppins ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>ICT Quiz - 5th Grade</h1>
+                                <h1 className="text-4xl font-bold font-poppins text-blue-600">ICT Quiz - 5th Grade</h1>
                             </div>
-                            <p className={`text-center mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Welcome to the Technology quiz!</p>
-                            <div className={`rounded-lg p-6 mb-6 border-l-4 ${isDarkMode ? 'bg-yellow-900 border-yellow-600' : 'bg-yellow-50 border-yellow-400'}`}>
-                                <p className={`text-lg font-semibold font-poppins mb-2 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>Your Name:</p>
-                                <p className={`text-2xl font-bold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>{studentName}</p>
+                            <p className="text-gray-700 text-center mb-6">Welcome to the Technology quiz!</p>
+                            <div className="bg-yellow-50 rounded-lg p-6 mb-6 border-l-4 border-yellow-400">
+                                <p className="text-lg font-semibold font-poppins text-gray-800 mb-2">Your Name:</p>
+                                <p className="text-2xl font-bold text-blue-600">{studentName}</p>
                             </div>
-                            <div className={`rounded-lg p-6 mb-6 ${isDarkMode ? 'bg-blue-900' : 'bg-blue-50'}`}>
-                                <p className={`text-lg font-semibold font-poppins mb-3 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>📋 Instructions:</p>
-                                <ul className={`space-y-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                            <div className="bg-blue-50 rounded-lg p-6 mb-6">
+                                <p className="text-lg font-semibold font-poppins text-gray-800 mb-3">📋 Instructions:</p>
+                                <ul className="space-y-2 text-gray-700">
                                     <li>• There are 5 questions in total.</li>
                                     <li>• The total score is 20 points.</li>
                                     <li>• Read each question carefully.</li>
@@ -458,11 +564,12 @@
                             <button onClick={handleStartQuiz} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold font-poppins py-4 px-6 rounded-xl transition-colors shadow-lg">
                                 Start Quiz
                             </button>
-                            <p className={`text-sm text-center mt-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>⚠️ The quiz will enter fullscreen mode. Please stay on this tab.</p>
+                            <p className="text-sm text-gray-600 text-center mt-4">⚠️ The quiz will enter fullscreen mode. Please stay on this tab.</p>
                         </div>
                     </div>
                 );
             }
+
             if (isCompleted) {
                 const points = calculatePoints();
                 const totalPoints = 20;
@@ -473,27 +580,18 @@
                 if (showReview) {
                     // Review Mode - Show answers with feedback
                     return (
-                        <div className={`min-h-screen p-4 overflow-y-auto transition-colors duration-300 ${
-                            isDarkMode 
-                                ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
-                                : 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500'
-                        }`}>
-                            <DarkModeToggle />
-                            <div className={`rounded-3xl shadow-2xl p-8 max-w-4xl mx-auto my-8 relative z-10 ${
-                                isDarkMode ? 'bg-gray-800' : 'bg-white'
-                            }`}>
+                        <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 p-4 overflow-y-auto">
+                            <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl mx-auto my-8 relative z-10">
                                 <div className="text-center mb-6">
-                                    <h2 className={`text-3xl font-bold font-poppins mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Review Your Answers</h2>
-                                    <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>See which answers were correct and incorrect</p>
+                                    <h2 className="text-3xl font-bold font-poppins text-gray-800 mb-2">Review Your Answers</h2>
+                                    <p className="text-gray-600">See which answers were correct and incorrect</p>
                                 </div>
                                 
                                 {questions.map((q, qIndex) => {
                                     const userAnswers = answers[qIndex] || {};
                                     return (
-                                        <div key={qIndex} className={`mb-8 p-6 rounded-xl border-2 ${
-                                            isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
-                                        }`}>
-                                            <h3 className={`text-xl font-bold font-poppins mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                                        <div key={qIndex} className="mb-8 p-6 bg-gray-50 rounded-xl border-2 border-gray-200">
+                                            <h3 className="text-xl font-bold font-poppins text-gray-800 mb-4">
                                                 Question {qIndex + 1}: {q.question}
                                             </h3>
                                             
@@ -642,26 +740,18 @@
                 
                 // Results Screen with Two Buttons
                 return (
-                    // ===== UPDATE RESULTS SCREEN =====
-                    <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
-                        isDarkMode 
-                            ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
-                            : 'bg-gradient-to-br from-green-400 via-blue-500 to-purple-500'
-                    }`}>
-                        <DarkModeToggle />
+                    <div className="min-h-screen bg-gradient-to-br from-green-400 via-blue-500 to-purple-500 flex items-center justify-center p-4">
                         {isPerfectScore && <Confetti />}
-                        <div className={`rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 fade-in ${
-                            isDarkMode ? 'bg-gray-800' : 'bg-white'
-                        }`}>
+                        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 fade-in">
                             <div className="text-center">
                                 <div className="text-6xl mb-4">🎉</div>
-                                <h2 className={`text-4xl font-bold font-poppins mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Quiz Completed!</h2>
-                                <p className={`text-xl mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Great job, {studentName}!</p>
-                                <div className={`${isPerfectScore ? (isDarkMode ? 'bg-yellow-900' : 'bg-yellow-50') : (isDarkMode ? 'bg-blue-900' : 'bg-blue-50')} rounded-lg p-6 my-6 text-center transition-all duration-300 ${isPerfectScore ? 'scale-105 transform' : ''}`}>
-                                    <p className={`text-2xl font-bold mb-2 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>Your Score: {points} / {totalPoints}</p>
+                                <h2 className="text-4xl font-bold font-poppins text-gray-800 mb-4">Quiz Completed!</h2>
+                                <p className="text-xl text-gray-700 mb-2">Great job, {studentName}!</p>
+                                <div className={`${isPerfectScore ? 'bg-yellow-50 scale-105 transform' : 'bg-blue-50'} rounded-lg p-6 my-6 text-center transition-all duration-300`}>
+                                    <p className="text-2xl font-bold text-blue-600 mb-2">Your Score: {points} / {totalPoints}</p>
                                     <p className="text-3xl font-bold text-green-600 mb-3">Your Grade: {grade.toFixed(1)}</p>
-                                    <p className={`text-xl mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{percentage}%</p>
-                                    <p className={`${isPerfectScore ? 'text-green-700 text-2xl font-bold' : (isDarkMode ? 'text-gray-300 mt-2' : 'text-gray-700 mt-2')} font-poppins`}>
+                                    <p className="text-xl text-gray-700 mb-3">{percentage}%</p>
+                                    <p className={`${isPerfectScore ? 'text-green-700 text-2xl font-bold' : 'text-gray-700 mt-2'} font-poppins`}>
                                         {percentage === 100 ? '✅ PERFECT SCORE! AMAZING! ✅' : percentage >= 80 ? '🌟 Excellent work!' : percentage >= 60 ? '👍 Good job!' : '💪 Keep studying!'}
                                     </p>
                                 </div>
@@ -683,7 +773,7 @@
                                     </button>
                                 </div>
                                 
-                                <p className={`text-sm mt-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Thank you for taking the ICT quiz!</p>
+                                <p className="text-gray-600 text-sm mt-4">Thank you for taking the ICT quiz!</p>
                             </div>
                             
                             {/* ========== EXIT CONFIRMATION MODAL - PASTE HERE ========== */}
@@ -741,178 +831,62 @@
             const isAnswered = (() => { const currentAnswers = answers[currentQuestion] || {}; if (currentQ.type.includes('group')) return Object.keys(currentAnswers).length === (currentQ.questions || currentQ.statements).length; if (currentQ.type === 'drag-drop-images') return Object.values(currentAnswers).flat().length === currentQ.items.length; if (currentQ.type === 'drag-drop') return Object.keys(currentAnswers).length === currentQ.categories.length; return currentAnswers !== undefined; })();
 
             return (
-                <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
-                    isDarkMode 
-                        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
-                        : 'bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400'
-                }`}>
-                    <DarkModeToggle />
+                <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
+                    <AnimatedBackground />
                     {showWarning && (
                         <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
-                            <div className={`rounded-3xl shadow-2xl max-w-md w-full p-8 text-center fade-in shake ${
-                                isDarkMode ? 'bg-gray-800' : 'bg-white'
-                            }`}>
+                            <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 text-center fade-in shake">
                                 <div className="mb-6">
-                                    <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 pulse ${
-                                        isDarkMode ? 'bg-red-900' : 'bg-red-100'
-                                    }`}>
+                                    <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 pulse">
+                                        {/* --- UPDATED ICON USAGE --- */}
                                         <WarningIcon className="w-12 h-12 text-red-600" />
                                     </div>
-                                    <h2 className={`text-3xl font-bold font-poppins mb-3 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                                        ⚠️ Warning!
-                                    </h2>
-                                    <p className={`text-lg mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                                        You have exited fullscreen mode or switched tabs.
-                                    </p>
-                                    <p className={`text-md ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                                        Please return to fullscreen mode to continue.
-                                    </p>
+                                    <h2 className="text-3xl font-bold font-poppins text-gray-800 mb-3">⚠️ Warning!</h2>
+                                    <p className="text-lg text-gray-700 mb-2">You have exited fullscreen mode or switched tabs.</p>
+                                    <p className="text-md text-gray-600">Please return to fullscreen mode to continue.</p>
                                 </div>
-                                <div className={`border-l-4 p-4 mb-6 text-left ${
-                                    isDarkMode 
-                                        ? 'bg-yellow-900 border-yellow-600' 
-                                        : 'bg-yellow-50 border-yellow-400'
-                                }`}>
-                                    <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                                        <strong>Remember:</strong> You must stay in fullscreen during the entire quiz.
-                                    </p>
-                                </div>
-                                <button 
-                                    onClick={enterFullscreen} 
-                                    className="w-full bg-red-600 hover:bg-red-700 text-white font-bold font-poppins py-4 px-6 rounded-xl transition-all shadow-lg hover:scale-105 transform"
-                                >
-                                    Return to Fullscreen
-                                </button>
+                                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 text-left"><p className="text-sm text-gray-700"><strong>Remember:</strong> You must stay in fullscreen during the entire quiz.</p></div>
+                                <button onClick={enterFullscreen} className="w-full bg-red-600 hover:bg-red-700 text-white font-bold font-poppins py-4 px-6 rounded-xl transition-all shadow-lg hover:scale-105 transform">Return to Fullscreen</button>
                             </div>
                         </div>
                     )}
-                    <div className={`rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 ${questionTransition === 'enter' ? 'slide-in' : 'slide-out'} ${showWarning ? 'blur-sm' : ''} ${
-                        isDarkMode ? 'bg-gray-800' : 'bg-white'
-                    }`}>
-                       <div className="mb-6">
-                            <div className="flex justify-between items-center mb-4">
-                                <span className={`text-sm font-semibold ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Question {currentQuestion + 1} of {questions.length}</span>
-                                <span className={`text-sm font-semibold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>{studentName}</span>
-                            </div>
-                            <div className={`w-full rounded-full h-2 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
-                                <div className="bg-blue-600 h-2 rounded-full transition-all duration-500" style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}></div>
-                            </div>
+                    <div className={`bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 ${questionTransition === 'enter' ? 'slide-in' : 'slide-out'} ${showWarning ? 'blur-sm' : ''}`}>
+                        <div className="mb-6">
+                            <div className="flex justify-between items-center mb-4"><span className="text-sm font-semibold text-gray-500">Question {currentQuestion + 1} of {questions.length}</span><span className="text-sm font-semibold text-blue-600">{studentName}</span></div>
+                            <div className="w-full bg-gray-200 rounded-full h-2"><div className="bg-blue-600 h-2 rounded-full transition-all duration-500" style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}></div></div>
                         </div>
-                        <h2 className={`text-2xl font-bold font-poppins mb-6 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{currentQ.question}</h2>
+                        <h2 className="text-2xl font-bold font-poppins text-gray-800 mb-6">{currentQ.question}</h2>
 
-                        {currentQ.type === 'multiple-choice-group' && (
-                            <div className="mb-6 space-y-4">
-                                {currentQ.questions.map((q, qIndex) => (
-                                    <div key={qIndex} className={`p-4 rounded-xl border-2 ${
-                                        isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
-                                    }`}>
-                                        <p className={`font-medium mb-3 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-                                            {qIndex + 1}. {q.text}
-                                        </p>
-                                        <div className="space-y-2">
-                                            {q.options.map((option, optIndex) => (
-                                                <button 
-                                                    key={optIndex} 
-                                                    onClick={() => { 
-                                                        const newAnswers = { ...(answers[currentQuestion] || {}), [qIndex]: optIndex }; 
-                                                        handleAnswer(newAnswers); 
-                                                    }} 
-                                                    className={`w-full p-3 text-left rounded-lg border-2 transition-all ${
-                                                        (answers[currentQuestion] || {})[qIndex] === optIndex 
-                                                            ? `border-blue-600 font-semibold transform scale-105 ${isDarkMode ? 'bg-blue-900 text-white' : 'bg-blue-100 text-gray-800'}` 
-                                                            : `border-gray-300 hover:border-blue-400 ${isDarkMode ? 'bg-gray-600 text-gray-200 hover:bg-gray-500' : 'bg-blue-50 text-gray-800 hover:bg-blue-100'}`
-                                                    }`}
-                                                >
-                                                    {option.text}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                        {currentQ.type === 'true-false-group' && (
-                            <div className="mb-6 space-y-4">
-                                {currentQ.statements.map((statement, stmtIndex) => (
-                                    <div key={stmtIndex} className={`p-4 rounded-xl border-2 ${
-                                        isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
-                                    }`}>
-                                        <p className={`font-medium mb-3 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-                                            {stmtIndex + 1}. {statement.text}
-                                        </p>
-                                        <div className="flex gap-3">
-                                            <button 
-                                                onClick={() => { 
-                                                    const newAnswers = { ...(answers[currentQuestion] || {}), [stmtIndex]: 0 }; 
-                                                    handleAnswer(newAnswers); 
-                                                }} 
-                                                className={`flex-1 p-3 rounded-lg border-2 transition-all ${
-                                                    (answers[currentQuestion] || {})[stmtIndex] === 0 
-                                                        ? `border-blue-600 font-semibold ${isDarkMode ? 'bg-blue-900 text-white' : 'bg-blue-50 text-gray-800'}` 
-                                                        : `border-gray-300 hover:border-blue-400 ${isDarkMode ? 'bg-gray-600 text-gray-200 hover:bg-gray-500' : 'bg-white text-gray-800 hover:bg-gray-100'}`
-                                                }`}
-                                            >
-                                                True
-                                            </button>
-                                            <button 
-                                                onClick={() => { 
-                                                    const newAnswers = { ...(answers[currentQuestion] || {}), [stmtIndex]: 1 }; 
-                                                    handleAnswer(newAnswers); 
-                                                }} 
-                                                className={`flex-1 p-3 rounded-lg border-2 transition-all ${
-                                                    (answers[currentQuestion] || {})[stmtIndex] === 1 
-                                                        ? `border-blue-600 font-semibold ${isDarkMode ? 'bg-blue-900 text-white' : 'bg-blue-50 text-gray-800'}` 
-                                                        : `border-gray-300 hover:border-blue-400 ${isDarkMode ? 'bg-gray-600 text-gray-200 hover:bg-gray-500' : 'bg-white text-gray-800 hover:bg-gray-100'}`
-                                                }`}
-                                            >
-                                                False
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
+                        {currentQ.type === 'multiple-choice-group' && (<div className="mb-6 space-y-4">{currentQ.questions.map((q, qIndex) => (<div key={qIndex} className="p-4 bg-gray-50 rounded-xl border-2 border-gray-200"><p className="text-gray-800 font-medium mb-3">{qIndex + 1}. {q.text}</p><div className="space-y-2">{q.options.map((option, optIndex) => (<button key={optIndex} onClick={() => { const newAnswers = { ...(answers[currentQuestion] || {}), [qIndex]: optIndex }; handleAnswer(newAnswers); }} className={`w-full p-3 text-left rounded-lg border-2 transition-all bg-blue-50 ${(answers[currentQuestion] || {})[qIndex] === optIndex ? 'border-blue-600 bg-blue-100 font-semibold transform scale-105' : 'border-gray-300 hover:border-blue-400 hover:bg-blue-100' }`}>{option.text}</button>))}</div></div>))}</div>)}
+                        {currentQ.type === 'true-false-group' && (<div className="mb-6 space-y-4">{currentQ.statements.map((statement, stmtIndex) => (<div key={stmtIndex} className="p-4 bg-gray-50 rounded-xl border-2 border-gray-200"><p className="text-gray-800 font-medium mb-3">{stmtIndex + 1}. {statement.text}</p><div className="flex gap-3"><button onClick={() => { const newAnswers = { ...(answers[currentQuestion] || {}), [stmtIndex]: 0 }; handleAnswer(newAnswers); }} className={`flex-1 p-3 rounded-lg border-2 transition-all ${ (answers[currentQuestion] || {})[stmtIndex] === 0 ? 'border-blue-600 bg-blue-50 font-semibold' : 'border-gray-300 hover:border-blue-400 hover:bg-gray-100' }`}>True</button><button onClick={() => { const newAnswers = { ...(answers[currentQuestion] || {}), [stmtIndex]: 1 }; handleAnswer(newAnswers); }} className={`flex-1 p-3 rounded-lg border-2 transition-all ${ (answers[currentQuestion] || {})[stmtIndex] === 1 ? 'border-blue-600 bg-blue-50 font-semibold' : 'border-gray-300 hover:border-blue-400 hover:bg-gray-100' }`}>False</button></div></div>))}</div>)}
                         {currentQ.type === 'fill-group' && (
                             <div className="mb-6">
                                 <div className="mb-6">
-                                    <p className={`text-sm font-semibold mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                                        📝 Word Bank - Use these words to fill in the blanks:
-                                    </p>
-                                    <div className={`flex flex-wrap gap-3 p-4 rounded-xl border-2 ${
-                                        isDarkMode ? 'bg-purple-900 border-purple-700' : 'bg-purple-50 border-purple-200'
-                                    }`}>
+                                    <p className="text-sm font-semibold text-gray-600 mb-3">📝 Word Bank - Use these words to fill in the blanks:</p>
+                                    <div className="flex flex-wrap gap-3 p-4 bg-purple-50 rounded-xl border-2 border-purple-200">
                                         {currentQ.wordBank.map((word) => (
                                             <div 
                                                 key={word}
-                                                className={`px-4 py-2 rounded-lg font-semibold font-poppins ${
-                                                    isDarkMode ? 'bg-purple-700 text-purple-200' : 'bg-purple-200 text-purple-800'
-                                                }`}
+                                                className="px-4 py-2 bg-purple-200 text-purple-800 rounded-lg font-semibold font-poppins"
                                             >
                                                 {word}
                                             </div>
                                         ))}
                                     </div>
-                                    <p className={`text-xs mt-2 italic ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                                        💡 Tip: Copy the spelling exactly (not case-sensitive)
-                                    </p>
+                                    <p className="text-xs text-gray-500 mt-2 italic">💡 Tip: Copy the spelling exactly (not case-sensitive)</p>
                                 </div>
                                 <div className="space-y-4">
                                     {currentQ.statements.map((statement, stmtIndex) => {
                                         const parts = statement.text.split('_______');
                                         const userAnswer = (answers[currentQuestion] || {})[stmtIndex] || '';
+                                        const isCorrect = userAnswer.toLowerCase().trim() === statement.answer.toLowerCase();
                                         const isAnswered = userAnswer.trim() !== '';
                                         
                                         return (
-                                            <div key={stmtIndex} className={`p-4 rounded-xl border-2 ${
-                                                isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
-                                            }`}>
+                                            <div key={stmtIndex} className="p-4 bg-gray-50 rounded-xl border-2 border-gray-200">
                                                 <div className="flex items-center flex-wrap gap-2">
-                                                    <span className={`font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                                                        {stmtIndex + 1}.
-                                                    </span>
-                                                    <span className={isDarkMode ? 'text-gray-200' : 'text-gray-800'}>
-                                                        {parts[0]}
-                                                    </span>
+                                                    <span className="font-semibold text-gray-700">{stmtIndex + 1}.</span>
+                                                    <span className="text-gray-800">{parts[0]}</span>
                                                     <input
                                                         type="text"
                                                         value={userAnswer}
@@ -922,17 +896,13 @@
                                                             handleAnswer(newAnswers);
                                                         }}
                                                         placeholder="type here..."
-                                                        className={`w-36 px-3 py-2 border-2 rounded-lg focus:outline-none focus:border-purple-400 ${
-                                                            isDarkMode 
-                                                                ? `bg-gray-600 text-white placeholder-gray-400 ${isAnswered ? 'border-purple-500 bg-purple-900' : 'border-gray-500'}` 
-                                                                : `bg-white text-gray-800 ${isAnswered ? 'border-purple-400 bg-purple-50' : 'border-gray-300'}`
+                                                        className={`w-36 px-3 py-2 border-2 rounded-lg focus:outline-none focus:border-purple-400 bg-white ${
+                                                            isAnswered
+                                                                ? 'border-purple-400 bg-purple-50' 
+                                                                : 'border-gray-300 bg-white'
                                                         }`}
                                                     />
-                                                    {parts[1] && (
-                                                        <span className={isDarkMode ? 'text-gray-200' : 'text-gray-800'}>
-                                                            {parts[1]}
-                                                        </span>
-                                                    )}
+                                                    {parts[1] && <span className="text-gray-800">{parts[1]}</span>}
                                                 </div>
                                             </div>
                                         );
@@ -1032,7 +1002,7 @@
                                     >
                                         {/* Left column - Items */}
                                         <div className="space-y-3">
-                                            <p className={`font-semibold mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Items:</p>
+                                            <p className="font-semibold text-gray-700 mb-3">Items:</p>
                                             {currentQ.items.map((item) => {
                                                 const isMatched = Object.values(answers[currentQuestion] || {}).includes(item);
                                                 const isDrawing = drawingFrom === item;
@@ -1165,17 +1135,10 @@
                                                 setDraggedItem(null);
                                             }
                                         }}
+                                        className="flex flex-wrap gap-3 p-4 bg-gray-50 rounded-xl border-2 border-gray-200 min-h-16 transition-all hover:border-purple-300 hover:bg-purple-50"
                                     >
-                                        <div className={`flex flex-wrap gap-3 p-4 rounded-xl border-2 min-h-16 transition-all ${
-                                            isDarkMode 
-                                                ? 'bg-gray-700 border-gray-600 hover:border-purple-500 hover:bg-gray-600' 
-                                                : 'bg-gray-50 border-gray-200 hover:border-purple-300 hover:bg-purple-50'
-                                        }`}>
-                                    
                                         {getAvailableItems().length === 0 ? (
-                                            <p className={`text-sm italic w-full text-center ${isDarkMode ? 'text-gray-400' : 'text-gray-400'}`}>
-                                                All devices placed! (Drag back here to remove)
-                                            </p>
+                                            <p className="text-gray-400 text-sm italic w-full text-center">All devices placed! (Drag back here to remove)</p>
                                         ) : (
                                             getAvailableItems().map((item) => (
                                                 <div 
@@ -1183,11 +1146,7 @@
                                                     draggable 
                                                     onDragStart={(e) => handleDragStart(e, item.name)}
                                                     onClick={() => setPreviewImage({ name: item.name, icon: item.icon })}
-                                                    className={`flex flex-col items-center px-4 py-3 border-2 rounded-xl cursor-pointer hover:shadow-lg transition-all transform hover:scale-105 ${
-                                                        isDarkMode 
-                                                            ? 'bg-gray-600 border-purple-400 hover:border-purple-300' 
-                                                            : 'bg-white border-purple-300 hover:border-purple-500'
-                                                    }`}
+                                                    className="flex flex-col items-center px-4 py-3 bg-white border-2 border-purple-300 rounded-xl cursor-pointer hover:border-purple-500 hover:shadow-lg transition-all transform hover:scale-105"
                                                     title="Click to preview, drag to place"
                                                 >
                                                     <div className="w-16 h-16 mb-2 flex items-center justify-center">
@@ -1218,15 +1177,9 @@
                                             key={category} 
                                             onDragOver={handleDragOver} 
                                             onDrop={(e) => handleDrop(e, category)} 
-                                            className={`p-4 border-2 border-dashed rounded-xl min-h-40 transition-all ${
-                                                isDarkMode 
-                                                    ? 'border-gray-600 bg-gray-700 hover:border-purple-400 hover:bg-gray-600' 
-                                                    : 'border-gray-300 bg-gray-50 hover:border-purple-400 hover:bg-purple-50'
-                                            }`}
+                                            className="p-4 border-2 border-dashed rounded-xl min-h-40 transition-all border-gray-300 bg-gray-50 hover:border-purple-400 hover:bg-purple-50"
                                         >
-                                            <p className={`font-semibold mb-3 text-center text-lg ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-                                                {category}
-                                            </p>
+                                            <p className="font-semibold text-gray-700 mb-3 text-center text-lg">{category}</p>
                                             <div className="flex flex-wrap gap-2 justify-center">
                                                 {dropZones[category] && dropZones[category].map((itemName) => { 
                                                     const item = currentQ.items.find(i => i.name === itemName); 
@@ -1236,11 +1189,7 @@
                                                             draggable 
                                                             onDragStart={(e) => handleDragStart(e, itemName)}
                                                             onClick={() => setPreviewImage({ name: itemName, icon: item?.icon })}
-                                                            className={`flex flex-col items-center px-3 py-2 border-2 rounded-xl cursor-pointer hover:shadow-lg transition-all ${
-                                                                isDarkMode 
-                                                                    ? 'bg-gray-600 border-purple-400 hover:border-purple-300' 
-                                                                    : 'bg-white border-purple-400 hover:border-purple-600'
-                                                            }`}
+                                                            className="flex flex-col items-center px-3 py-2 bg-white border-2 border-purple-400 rounded-xl cursor-pointer hover:border-purple-600 hover:shadow-lg transition-all"
                                                             title="Click to preview, drag to move"
                                                         >
                                                             <div className="w-12 h-12 mb-1 flex items-center justify-center">
@@ -1263,9 +1212,7 @@
                                                     ); 
                                                 })}
                                                 {(!dropZones[category] || dropZones[category].length === 0) && (
-                                                    <p className={`text-sm italic ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                                                        Drop devices here...
-                                                    </p>
+                                                    <p className="text-gray-400 text-sm italic">Drop devices here...</p>
                                                 )}
                                             </div>
                                         </div>
@@ -1279,18 +1226,12 @@
                                         onClick={() => setPreviewImage(null)}
                                     >
                                         <div 
-                                            className={`rounded-3xl shadow-2xl max-w-2xl w-full p-8 text-center fade-in ${
-                                                isDarkMode ? 'bg-gray-800' : 'bg-white'
-                                            }`}
+                                            className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-8 text-center fade-in"
                                             onClick={(e) => e.stopPropagation()}
                                         >
                                             <div className="mb-6">
-                                                <h3 className={`text-2xl font-bold font-poppins mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                                                    {previewImage.name}
-                                                </h3>
-                                                <div className={`flex items-center justify-center rounded-2xl p-8 min-h-80 ${
-                                                    isDarkMode ? 'bg-gray-700' : 'bg-gray-50'
-                                                }`}>
+                                                <h3 className="text-2xl font-bold font-poppins text-gray-800 mb-4">{previewImage.name}</h3>
+                                                <div className="flex items-center justify-center bg-gray-50 rounded-2xl p-8 min-h-80">
                                                     <img 
                                                         src={`../Images/${previewImage.name.toLowerCase()}.png`}
                                                         alt={previewImage.name}
