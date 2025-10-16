@@ -269,8 +269,41 @@
             const handleAnswer = (answer) => setAnswers({ ...answers, [currentQuestion]: answer });
             const handleDragStart = (e, item) => { setDraggedItem(item); e.dataTransfer.setData('text/plain', item); };
             const handleDragOver = (e) => e.preventDefault();
-            const handleDrop = (e, category) => { e.preventDefault(); const item = draggedItem || e.dataTransfer.getData('text/plain'); if (item) { let newAnswers = { ...(answers[currentQuestion] || {}) }; Object.keys(newAnswers).forEach(key => { if (Array.isArray(newAnswers[key])) newAnswers[key] = newAnswers[key].filter(i => i !== item); else if (newAnswers[key] === item) delete newAnswers[key]; }); if (questions[currentQuestion].type === 'drag-drop-images') { if (!newAnswers[category]) newAnswers[category] = []; if (!newAnswers[category].includes(item)) newAnswers[category].push(item); } else { newAnswers[category] = item; } setAnswers({ ...answers, [currentQuestion]: newAnswers }); setDropZones(newAnswers); setDraggedItem(null); } };
-            const getAvailableItems = () => { const currentQ = questions[currentQuestion]; const currentAnswers = answers[currentQuestion] || {}; if (currentQ.type.includes('drag-drop')) { const placedItems = Object.values(currentAnswers).flat(); return currentQ.items.filter(item => !placedItems.includes(item.name || item)); } if (currentQ.type === 'fill-group') return currentQ.wordBank.filter(word => !Object.values(currentAnswers).includes(word)); return []; };
+            const handleDrop = (e, category) => {
+                e.preventDefault();
+                const item = draggedItem || e.dataTransfer.getData('text/plain');
+                if (item) {
+                    let newAnswers = { ...(answers[currentQuestion] || {}) };
+                    Object.keys(newAnswers).forEach(key => {
+                        if (Array.isArray(newAnswers[key])) {
+                            newAnswers[key] = newAnswers[key].filter(i => i !== item);
+                        } else if (newAnswers[key] === item) {
+                            delete newAnswers[key];
+                        }
+                    });
+                    if (questions[currentQuestion].type === 'drag-drop-images') {
+                        if (!newAnswers[category]) newAnswers[category] = [];
+                        if (!newAnswers[category].includes(item)) newAnswers[category].push(item);
+                    } else {
+                        newAnswers[category] = item;
+                    }
+                    setAnswers({ ...answers, [currentQuestion]: newAnswers });
+                    setDropZones(newAnswers);
+                    setDraggedItem(null);
+                }
+            };
+            const getAvailableItems = () => {
+                const currentQ = questions[currentQuestion];
+                const currentAnswers = answers[currentQuestion] || {};
+                if (currentQ.type.includes('drag-drop')) {
+                    const placedItems = Object.values(currentAnswers).flat();
+                    return currentQ.items.filter(item => !placedItems.includes(item.name || item));
+                }
+                if (currentQ.type === 'fill-group') {
+                    return currentQ.wordBank.filter(word => !Object.values(currentAnswers).includes(word));
+                }
+                return [];
+            };
             const handleNext = () => { setQuestionTransition('exit'); setTimeout(() => { if (currentQuestion < questions.length - 1) { setCurrentQuestion(prev => prev + 1); setQuestionTransition('enter'); } else { setIsCompleted(true); setCompletedStudents({ ...completedStudents, [studentName]: true }); if (document.exitFullscreen) document.exitFullscreen(); } }, 300); };
             const handleBack = () => { 
                 if (currentQuestion > 0) { 
