@@ -929,7 +929,7 @@
                                                 const isMatched = Object.values(answers[currentQuestion] || {}).includes(item);
                                                 const isDrawing = drawingFrom === item;
                                                 return (
-                                                    <button key={item} id={`item-${currentQuestion}-${item}`} onClick={() => { if (drawingFrom === item) { setDrawingFrom(null); setCurrentMousePos(null); } else if (!isMatched) { setDrawingFrom(item); } }} className={`p-3 rounded-xl border-2 transition-all text-left font-semibold whitespace-nowrap overflow-hidden text-ellipsis ${ isDrawing ? 'border-purple-500 bg-purple-100 shadow-lg scale-105 transform' : isMatched ? 'border-purple-400 bg-purple-50' : 'border-gray-300 bg-white hover:border-purple-300 hover:bg-purple-50' }`} style={{ zIndex: 2, position: 'relative', width: '180px' }} >
+                                                    <button key={item} id={`item-${currentQuestion}-${item}`} onClick={() => { if (drawingFrom === item) { setDrawingFrom(null); setCurrentMousePos(null); } else if (!isMatched) { setDrawingFrom(item); } }} className={`p-3 rounded-xl border-2 transition-all text-left font-semibold ${ isDrawing ? 'border-purple-500 bg-purple-100 shadow-lg scale-105 transform' : isMatched ? 'border-purple-400 bg-purple-50' : 'border-gray-300 bg-white hover:border-purple-300 hover:bg-purple-50' }`} style={{ zIndex: 2, position: 'relative', width: '180px' }} >
                                                         {item}
                                                     </button>
                                                 );
