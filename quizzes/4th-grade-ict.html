@@ -840,12 +840,9 @@
                                             <div key={stmtIndex} className={`p-4 rounded-xl border-2 ${
                                                 isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
                                             }`}>
-                                                <div className="flex items-baseline flex-wrap gap-2">
+                                                <div className="flex items-baseline flex-wrap gap-1">
                                                     <span className={`font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                                                        {stmtIndex + 1}.
-                                                    </span>
-                                                    <span className={isDarkMode ? 'text-gray-200' : 'text-gray-800'}>
-                                                        {parts[0]}
+                                                        {stmtIndex + 1}. {parts[0]}
                                                     </span>
                                                     <input
                                                         type="text"
