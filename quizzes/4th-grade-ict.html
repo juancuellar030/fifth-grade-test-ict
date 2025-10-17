@@ -69,86 +69,19 @@
                 <circle cx="12" cy="16.5" r="1" fill="currentColor"></circle>
             </svg>
         );
+
+        const MoonIcon = ({ className }) => (
+            <svg className={className} viewBox="0 0 24 24" fill="none">
+                <path d="M3.32031 11.6835C3.32031 16.6541 7.34975 20.6835 12.3203 20.6835C16.1075 20.6835 19.3483 18.3443 20.6768 15.032C19.6402 15.4486 18.5059 15.6834 17.3203 15.6834C12.3497 15.6834 8.32031 11.654 8.32031 6.68342C8.32031 5.50338 8.55165 4.36259 8.96453 3.32996C5.65605 4.66028 3.32031 7.89912 3.32031 11.6835Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+        );
         
-        const AnimatedBackground = () => {
-            const animationFrameId = useRef(null);
-            const [positions, setPositions] = useState([
-                { x: 100, y: 100, vx: 0.5, vy: 0.3 }, { x: 300, y: 200, vx: -0.4, vy: 0.5 },
-                { x: 500, y: 300, vx: 0.2, vy: -0.5 }, { x: 200, y: 400, vx: -0.5, vy: -0.2 },
-                { x: 700, y: 150, vx: 0.4, vy: 0.2 }, { x: 400, y: 500, vx: -0.2, vy: 0.4 },
-                { x: 600, y: 50, vx: 0.3, vy: 0.5 }, { x: 800, y: 450, vx: -0.3, vy: -0.4 },
-                { x: 150, y: 550, vx: 0.5, vy: -0.3 }
-            ]);
-            const svgIcons = [
-                { 
-                    svg: '<svg viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M21.3911 16.3358C21.4356 16.3818 21.4579 16.4048 21.4787 16.4276C21.7998 16.7802 21.9843 17.2358 21.999 17.7124C22 17.7433 22 17.7753 22 17.8393C22 17.9885 22 18.0631 21.996 18.1261C21.9325 19.1314 21.1314 19.9325 20.1261 19.996C20.0631 20 19.9885 20 19.8393 20H4.16068C4.01148 20 3.93688 20 3.87388 19.996C2.86865 19.9325 2.06749 19.1314 2.00398 18.1261C2 18.0631 2 17.9885 2 17.8393C2 17.7753 2 17.7433 2.00096 17.7124C2.01569 17.2358 2.20022 16.7802 2.52127 16.4276C2.54208 16.4048 2.56433 16.3818 2.60883 16.3359L3.90311 15H20.0969L21.3911 16.3358ZM8.75 18C8.75 17.5858 9.08579 17.25 9.5 17.25H14.5C14.9142 17.25 15.25 17.5858 15.25 18C15.25 18.4142 14.9142 18.75 14.5 18.75H9.5C9.08579 18.75 8.75 18.4142 8.75 18Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M4.35294 7C4.35294 5.11438 4.35294 4.17157 4.93873 3.58579C5.52451 3 6.46732 3 8.35294 3H15.6471C17.5327 3 18.4755 3 19.0613 3.58579C19.6471 4.17157 19.6471 5.11438 19.6471 7V14H4.35294V7ZM12 6.5C12.4142 6.5 12.75 6.16421 12.75 5.75C12.75 5.33579 12.4142 5 12 5C11.5858 5 11.25 5.33579 11.25 5.75C11.25 6.16421 11.5858 6.5 12 6.5Z" fill="currentColor"/></svg>', 
-                     color: '#93c5fd', size: 'w-36 h-36' 
-                },
-                { 
-                    svg: '<svg viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M14 22H10C6.22876 22 4.34315 22 3.17157 20.7881C2 19.5763 2 17.6258 2 13.725V12.2039C2 9.91549 2 8.77128 2.5192 7.82274C3.0384 6.87421 3.98695 6.28551 5.88403 5.10813L7.88403 3.86687C9.88939 2.62229 10.8921 2 12 2C13.1079 2 14.1106 2.62229 16.116 3.86687L18.116 5.10812C20.0131 6.28551 20.9616 6.87421 21.4808 7.82274C22 8.77128 22 9.91549 22 12.2039V13.725C22 17.6258 22 19.5763 20.8284 20.7881C19.6569 22 17.7712 22 14 22ZM17.4498 12.192C14.4329 8.93571 9.56706 8.93571 6.55017 12.192C6.26866 12.4959 5.79413 12.514 5.49028 12.2325C5.18643 11.951 5.16832 11.4764 5.44983 11.1726C9.06036 7.27552 14.9396 7.27552 18.5502 11.1726C18.8317 11.4764 18.8136 11.951 18.5097 12.2325C18.2059 12.514 17.7313 12.4959 17.4498 12.192ZM15.4498 14.3505C13.5375 12.2864 10.4625 12.2864 8.55019 14.3505C8.26868 14.6544 7.79415 14.6725 7.4903 14.391C7.18645 14.1095 7.16834 13.6349 7.44985 13.3311C9.95581 10.6262 14.0442 10.6262 16.5502 13.3311C16.8317 13.6349 16.8136 14.1095 16.5097 14.391C16.2059 14.6725 15.7314 14.6544 15.4498 14.3505ZM13.4499 16.5095C12.6421 15.6377 11.358 15.6377 10.5502 16.5095C10.2687 16.8134 9.79417 16.8315 9.49031 16.55C9.18646 16.2684 9.16835 15.7939 9.44986 15.4901C10.8513 13.9775 13.1488 13.9775 14.5502 15.4901C14.8317 15.7939 14.8136 16.2684 14.5098 16.55C14.2059 16.8315 13.7314 16.8134 13.4499 16.5095Z" fill="currentColor"/> </svg>', 
-                    color: '#93c5fd', size: 'w-36 h-36'
-                },
-                { 
-                    svg: '<svg viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.17157 3.17157C4 4.34315 4 6.22876 4 10V14C4 17.7712 4 19.6569 5.17157 20.8284C6.34315 22 8.22876 22 12 22C15.7712 22 17.6569 22 18.8284 20.8284C20 19.6569 20 17.7712 20 14V10C20 6.22876 20 4.34315 18.8284 3.17157C17.6569 2 15.7712 2 12 2C8.22876 2 6.34315 2 5.17157 3.17157ZM9 4.25C8.58579 4.25 8.25 4.58579 8.25 5C8.25 5.41421 8.58579 5.75 9 5.75H15C15.4142 5.75 15.75 5.41421 15.75 5C15.75 4.58579 15.4142 4.25 15 4.25H9ZM12 19C13.1046 19 14 18.1046 14 17C14 15.8954 13.1046 15 12 15C10.8954 15 10 15.8954 10 17C10 18.1046 10.8954 19 12 19Z" fill="currentColor"/></svg>', 
-                    color: '#93c5fd', size: 'w-36 h-36' 
-                },
-                { 
-                    svg: '<svg viewBox="0 0 24 24" fill="none"><path d="M2 12.124C2 6.53269 6.47713 2 11.9999 2C17.5228 2 21.9999 6.53269 21.9999 12.124L21.9999 17.3675C22.0002 18.1844 22.0004 18.7446 21.8568 19.2364C21.576 20.1982 20.9046 20.9937 20.01 21.4245C19.5525 21.6449 19.0059 21.732 18.2088 21.8591L18.0789 21.8799C17.7954 21.9252 17.5532 21.9639 17.3522 21.9839C17.1431 22.0047 16.9299 22.0111 16.7118 21.9676C15.9942 21.8245 15.4024 21.3126 15.1508 20.6172C15.0744 20.4059 15.0474 20.1916 15.035 19.9793C15.0232 19.7753 15.0232 19.527 15.0232 19.2365L15.0231 15.0641C15.0226 14.6386 15.0222 14.2725 15.1195 13.959C15.3422 13.2416 15.9238 12.6975 16.6477 12.5292C16.9641 12.4556 17.3246 12.4849 17.7435 12.5189L17.8367 12.5264L17.9465 12.5352C18.7302 12.5975 19.2664 12.6402 19.7216 12.8106C20.0415 12.9304 20.3381 13.0953 20.6046 13.2976V12.124C20.6046 7.31288 16.7521 3.41266 11.9999 3.41266C7.24776 3.41266 3.39534 7.31288 3.39534 12.124V13.2976C3.66176 13.0953 3.95843 12.9304 4.27829 12.8106C4.73345 12.6402 5.26965 12.5975 6.05335 12.5352L6.16318 12.5264L6.25641 12.5189C6.67534 12.4849 7.03581 12.4556 7.35224 12.5292C8.07612 12.6975 8.65766 13.2416 8.88039 13.959C8.97774 14.2725 8.9773 14.6386 8.97678 15.0641L8.97671 19.2365C8.97671 19.527 8.97672 19.7753 8.96487 19.9793C8.95254 20.1916 8.9255 20.4059 8.84906 20.6172C8.59754 21.3126 8.00574 21.8245 7.28812 21.9676C7.07001 22.0111 6.85675 22.0047 6.64768 21.9839C6.44671 21.9639 6.20449 21.9252 5.92102 21.8799L5.92102 21.8799L5.79106 21.8591C4.99399 21.732 4.44737 21.6449 3.98991 21.4245C3.09534 20.9937 2.42388 20.1982 2.14308 19.2364C2.02467 18.8309 2.00404 18.3788 2.0006 17.7747L2 17.5803V12.124Z" fill="#currentColor"/></svg>', 
-                    color: '#93c5fd', size: 'w-36 h-36'
-                },
-                { 
-                    svg: '<svg viewBox="0 0 24 24" fill="none"><path d="M11.75 16.0001V13.5001L13.4834 14.8001C13.5878 14.8785 13.6737 14.9429 13.7472 15.0001C13.6737 15.0573 13.5878 15.1217 13.4834 15.2001L12.15 16.2001C11.9904 16.3198 11.8607 16.4166 11.7528 16.4946C11.7504 16.3615 11.75 16.1996 11.75 16.0001Z" fill="currentColor"/><path d="M11.7906 16.9603C11.7904 16.9596 11.7901 16.9585 11.7895 16.9571C11.7904 16.9602 11.7909 16.9616 11.7909 16.9615C11.791 16.9614 11.7909 16.9611 11.7906 16.9603Z" fill="currentColor"/><path d="M11.75 8.00011V10.5001L13.4834 9.20011C13.5878 9.12175 13.6737 9.05729 13.7472 9.00011C13.6737 8.94293 13.5878 8.87847 13.4834 8.80011L12.15 7.80011C11.9904 7.68043 11.8607 7.58358 11.7528 7.50565C11.7504 7.63874 11.75 7.80064 11.75 8.00011Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M3.46447 3.46447C2 4.92893 2 7.28595 2 12C2 16.714 2 19.0711 3.46447 20.5355C4.92893 22 7.28595 22 12 22C16.714 22 19.0711 22 20.5355 20.5355C22 19.0711 22 16.714 22 12C22 7.28595 22 4.92893 20.5355 3.46447C19.0711 2 16.714 2 12 2C7.28595 2 4.92893 2 3.46447 3.46447ZM13.0099 6.57C12.6958 6.33435 12.3963 6.10963 12.1382 5.96935C11.8739 5.82574 11.4222 5.64148 10.941 5.88207C10.4598 6.12267 10.3362 6.59462 10.2925 6.89218C10.2499 7.18285 10.2499 7.55729 10.25 7.94992L10.25 10.3988L8.48016 8.92394C8.16195 8.65877 7.68903 8.70176 7.42385 9.01997C7.15868 9.33818 7.20167 9.8111 7.51988 10.0763L9.82848 12.0001L7.51988 13.9239C7.20167 14.1891 7.15868 14.662 7.42385 14.9802C7.68903 15.2985 8.16195 15.3414 8.48016 15.0763L10.25 13.6014L10.25 16.0503C10.2499 16.4429 10.2499 16.8174 10.2925 17.108C10.3362 17.4056 10.4598 17.8775 10.941 18.1181C11.4222 18.3587 11.8739 18.1745 12.1382 18.0309C12.3963 17.8906 12.6958 17.6659 13.0099 17.4302L14.4167 16.3751C14.6318 16.2139 14.8537 16.0476 15.0152 15.8852C15.1982 15.7011 15.4167 15.4125 15.4167 15.0001C15.4167 14.5877 15.1982 14.2991 15.0152 14.115C14.8537 13.9526 14.6318 13.7863 14.4167 13.6251L12.25 12.0001L14.4167 10.3751C14.6318 10.2139 14.8537 10.0476 15.0152 9.88518C15.1982 9.70108 15.4167 9.41247 15.4167 9.00011C15.4167 8.58774 15.1982 8.29914 15.0152 8.11503C14.8537 7.95263 14.6318 7.7863 14.4167 7.6251L13.0099 6.57Z" fill="currentColor"/></svg>', 
-                    color: '#93c5fd', size: 'w-36 h-36' 
-                },
-                { 
-                    svg: '<svg viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M22 6.1875V8.3C22 9.95685 20.5778 11.3 18.8235 11.3C18.2388 11.3 17.7647 11.7477 17.7647 12.3V17.25H13V8.3125C13 8.02234 13 7.87726 13.0064 7.75466C13.14 5.18614 15.3147 3.13221 18.0343 3.00602C18.1642 3 18.3178 3 18.625 3C18.8093 3 18.9015 3 18.9794 3.00361C20.6112 3.07932 21.916 4.31169 21.9962 5.8528C22 5.92634 22 6.01349 22 6.1875ZM20.25 6C20.25 5.58579 19.9142 5.25 19.5 5.25C19.0858 5.25 18.75 5.58579 18.75 6V8.5C18.75 8.91421 19.0858 9.25 19.5 9.25C19.9142 9.25 20.25 8.91421 20.25 8.5V6Z" fill="currentColor"/><path d="M15.3824 21C14.0666 21 13 19.9926 13 18.75H17.7647C17.7647 19.9926 16.6981 21 15.3824 21Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M2 6.1875V8.3C2 9.95685 3.42215 11.3 5.17647 11.3C5.76124 11.3 6.23529 11.7477 6.23529 12.3V17.25H11V8.3125C11 8.02234 11 7.87726 10.9936 7.75466C10.86 5.18614 8.68526 3.13221 5.96565 3.00602C5.83584 3 5.68223 3 5.375 3C5.19066 3 5.09849 3 5.02061 3.00361C3.38884 3.07932 2.08399 4.31169 2.00383 5.8528C2 5.92634 2 6.01349 2 6.1875ZM3.75 6C3.75 5.58579 4.08579 5.25 4.5 5.25C4.91421 5.25 5.25 5.58579 5.25 6V8.5C5.25 8.91421 4.91421 9.25 4.5 9.25C4.08579 9.25 3.75 8.91421 3.75 8.5V6Z" fill="currentColor"/><path d="M8.61765 21C9.93338 21 11 19.9926 11 18.75H6.23529C6.23529 19.9926 7.30191 21 8.61765 21Z" fill="currentColor"/></svg>', 
-                    color: '#93c5fd', size: 'w-36 h-36'
-                },
-                { 
-                    svg: '<svg viewBox="0 0 24 24" fill="none"><path d="M12 10.35C12.9113 10.35 13.65 11.0887 13.65 12C13.65 12.9113 12.9113 13.65 12 13.65C11.0887 13.65 10.35 12.9113 10.35 12C10.35 11.0887 11.0887 10.35 12 10.35Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M3.46447 3.46447C2 4.92893 2 7.28595 2 12C2 16.714 2 19.0711 3.46447 20.5355C4.92893 22 7.28595 22 12 22C16.714 22 19.0711 22 20.5355 20.5355C22 19.0711 22 16.714 22 12C22 7.28595 22 4.92893 20.5355 3.46447C19.0711 2 16.714 2 12 2C7.28595 2 4.92893 2 3.46447 3.46447ZM6.75 12C6.75 9.1005 9.1005 6.75 12 6.75C14.8995 6.75 17.25 9.1005 17.25 12C17.25 12.6327 17.1384 13.2376 16.9345 13.7973C16.8991 13.8944 16.8295 13.9989 16.7183 14.1015L16.6377 14.1758C16.3369 14.4533 15.8853 14.4888 15.5448 14.2618C15.2981 14.0974 15.15 13.8206 15.15 13.5241V12C15.15 10.2603 13.7397 8.85 12 8.85C10.2603 8.85 8.85 10.2603 8.85 12C8.85 13.7397 10.2603 15.15 12 15.15C12.7017 15.15 13.3499 14.9205 13.8735 14.5325C14.0557 14.9233 14.3431 15.2635 14.7127 15.5099C15.6294 16.121 16.8451 16.0252 17.6548 15.2783L17.7354 15.204C17.9855 14.9732 18.211 14.6756 18.3439 14.3108C18.6069 13.5889 18.75 12.8103 18.75 12C18.75 8.27208 15.7279 5.25 12 5.25C8.27208 5.25 5.25 8.27208 5.25 12C5.25 15.7279 8.27208 18.75 12 18.75C12.4142 18.75 12.75 18.4142 12.75 18C12.75 17.5858 12.4142 17.25 12 17.25C9.1005 17.25 6.75 14.8995 6.75 12Z" fill="currentColor"/></svg>', 
-                    color: '#93c5fd', size: 'w-36 h-36' 
-                },
-                { 
-                    svg: '<svg viewBox="0 0 24 24" fill="none" ><path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C10.4003 22 8.88837 21.6244 7.54753 20.9565C7.19121 20.7791 6.78393 20.72 6.39939 20.8229L4.17335 21.4185C3.20701 21.677 2.32295 20.793 2.58151 19.8267L3.17712 17.6006C3.28001 17.2161 3.22094 16.8088 3.04346 16.4525C2.37562 15.1116 2 13.5997 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM7.5 11.1084C7.5 12.4768 8.81884 13.9126 10.0286 14.9417C10.8524 15.6426 11.2644 15.9931 12 15.9931C12.7356 15.9931 13.1476 15.6426 13.9714 14.9417C15.1812 13.9126 16.5 12.4768 16.5 11.1084C16.5 8.43124 14.0249 7.43172 12 9.4998C9.97507 7.43172 7.5 8.43124 7.5 11.1084Z" fill="currentColor"/></svg>', 
-                    color: '#93c5fd', size: 'w-36 h-36'
-                },
-                { 
-                    svg: '<svg viewBox="0 0 24 24" fill="none"><path d="M18 8C18 9.10457 17.1046 10 16 10C14.8954 10 14 9.10457 14 8C14 6.89543 14.8954 6 16 6C17.1046 6 18 6.89543 18 8Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M11.9426 1.25H12.0574C14.3658 1.24999 16.1748 1.24998 17.5863 1.43975C19.031 1.63399 20.1711 2.03933 21.0659 2.93414C21.9607 3.82895 22.366 4.96897 22.5603 6.41371C22.75 7.82519 22.75 9.63423 22.75 11.9426V12.0309C22.75 13.9397 22.75 15.5023 22.6463 16.7745C22.5422 18.0531 22.3287 19.1214 21.8509 20.0087C21.6401 20.4001 21.3812 20.7506 21.0659 21.0659C20.1711 21.9607 19.031 22.366 17.5863 22.5603C16.1748 22.75 14.3658 22.75 12.0574 22.75H11.9426C9.63423 22.75 7.82519 22.75 6.41371 22.5603C4.96897 22.366 3.82895 21.9607 2.93414 21.0659C2.14086 20.2726 1.7312 19.2852 1.51335 18.0604C1.29935 16.8573 1.2602 15.3603 1.25207 13.5015C1.25 13.0287 1.25 12.5286 1.25 12.001V11.9426C1.24999 9.63424 1.24998 7.82519 1.43975 6.41371C1.63399 4.96897 2.03933 3.82895 2.93414 2.93414C3.82895 2.03933 4.96897 1.63399 6.41371 1.43975C7.82519 1.24998 9.63424 1.24999 11.9426 1.25ZM6.61358 2.92637C5.33517 3.09825 4.56445 3.42514 3.9948 3.9948C3.42514 4.56445 3.09825 5.33517 2.92637 6.61358C2.75159 7.91356 2.75 9.62178 2.75 12C2.75 12.2905 2.75 12.5715 2.75034 12.8435L3.75148 11.9675C4.66275 11.1702 6.03617 11.2159 6.89238 12.0721L11.1821 16.3618C11.8693 17.0491 12.9511 17.1428 13.7463 16.5839L14.0445 16.3744C15.1887 15.5702 16.7368 15.6634 17.7764 16.599L20.6068 19.1463C20.8917 18.548 21.0609 17.7618 21.1513 16.6527C21.2494 15.4482 21.25 13.9459 21.25 12C21.25 9.62178 21.2484 7.91356 21.0736 6.61358C20.9018 5.33517 20.5749 4.56445 20.0052 3.9948C19.4355 3.42514 18.6648 3.09825 17.3864 2.92637C16.0864 2.75159 14.3782 2.75 12 2.75C9.62178 2.75 7.91356 2.75159 6.61358 2.92637Z" fill="currentColor"/></svg>', 
-                    color: '#93c5fd', size: 'w-36 h-36'
-                }
-            ];
-            
-            useEffect(() => {
-                const animate = () => {
-                    setPositions(prevPositions => {
-                        const width = window.innerWidth;
-                        const height = window.innerHeight;
-                        const BOUNCE = 0.85;
-                        const SIZE = 144;
-                        return prevPositions.map((pos) => {
-                            let newVx = pos.vx; let newVy = pos.vy;
-                            let newX = pos.x + newVx; let newY = pos.y + newVy;
-                            if (newX - SIZE / 2 < 0 || newX + SIZE / 2 > width) newVx = -newVx * BOUNCE;
-                            if (newY - SIZE / 2 < 0 || newY + SIZE / 2 > height) newVy = -newVy * BOUNCE;
-                            newX = pos.x + newVx; newY = pos.y + newVy;
-                            return { ...pos, x: newX, y: newY, vx: newVx, vy: newVy };
-                        });
-                    });
-                    animationFrameId.current = requestAnimationFrame(animate);
-                };
-                animationFrameId.current = requestAnimationFrame(animate);
-                return () => cancelAnimationFrame(animationFrameId.current);
-            }, []);
-        
-            return (
-                <div className="fixed inset-0 overflow-hidden pointer-events-none">
-                    {positions.map((pos, idx) => (
-                        <div key={idx} className={`absolute opacity-10 ${svgIcons[idx % svgIcons.length].size}`} style={{ left: `${pos.x}px`, top: `${pos.y}px`, transform: 'translate(-50%, -50%)', color: svgIcons[idx % svgIcons.length].color }} dangerouslySetInnerHTML={{ __html: svgIcons[idx % svgIcons.length].svg }}/>
-                    ))}
-                </div>
-            );
-        };
-        
+        const SunIcon = ({ className }) => (
+            <svg className={className} viewBox="0 0 24 24" fill="none">
+                <path d="M12 3V4M12 20V21M4 12H3M6.31412 6.31412L5.5 5.5M17.6859 6.31412L18.5 5.5M6.31412 17.69L5.5 18.5001M17.6859 17.69L18.5 18.5001M21 12H20M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+        );
+           
         const Confetti = () => {
              const confettiPieces = Array.from({ length: 250 }).map((_, i) => ({ id: i, left: Math.random() * 100, delay: Math.random() * 3, duration: 2 + Math.random() * 1, color: ['#ff5353', '#ffee53', '#53ffa9', '#5395ff', '#ef53ff', '#45B7D1'][Math.floor(Math.random() * 6)], rotX: Math.random() * 360, rotY: Math.random() * 360, rotZ: Math.random() * 360, swayAmount: 50 + Math.random() * 100 }));
             return (
@@ -200,83 +133,11 @@
             const [matchingLines, setMatchingLines] = useState({});
             const [drawingFrom, setDrawingFrom] = useState(null);
             const [currentMousePos, setCurrentMousePos] = useState(null);
+            const [isDarkMode, setIsDarkMode] = useState(false);
             const inputRef = useRef(null);
             
             // Base questions can be defined here
-            const baseQuestions = [
-                {
-                    id: 1,
-                    type: 'multiple-choice-group',
-                    question: 'Answer each question by selecting the correct option:',
-                    questions: [
-                        { text: 'What is cultural information?', options: ['Facts about computers', 'Stories, traditions, and ways people live', 'Messages sent by phone', 'Websites and apps'], correct: 1 },
-                        { text: 'Why is it important to manage information?', options: ['To lose it', 'To keep it organized and easy to find', 'To forget it', 'To make it confusing'], correct: 1 },
-                        { text: 'What does social participation mean?', options: ['Watching TV alone', 'Joining activities with others and working together', 'Playing video games by yourself', 'Reading a book'], correct: 1 }
-                    ]
-                },
-                {
-                    id: 2,
-                    type: 'true-false-group',
-                    question: 'Read each statement and select True or False:',
-                    statements: [
-                        { text: "Sharing your friend's secret without asking shows respect for privacy.", correct: 1 }, // False
-                        { text: 'A printed book is an example of digital information.', correct: 1 }, // False
-                        { text: 'Working on a group project with classmates is a form of social participation.', correct: 0 } // True
-                    ]
-                },
-                {
-                    id: 3,
-                    type: 'drag-drop-images',
-                    question: 'Drag each source of information to the correct group:',
-                    items: [
-                        { name: 'Teacher', icon: '🧑‍🏫' },
-                        { name: 'Book', icon: '📖' },
-                        { name: 'Family', icon: '👨‍👩‍👧‍👦' },
-                        { name: 'Website', icon: '💻' },
-                        { name: 'Friend', icon: '🧑‍🤝‍🧑' },
-                        { name: 'App', icon: '📱' }
-                    ],
-                    categories: ['Information from People', 'Information from Things'],
-                    correctAnswers: {
-                        'Information from People': ['Teacher', 'Family', 'Friend'],
-                        'Information from Things': ['Book', 'Website', 'App']
-                    }
-                },
-                {
-                    id: 4,
-                    type: 'drag-drop',
-                    question: 'Match the activity to the best way to communicate:',
-                    items: ['Asking your teacher a question', 'Sending a thank you note', 'Chatting with a relative far away', 'A news website'],
-                    categories: ['Talking Face-to-Face', 'Writing an Email', 'Making a Video Call', 'Provides facts and updates'],
-                    correctAnswers: {
-                        'Talking Face-to-Face': 'Asking your teacher a question',
-                        'Writing an Email': 'Sending a thank you note',
-                        'Making a Video Call': 'Chatting with a relative far away',
-                        'Provides facts and updates': 'A news website'
-                    }
-                },
-                {
-                    id: 5,
-                    type: 'fill-group',
-                    question: 'Fill in the blanks using the words from the word bank:',
-                    wordBank: ['digital', 'cultural', 'privacy', 'sources'],
-                    statements: [
-                        { text: 'Traditions and family stories are examples of ______ information.', answer: 'cultural' },
-                        { text: 'Information found on a computer or phone is called ______ information.', answer: 'digital' },
-                        { text: "Checking books and websites to find answers means you are using different ______.", answer: 'sources' },
-                        { text: "Not sharing someone's personal information is how you respect their ______.", answer: 'privacy' }
-                    ]
-                }
-            ];
-          
-            const shuffleArray = (array) => {
-                const newArray = [...array];
-                for (let i = newArray.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-                }
-                return newArray;
-            };
+            const baseQuestions = [ { id: 1, type: 'multiple-choice-group', question: 'Answer each question by selecting the correct option:', questions: [ { text: 'What is cultural information?', options: ['Facts about computers', 'Stories, traditions, and ways people live', 'Messages sent by phone', 'Websites and apps'], correct: 1 }, { text: 'What does it mean to keep information private?', options: ['Tell everyone your secrets', 'Share only the correct information with people you know', 'Publish everything online', 'Ignore all information'], correct: 1 }, { text: 'What does social participation mean?', options: ['Watching TV alone', 'Doing activities with others', 'Playing video games at home by yourself', 'Reading a book'], correct: 1 } ] }, { id: 2, type: 'drag-drop', question: 'Match the example to the correct concept:', items: ['Website🌐', 'Talking to friends💬', 'School soccer game⚽', 'Keeping your password a secret🔑'], categories: ['Online Source of Information', 'Face-to-Face Communication', 'Social Participation', 'Protecting Privacy'], correctAnswers: { 'Online Source of Information': 'Website🌐', 'Face-to-Face Communication': 'Talking to friends💬', 'Social Participation': 'School soccer game⚽', 'Protecting Privacy': 'Keeping your password a secret🔑' } }, { id: 3, type: 'drag-drop-images', question: 'Drag each device to the correct group:', items: [ { name: 'Teacher', icon: '🧑‍🏫' }, { name: 'Book', icon: '📖' }, { name: 'Family', icon: '👨‍👩‍👧‍👦' }, { name: 'Website', icon: '💻' }, { name: 'Friend', icon: '🧑‍🤝‍🧑' }, { name: 'App', icon: '📱' } ], categories: ['Cultural Information', 'Digital Information'], correctAnswers: { 'Cultural Information': ['Teacher', 'Family', 'Friend'], 'Digital Information': ['Book', 'Website', 'App'] } }, { id: 4, type: 'true-false-group', question: 'Read each statement and select True or False:', statements: [ { text: "Social media posts are examples of cultural information.", correct: 1 }, { text: 'A book from your school bag is an example of digital information.', correct: 1 }, { text: 'Working on a group project with classmates is a form of social participation.', correct: 0 } ] }, { id: 5, type: 'fill-group', question: 'Write the correct word from the box to fill in each blank:', wordBank: ['information', 'Digital', 'sources', 'privacy', 'communication'], statements: [{ text: 'Traditions and family stories are examples of cultural _______.', answer: 'networks' }, { text: '_______ information include facts, pictures, and messages on computers and phones.', answer: 'Digital' }, { text: 'Checking books and websites to find answers means you are using different _______.', answer: 'sources' }, { text: 'Not sharing a person's personal information is how you respect their _______.', answer: 'privacy' }] } ];
 
             // Initialize randomized questions on component mount
             useEffect(() => {
@@ -412,19 +273,41 @@
             const getAvailableItems = () => { const currentQ = questions[currentQuestion]; const currentAnswers = answers[currentQuestion] || {}; if (currentQ.type.includes('drag-drop')) { const placedItems = Object.values(currentAnswers).flat(); return currentQ.items.filter(item => !placedItems.includes(item.name || item)); } if (currentQ.type === 'fill-group') return currentQ.wordBank.filter(word => !Object.values(currentAnswers).includes(word)); return []; };
             const handleNext = () => { setQuestionTransition('exit'); setTimeout(() => { if (currentQuestion < questions.length - 1) { setCurrentQuestion(prev => prev + 1); setQuestionTransition('enter'); } else { setIsCompleted(true); setCompletedStudents({ ...completedStudents, [studentName]: true }); if (document.exitFullscreen) document.exitFullscreen(); } }, 300); };
             const handleBack = () => { if (currentQuestion > 0) { setQuestionTransition('exit'); setTimeout(() => setCurrentQuestion(prev => prev - 1), 300); }};
-
+            const DarkModeToggle = () => (
+                <button
+                    onClick={() => setIsDarkMode(!isDarkMode)}
+                    className={`fixed top-4 right-4 z-50 p-3 rounded-full shadow-lg transition-all hover:scale-110 transform ${
+                        isDarkMode 
+                            ? 'bg-gray-800 text-yellow-400 hover:bg-gray-700' 
+                            : 'bg-white text-gray-800 hover:bg-gray-100'
+                    }`}
+                    title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                    aria-label="Toggle dark mode"
+                >
+                    {isDarkMode ? <SunIcon className="w-6 h-6" /> : <MoonIcon className="w-6 h-6" />}
+                </button>
+            );
+            
             // PASSWORD SCREEN - First screen shown
             if (!passwordEntered && !hasStarted && !isCompleted) {
                 return (
-                    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
-                        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 transform transition-all fade-in">
+                    <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
+                        isDarkMode 
+                            ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+                            : 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500'
+                    }`}>
+                        <DarkModeToggle />
+                        <div className={`rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 transform transition-all fade-in ${
+                            isDarkMode ? 'bg-gray-800' : 'bg-white'
+                        }`}>
+                            {/* ===== UPDATE TEXT COLORS FOR DARK MODE ===== */}
                             <div className="flex items-center justify-center mb-6">
                                 <Monitor className="w-12 h-12 text-blue-600 mr-3"/>
-                                <h1 className="text-4xl font-bold font-poppins text-blue-600">Cultural and Digital Information Quiz - 4th Grade</h1>
+                                <h1 className={`text-4xl font-bold font-poppins ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>Iinformation and Communication Quiz - 4th Grade</h1>
                             </div>
-                            <p className="text-gray-700 text-center mb-6">Enter your password to access the quiz</p>
+                            <p className={`text-center mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Enter your password to access the quiz</p>
                             <div className="mb-6">
-                                <label className="block text-gray-700 font-semibold mb-2">Password:</label>
+                                <label className={`block font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Password:</label>
                                 <div className="relative">
                                     <input 
                                         type={showPassword ? 'text' : 'password'} 
@@ -439,7 +322,9 @@
                                             }
                                         }}
                                         placeholder="Enter your password..."
-                                        className="w-full p-3 pr-12 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
+                                        className={`w-full p-3 pr-12 border-2 rounded-lg focus:border-blue-500 focus:outline-none ${
+                                            isDarkMode ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'border-gray-300 bg-white'
+                                        }`}
                                         autoFocus
                                     />
                                     <button
@@ -494,8 +379,10 @@
 
             if (questions.length === 0) {
                 return (
-                    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center">
-                        <div className="text-white text-2xl font-poppins">Loading Quiz...</div>
+                    <div className={`min-h-screen flex items-center justify-center transition-colors duration-300 ${
+                        isDarkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500'
+                    }`}>
+                        <div className={`text-2xl font-poppins ${isDarkMode ? 'text-white' : 'text-white'}`}>Loading Quiz...</div>
                     </div>
                 );
             }
@@ -503,20 +390,27 @@
             // NAME CONFIRMATION AND START SCREEN - After password
             if (passwordEntered && !hasStarted && !isCompleted) {
                 return (
-                    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
-                        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 transform transition-all fade-in">
+                    <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
+                        isDarkMode 
+                            ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+                            : 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500'
+                    }`}>
+                        <DarkModeToggle />
+                        <div className={`rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 transform transition-all fade-in ${
+                            isDarkMode ? 'bg-gray-800' : 'bg-white'
+                        }`}>
                             <div className="flex items-center justify-center mb-6">
                                 <Monitor className="w-12 h-12 text-blue-600 mr-3"/>
-                                <h1 className="text-4xl font-bold font-poppins text-blue-600">Cultural and Digital Information Quiz - 4th Grade</h1>
+                                <h1 className={`text-4xl font-bold font-poppins ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>Information and Communication Quiz - 4th Grade</h1>
                             </div>
-                            <p className="text-gray-700 text-center mb-6">Welcome to the Communication and Information quiz!</p>
-                            <div className="bg-yellow-50 rounded-lg p-6 mb-6 border-l-4 border-yellow-400">
-                                <p className="text-lg font-semibold font-poppins text-gray-800 mb-2">Your Name:</p>
-                                <p className="text-2xl font-bold text-blue-600">{studentName}</p>
+                            <p className={`text-center mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Welcome to the Technology quiz!</p>
+                            <div className={`rounded-lg p-6 mb-6 border-l-4 ${isDarkMode ? 'bg-yellow-900 border-yellow-600' : 'bg-yellow-50 border-yellow-400'}`}>
+                                <p className={`text-lg font-semibold font-poppins mb-2 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>Your Name:</p>
+                                <p className={`text-2xl font-bold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>{studentName}</p>
                             </div>
-                            <div className="bg-blue-50 rounded-lg p-6 mb-6">
-                                <p className="text-lg font-semibold font-poppins text-gray-800 mb-3">📋 Instructions:</p>
-                                <ul className="space-y-2 text-gray-700">
+                            <div className={`rounded-lg p-6 mb-6 ${isDarkMode ? 'bg-blue-900' : 'bg-blue-50'}`}>
+                                <p className={`text-lg font-semibold font-poppins mb-3 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>📋 Instructions:</p>
+                                <ul className={`space-y-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                                     <li>• There are 5 questions in total.</li>
                                     <li>• The total score is 20 points.</li>
                                     <li>• Read each question carefully.</li>
@@ -525,7 +419,7 @@
                             <button onClick={handleStartQuiz} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold font-poppins py-4 px-6 rounded-xl transition-colors shadow-lg">
                                 Start Quiz
                             </button>
-                            <p className="text-sm text-gray-600 text-center mt-4">⚠️ The quiz will enter fullscreen mode. Please stay on this tab.</p>
+                            <p className={`text-sm text-center mt-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>⚠️ The quiz will enter fullscreen mode. Please stay on this tab.</p>
                         </div>
                     </div>
                 );
@@ -541,18 +435,27 @@
                 if (showReview) {
                     // Review Mode - Show answers with feedback
                     return (
-                        <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 p-4 overflow-y-auto">
-                            <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl mx-auto my-8 relative z-10">
+                        <div className={`min-h-screen p-4 overflow-y-auto transition-colors duration-300 ${
+                            isDarkMode 
+                                ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+                                : 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500'
+                        }`}>
+                            <DarkModeToggle />
+                            <div className={`rounded-3xl shadow-2xl p-8 max-w-4xl mx-auto my-8 relative z-10 ${
+                                isDarkMode ? 'bg-gray-800' : 'bg-white'
+                            }`}>
                                 <div className="text-center mb-6">
-                                    <h2 className="text-3xl font-bold font-poppins text-gray-800 mb-2">Review Your Answers</h2>
-                                    <p className="text-gray-600">See which answers were correct and incorrect</p>
+                                    <h2 className={`text-3xl font-bold font-poppins mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Review Your Answers</h2>
+                                    <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>See which answers were correct and incorrect</p>
                                 </div>
                                 
                                 {questions.map((q, qIndex) => {
                                     const userAnswers = answers[qIndex] || {};
                                     return (
-                                        <div key={qIndex} className="mb-8 p-6 bg-gray-50 rounded-xl border-2 border-gray-200">
-                                            <h3 className="text-xl font-bold font-poppins text-gray-800 mb-4">
+                                        <div key={qIndex} className={`mb-8 p-6 rounded-xl border-2 ${
+                                            isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
+                                        }`}>
+                                            <h3 className={`text-xl font-bold font-poppins mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                                                 Question {qIndex + 1}: {q.question}
                                             </h3>
                                             
@@ -701,18 +604,25 @@
                 
                 // Results Screen with Two Buttons
                 return (
-                    <div className="min-h-screen bg-gradient-to-br from-green-400 via-blue-500 to-purple-500 flex items-center justify-center p-4">
+                    <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
+                        isDarkMode 
+                            ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+                            : 'bg-gradient-to-br from-green-400 via-blue-500 to-purple-500'
+                    }`}>
+                        <DarkModeToggle />
                         {isPerfectScore && <Confetti />}
-                        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 fade-in">
+                        <div className={`rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 fade-in ${
+                            isDarkMode ? 'bg-gray-800' : 'bg-white'
+                        }`}>
                             <div className="text-center">
                                 <div className="text-6xl mb-4">🎉</div>
-                                <h2 className="text-4xl font-bold font-poppins text-gray-800 mb-4">Quiz Completed!</h2>
-                                <p className="text-xl text-gray-700 mb-2">Great job, {studentName}!</p>
-                                <div className={`${isPerfectScore ? 'bg-yellow-50 scale-105 transform' : 'bg-blue-50'} rounded-lg p-6 my-6 text-center transition-all duration-300`}>
-                                    <p className="text-2xl font-bold text-blue-600 mb-2">Your Score: {points} / {totalPoints}</p>
+                                <h2 className={`text-4xl font-bold font-poppins mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Quiz Completed!</h2>
+                                <p className={`text-xl mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Great job, {studentName}!</p>
+                                <div className={`${isPerfectScore ? (isDarkMode ? 'bg-yellow-900' : 'bg-yellow-50') : (isDarkMode ? 'bg-blue-900' : 'bg-blue-50')} rounded-lg p-6 my-6 text-center transition-all duration-300 ${isPerfectScore ? 'scale-105 transform' : ''}`}>
+                                    <p className={`text-2xl font-bold mb-2 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>Your Score: {points} / {totalPoints}</p>
                                     <p className="text-3xl font-bold text-green-600 mb-3">Your Grade: {grade.toFixed(1)}</p>
-                                    <p className="text-xl text-gray-700 mb-3">{percentage}%</p>
-                                    <p className={`${isPerfectScore ? 'text-green-700 text-2xl font-bold' : 'text-gray-700 mt-2'} font-poppins`}>
+                                    <p className={`text-xl mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{percentage}%</p>
+                                    <p className={`${isPerfectScore ? 'text-green-700 text-2xl font-bold' : (isDarkMode ? 'text-gray-300 mt-2' : 'text-gray-700 mt-2')} font-poppins`}>
                                         {percentage === 100 ? '✅ PERFECT SCORE! AMAZING! ✅' : percentage >= 80 ? '🌟 Excellent work!' : percentage >= 60 ? '👍 Good job!' : '💪 Keep studying!'}
                                     </p>
                                 </div>
@@ -734,10 +644,9 @@
                                     </button>
                                 </div>
                                 
-                                <p className="text-gray-600 text-sm mt-4">Thank you for taking the ICT quiz!</p>
+                                <p className={`text-sm mt-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Thank you for taking the ICT quiz!</p>
                             </div>
                             
-                            {/* ========== EXIT CONFIRMATION MODAL - PASTE HERE ========== */}
                             {showExitConfirm && (
                                 <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
                                     <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 text-center fade-in">
@@ -770,7 +679,6 @@
                                                         document.exitFullscreen();
                                                     }
                                                     setShowExitConfirm(false);
-                                                    // Try to close (will likely not work, but worth trying)
                                                     window.close();
                                                 }}
                                                 className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold font-poppins py-3 px-6 rounded-xl transition-all shadow-lg hover:scale-105 transform"
@@ -781,25 +689,26 @@
                                     </div>
                                 </div>
                             )}
-                            {/* ========== END EXIT CONFIRMATION MODAL ========== */}
-                            
                         </div>
                     </div>
                 );
             }
 
             const currentQ = questions[currentQuestion];
-            const isAnswered = (() => { const currentAnswers = answers[currentQuestion] || {}; if (currentQ.type.includes('group')) return Object.keys(currentAnswers).length === (currentQ.questions || currentQ.statements).length; if (currentQ.type === 'drag-drop-images') return Object.values(currentAnswers).flat().length === currentQ.items.length; if (currentQ.type === 'drag-drop') return Object.keys(currentAnswers).length === currentQ.categories.length; return currentAnswers !== undefined; })();
+            const isAnswered = (() => { const currentAnswers = answers[currentQuestion] || {}; if (currentQ.type.includes('group')) return Object.keys(currentAnswers).length === (currentQ.questions || currentQ.statements).length; if (currentQ.type.includes('drag-drop-images')) return Object.values(currentAnswers).flat().length === currentQ.items.length; if (currentQ.type === 'drag-drop') return Object.keys(currentAnswers).length === currentQ.categories.length; return currentAnswers !== undefined; })();
 
             return (
-                <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
-                    <AnimatedBackground />
+                <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
+                    isDarkMode 
+                        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+                        : 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500'
+                }`}>
+                    <DarkModeToggle />
                     {showWarning && (
                         <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
                             <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 text-center fade-in shake">
                                 <div className="mb-6">
                                     <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 pulse">
-                                        {/* --- UPDATED ICON USAGE --- */}
                                         <WarningIcon className="w-12 h-12 text-red-600" />
                                     </div>
                                     <h2 className="text-3xl font-bold font-poppins text-gray-800 mb-3">⚠️ Warning!</h2>
@@ -811,43 +720,133 @@
                             </div>
                         </div>
                     )}
-                    <div className={`bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 ${questionTransition === 'enter' ? 'slide-in' : 'slide-out'} ${showWarning ? 'blur-sm' : ''}`}>
-                        <div className="mb-6">
-                            <div className="flex justify-between items-center mb-4"><span className="text-sm font-semibold text-gray-500">Question {currentQuestion + 1} of {questions.length}</span><span className="text-sm font-semibold text-blue-600">{studentName}</span></div>
-                            <div className="w-full bg-gray-200 rounded-full h-2"><div className="bg-blue-600 h-2 rounded-full transition-all duration-500" style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}></div></div>
+                    <div className={`rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 ${questionTransition === 'enter' ? 'slide-in' : 'slide-out'} ${showWarning ? 'blur-sm' : ''} ${
+                        isDarkMode ? 'bg-gray-800' : 'bg-white'
+                    }`}>
+                       <div className="mb-6">
+                            <div className="flex justify-between items-center mb-4">
+                                <span className={`text-sm font-semibold ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Question {currentQuestion + 1} of {questions.length}</span>
+                                <span className={`text-sm font-semibold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>{studentName}</span>
+                            </div>
+                            <div className={`w-full rounded-full h-2 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
+                                <div className="bg-blue-600 h-2 rounded-full transition-all duration-500" style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}></div>
+                            </div>
                         </div>
-                        <h2 className="text-2xl font-bold font-poppins text-gray-800 mb-6">{currentQ.question}</h2>
+                        <h2 className={`text-2xl font-bold font-poppins mb-6 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{currentQ.question}</h2>
 
-                        {currentQ.type === 'multiple-choice-group' && (<div className="mb-6 space-y-4">{currentQ.questions.map((q, qIndex) => (<div key={qIndex} className="p-4 bg-gray-50 rounded-xl border-2 border-gray-200"><p className="text-gray-800 font-medium mb-3">{qIndex + 1}. {q.text}</p><div className="space-y-2">{q.options.map((option, optIndex) => (<button key={optIndex} onClick={() => { const newAnswers = { ...(answers[currentQuestion] || {}), [qIndex]: optIndex }; handleAnswer(newAnswers); }} className={`w-full p-3 text-left rounded-lg border-2 transition-all bg-blue-50 ${(answers[currentQuestion] || {})[qIndex] === optIndex ? 'border-blue-600 bg-blue-100 font-semibold transform scale-105' : 'border-gray-300 hover:border-blue-400 hover:bg-blue-100' }`}>{option.text}</button>))}</div></div>))}</div>)}
-                        {currentQ.type === 'true-false-group' && (<div className="mb-6 space-y-4">{currentQ.statements.map((statement, stmtIndex) => (<div key={stmtIndex} className="p-4 bg-gray-50 rounded-xl border-2 border-gray-200"><p className="text-gray-800 font-medium mb-3">{stmtIndex + 1}. {statement.text}</p><div className="flex gap-3"><button onClick={() => { const newAnswers = { ...(answers[currentQuestion] || {}), [stmtIndex]: 0 }; handleAnswer(newAnswers); }} className={`flex-1 p-3 rounded-lg border-2 transition-all ${ (answers[currentQuestion] || {})[stmtIndex] === 0 ? 'border-blue-600 bg-blue-50 font-semibold' : 'border-gray-300 hover:border-blue-400 hover:bg-gray-100' }`}>True</button><button onClick={() => { const newAnswers = { ...(answers[currentQuestion] || {}), [stmtIndex]: 1 }; handleAnswer(newAnswers); }} className={`flex-1 p-3 rounded-lg border-2 transition-all ${ (answers[currentQuestion] || {})[stmtIndex] === 1 ? 'border-blue-600 bg-blue-50 font-semibold' : 'border-gray-300 hover:border-blue-400 hover:bg-gray-100' }`}>False</button></div></div>))}</div>)}
+                        {currentQ.type === 'multiple-choice-group' && (
+                            <div className="mb-6 space-y-4">
+                                {currentQ.questions.map((q, qIndex) => (
+                                    <div key={qIndex} className={`p-4 rounded-xl border-2 ${
+                                        isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
+                                    }`}>
+                                        <p className={`font-medium mb-3 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+                                            {qIndex + 1}. {q.text}
+                                        </p>
+                                        <div className="space-y-2">
+                                            {q.options.map((option, optIndex) => (
+                                                <button 
+                                                    key={optIndex} 
+                                                    onClick={() => { 
+                                                        const newAnswers = { ...(answers[currentQuestion] || {}), [qIndex]: optIndex }; 
+                                                        handleAnswer(newAnswers); 
+                                                    }} 
+                                                    className={`w-full p-3 text-left rounded-lg border-2 transition-all ${
+                                                        (answers[currentQuestion] || {})[qIndex] === optIndex 
+                                                            ? `border-blue-600 font-semibold transform scale-105 ${isDarkMode ? 'bg-blue-900 text-white' : 'bg-blue-100 text-gray-800'}` 
+                                                            : `border-gray-300 hover:border-blue-400 ${isDarkMode ? 'bg-gray-600 text-gray-200 hover:bg-gray-500' : 'bg-blue-50 text-gray-800 hover:bg-blue-100'}`
+                                                    }`}
+                                                >
+                                                    {option.text}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        {currentQ.type === 'true-false-group' && (
+                            <div className="mb-6 space-y-4">
+                                {currentQ.statements.map((statement, stmtIndex) => (
+                                    <div key={stmtIndex} className={`p-4 rounded-xl border-2 ${
+                                        isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
+                                    }`}>
+                                        <p className={`font-medium mb-3 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+                                            {stmtIndex + 1}. {statement.text}
+                                        </p>
+                                        <div className="flex gap-3">
+                                            <button 
+                                                onClick={() => { 
+                                                    const newAnswers = { ...(answers[currentQuestion] || {}), [stmtIndex]: 0 }; 
+                                                    handleAnswer(newAnswers); 
+                                                }} 
+                                                className={`flex-1 p-3 rounded-lg border-2 transition-all ${
+                                                    (answers[currentQuestion] || {})[stmtIndex] === 0 
+                                                        ? `border-blue-600 font-semibold ${isDarkMode ? 'bg-blue-900 text-white' : 'bg-blue-50 text-gray-800'}` 
+                                                        : `border-gray-300 hover:border-blue-400 ${isDarkMode ? 'bg-gray-600 text-gray-200 hover:bg-gray-500' : 'bg-white text-gray-800 hover:bg-gray-100'}`
+                                                }`}
+                                            >
+                                                True
+                                            </button>
+                                            <button 
+                                                onClick={() => { 
+                                                    const newAnswers = { ...(answers[currentQuestion] || {}), [stmtIndex]: 1 }; 
+                                                    handleAnswer(newAnswers); 
+                                                }} 
+                                                className={`flex-1 p-3 rounded-lg border-2 transition-all ${
+                                                    (answers[currentQuestion] || {})[stmtIndex] === 1 
+                                                        ? `border-blue-600 font-semibold ${isDarkMode ? 'bg-blue-900 text-white' : 'bg-blue-50 text-gray-800'}` 
+                                                        : `border-gray-300 hover:border-blue-400 ${isDarkMode ? 'bg-gray-600 text-gray-200 hover:bg-gray-500' : 'bg-white text-gray-800 hover:bg-gray-100'}`
+                                                }`}
+                                            >
+                                                False
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                         {currentQ.type === 'fill-group' && (
                             <div className="mb-6">
                                 <div className="mb-6">
-                                    <p className="text-sm font-semibold text-gray-600 mb-3">📝 Word Bank - Use these words to fill in the blanks:</p>
-                                    <div className="flex flex-wrap gap-3 p-4 bg-purple-50 rounded-xl border-2 border-purple-200">
+                                    <p className={`text-sm font-semibold mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                                        📝 Word Bank - Use these words to fill in the blanks:
+                                    </p>
+                                    <div className={`flex flex-wrap gap-3 p-4 rounded-xl border-2 ${
+                                        isDarkMode ? 'bg-purple-900 border-purple-700' : 'bg-purple-50 border-purple-200'
+                                    }`}>
                                         {currentQ.wordBank.map((word) => (
                                             <div 
                                                 key={word}
-                                                className="px-4 py-2 bg-purple-200 text-purple-800 rounded-lg font-semibold font-poppins"
+                                                className={`px-4 py-2 rounded-lg font-semibold font-poppins ${
+                                                    isDarkMode ? 'bg-purple-700 text-purple-200' : 'bg-purple-200 text-purple-800'
+                                                }`}
                                             >
                                                 {word}
                                             </div>
                                         ))}
                                     </div>
-                                    <p className="text-xs text-gray-500 mt-2 italic">💡 Tip: Copy the spelling exactly (not case-sensitive)</p>
+                                    <p className={`text-xs mt-2 italic ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                        💡 Tip: Copy the spelling exactly (not case-sensitive)
+                                    </p>
                                 </div>
                                 <div className="space-y-4">
                                     {currentQ.statements.map((statement, stmtIndex) => {
                                         const parts = statement.text.split('_______');
                                         const userAnswer = (answers[currentQuestion] || {})[stmtIndex] || '';
-                                        const isCorrect = userAnswer.toLowerCase().trim() === statement.answer.toLowerCase();
                                         const isAnswered = userAnswer.trim() !== '';
                                         
                                         return (
-                                            <div key={stmtIndex} className="p-4 bg-gray-50 rounded-xl border-2 border-gray-200">
+                                            <div key={stmtIndex} className={`p-4 rounded-xl border-2 ${
+                                                isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
+                                            }`}>
                                                 <div className="flex items-center flex-wrap gap-2">
-                                                    <span className="font-semibold text-gray-700">{stmtIndex + 1}.</span>
-                                                    <span className="text-gray-800">{parts[0]}</span>
+                                                    <span className={`font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                                        {stmtIndex + 1}.
+                                                    </span>
+                                                    <span className={isDarkMode ? 'text-gray-200' : 'text-gray-800'}>
+                                                        {parts[0]}
+                                                    </span>
                                                     <input
                                                         type="text"
                                                         value={userAnswer}
@@ -857,13 +856,17 @@
                                                             handleAnswer(newAnswers);
                                                         }}
                                                         placeholder="type here..."
-                                                        className={`inline-flex items-center justify-center w-35 px-3 py-2 border-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-purple-400 ${
-                                                            isAnswered
-                                                                ? 'border-purple-400 bg-purple-50' 
-                                                                : 'border-gray-300 bg-white'
+                                                        className={`w-36 px-3 py-2 border-2 rounded-lg focus:outline-none focus:border-purple-400 ${
+                                                            isDarkMode 
+                                                                ? `bg-gray-600 text-white placeholder-gray-400 ${isAnswered ? 'border-purple-500 bg-purple-900' : 'border-gray-500'}` 
+                                                                : `bg-white text-gray-800 ${isAnswered ? 'border-purple-400 bg-purple-50' : 'border-gray-300'}`
                                                         }`}
                                                     />
-                                                    {parts[1] && <span className="text-gray-800">{parts[1]}</span>}
+                                                    {parts[1] && (
+                                                        <span className={isDarkMode ? 'text-gray-200' : 'text-gray-800'}>
+                                                            {parts[1]}
+                                                        </span>
+                                                    )}
                                                 </div>
                                             </div>
                                         );
@@ -876,71 +879,43 @@
                                 <p className="text-sm font-semibold text-gray-600 mb-4">🎯 Click an item, then click its matching category to draw a line:</p>
                                 
                                 <div className="relative" style={{ minHeight: '400px' }}>
-                                    {/* SVG Canvas for drawing lines */}
                                     <svg 
                                         className="absolute inset-0 w-full h-full pointer-events-none" 
                                         style={{ zIndex: 1 }}
                                     >
-                                        {/* Draw completed lines */}
                                         {Object.entries(answers[currentQuestion] || {}).map(([category, item]) => {
                                             const itemEl = document.getElementById(`item-${currentQuestion}-${item}`);
                                             const catEl = document.getElementById(`cat-${currentQuestion}-${category}`);
-                                            
                                             if (!itemEl || !catEl) return null;
-                                            
                                             const itemRect = itemEl.getBoundingClientRect();
                                             const catRect = catEl.getBoundingClientRect();
                                             const svgEl = itemEl.closest('.relative').querySelector('svg');
                                             const containerRect = svgEl.getBoundingClientRect();
-                                            
                                             const x1 = itemRect.right - containerRect.left;
                                             const y1 = itemRect.top + itemRect.height / 2 - containerRect.top;
                                             const x2 = catRect.left - containerRect.left;
                                             const y2 = catRect.top + catRect.height / 2 - containerRect.top;
-                                            
                                             return (
                                                 <g key={`${category}-${item}`}>
-                                                    <line
-                                                        x1={x1}
-                                                        y1={y1}
-                                                        x2={x2}
-                                                        y2={y2}
-                                                        stroke="#9333ea"
-                                                        strokeWidth="3"
-                                                        strokeLinecap="round"
-                                                    />
+                                                    <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#9333ea" strokeWidth="3" strokeLinecap="round" />
                                                     <circle cx={x1} cy={y1} r="5" fill="#9333ea" />
                                                     <circle cx={x2} cy={y2} r="5" fill="#9333ea" />
                                                 </g>
                                             );
                                         })}
-                                        
-                                        {/* Draw line being created */}
                                         {drawingFrom && currentMousePos && (() => {
                                             const itemEl = document.getElementById(`item-${currentQuestion}-${drawingFrom}`);
                                             if (!itemEl) return null;
-                                            
                                             const itemRect = itemEl.getBoundingClientRect();
                                             const svgEl = itemEl.closest('.relative').querySelector('svg');
                                             const containerRect = svgEl.getBoundingClientRect();
-                                            
                                             const x1 = itemRect.right - containerRect.left;
                                             const y1 = itemRect.top + itemRect.height / 2 - containerRect.top;
                                             const x2 = currentMousePos.x - containerRect.left;
                                             const y2 = currentMousePos.y - containerRect.top;
-                                            
                                             return (
                                                 <g>
-                                                    <line
-                                                        x1={x1}
-                                                        y1={y1}
-                                                        x2={x2}
-                                                        y2={y2}
-                                                        stroke="#c084fc"
-                                                        strokeWidth="3"
-                                                        strokeDasharray="5,5"
-                                                        strokeLinecap="round"
-                                                    />
+                                                    <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#c084fc" strokeWidth="3" strokeDasharray="5,5" strokeLinecap="round" />
                                                     <circle cx={x1} cy={y1} r="5" fill="#c084fc" />
                                                 </g>
                                             );
@@ -949,107 +924,33 @@
                                     
                                     <div 
                                         className="grid grid-cols-[1fr_100px_1fr] gap-4"
-                                        onMouseMove={(e) => {
-                                            if (drawingFrom) {
-                                                setCurrentMousePos({ x: e.clientX, y: e.clientY });
-                                            }
-                                        }}
-                                        onMouseLeave={() => {
-                                            if (drawingFrom) {
-                                                setDrawingFrom(null);
-                                                setCurrentMousePos(null);
-                                            }
-                                        }}
-                                    >
-                                        {/* Left column - Items */}
+                                        onMouseMove={(e) => { if (drawingFrom) { setCurrentMousePos({ x: e.clientX, y: e.clientY }); } }}
+                                        onMouseLeave={() => { if (drawingFrom) { setDrawingFrom(null); setCurrentMousePos(null); } }} >
                                         <div className="space-y-3">
-                                            <p className="font-semibold text-gray-700 mb-3">Items:</p>
+                                            <p className={`font-semibold mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Items:</p>
                                             {currentQ.items.map((item) => {
                                                 const isMatched = Object.values(answers[currentQuestion] || {}).includes(item);
                                                 const isDrawing = drawingFrom === item;
-                                                
                                                 return (
-                                                    <button
-                                                        key={item}
-                                                        id={`item-${currentQuestion}-${item}`}
-                                                        onClick={() => {
-                                                            if (drawingFrom === item) {
-                                                                setDrawingFrom(null);
-                                                                setCurrentMousePos(null);
-                                                            } else if (!isMatched) {
-                                                                setDrawingFrom(item);
-                                                            }
-                                                        }}
-                                                        className={`p-3 rounded-xl border-2 transition-all text-left font-semibold whitespace-nowrap overflow-hidden text-ellipsis ${
-                                                            isDrawing
-                                                                ? 'border-purple-500 bg-purple-100 shadow-lg scale-105 transform'
-                                                                : isMatched
-                                                                ? 'border-purple-400 bg-purple-50'
-                                                                : 'border-gray-300 bg-white hover:border-purple-300 hover:bg-purple-50'
-                                                        }`}
-                                                        style={{ zIndex: 2, position: 'relative', width: '200px' }}
-                                                    >
+                                                    <button key={item} id={`item-${currentQuestion}-${item}`} onClick={() => { if (drawingFrom === item) { setDrawingFrom(null); setCurrentMousePos(null); } else if (!isMatched) { setDrawingFrom(item); } }} className={`p-3 rounded-xl border-2 transition-all text-left font-semibold whitespace-nowrap overflow-hidden text-ellipsis ${ isDrawing ? 'border-purple-500 bg-purple-100 shadow-lg scale-105 transform' : isMatched ? 'border-purple-400 bg-purple-50' : 'border-gray-300 bg-white hover:border-purple-300 hover:bg-purple-50' }`} style={{ zIndex: 2, position: 'relative', width: '180px' }} >
                                                         {item}
                                                     </button>
                                                 );
                                             })}
                                         </div>
-                                        
-                                        {/* Middle column - Empty space for lines */}
                                         <div></div>
-                                        
-                                        {/* Right column - Categories */}
                                         <div className="space-y-3">
                                             <p className="font-semibold text-gray-700 mb-3">Categories:</p>
                                             {currentQ.categories.map((category) => {
                                                 const matchedItem = (answers[currentQuestion] || {})[category];
-                                                
                                                 return (
                                                     <div key={category} className="relative">
-                                                        <button
-                                                            id={`cat-${currentQuestion}-${category}`}
-                                                            onClick={() => {
-                                                                if (drawingFrom) {
-                                                                    const newAnswers = { ...(answers[currentQuestion] || {}) };
-                                                                    
-                                                                    Object.keys(newAnswers).forEach(cat => {
-                                                                        if (newAnswers[cat] === drawingFrom) {
-                                                                            delete newAnswers[cat];
-                                                                        }
-                                                                    });
-                                                                    
-                                                                    newAnswers[category] = drawingFrom;
-                                                                    handleAnswer(newAnswers);
-                                                                    
-                                                                    setDrawingFrom(null);
-                                                                    setCurrentMousePos(null);
-                                                                }
-                                                            }}
-                                                            className={`w-full p-3 rounded-xl border-2 transition-all text-left ${
-                                                                matchedItem
-                                                                    ? 'border-purple-400 bg-purple-50 pr-12'
-                                                                    : drawingFrom
-                                                                    ? 'border-purple-300 bg-purple-50 hover:border-purple-500 hover:bg-purple-100'
-                                                                    : 'border-gray-300 bg-gray-50'
-                                                            }`}
-                                                            style={{ zIndex: 2, position: 'relative' }}
-                                                        >
+                                                        <button id={`cat-${currentQuestion}-${category}`} onClick={() => { if (drawingFrom) { const newAnswers = { ...(answers[currentQuestion] || {}) }; Object.keys(newAnswers).forEach(cat => { if (newAnswers[cat] === drawingFrom) { delete newAnswers[cat]; } }); newAnswers[category] = drawingFrom; handleAnswer(newAnswers); setDrawingFrom(null); setCurrentMousePos(null); } }} className={`w-full p-3 rounded-xl border-2 transition-all text-left ${ matchedItem ? 'border-purple-400 bg-purple-50 pr-12' : drawingFrom ? 'border-purple-300 bg-purple-50 hover:border-purple-500 hover:bg-purple-100' : 'border-gray-300 bg-gray-50' }`} style={{ zIndex: 2, position: 'relative' }} >
                                                             <div className="font-bold text-gray-800">{category}</div>
-                                                            {matchedItem && (
-                                                                <div className="text-sm text-purple-600 mt-1">→ {matchedItem}</div>
-                                                            )}
+                                                            {matchedItem && ( <div className="text-sm text-purple-600 mt-1">→ {matchedItem}</div> )}
                                                         </button>
                                                         {matchedItem && (
-                                                            <button
-                                                                onClick={() => {
-                                                                    const newAnswers = { ...(answers[currentQuestion] || {}) };
-                                                                    delete newAnswers[category];
-                                                                    handleAnswer(newAnswers);
-                                                                }}
-                                                                className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 hover:bg-red-100 rounded-lg transition-all"
-                                                                style={{ zIndex: 3 }}
-                                                                title="Remove connection"
-                                                            >
+                                                            <button onClick={() => { const newAnswers = { ...(answers[currentQuestion] || {}) }; delete newAnswers[category]; handleAnswer(newAnswers); }} className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 hover:bg-red-100 rounded-lg transition-all" style={{ zIndex: 3 }} title="Remove connection" >
                                                                 <svg className="w-5 h-5 text-red-500" viewBox="0 0 24 24" fill="currentColor">
                                                                     <path d="M3 6.38597C3 5.90152 3.34538 5.50879 3.77143 5.50879L6.43567 5.50832C6.96502 5.49306 7.43202 5.11033 7.61214 4.54412C7.61688 4.52923 7.62232 4.51087 7.64185 4.44424L7.75665 4.05256C7.8269 3.81241 7.8881 3.60318 7.97375 3.41617C8.31209 2.67736 8.93808 2.16432 9.66147 2.03297C9.84457 1.99972 10.0385 1.99986 10.2611 2.00002H13.7391C13.9617 1.99986 14.1556 1.99972 14.3387 2.03297C15.0621 2.16432 15.6881 2.67736 16.0264 3.41617C16.1121 3.60318 16.1733 3.81241 16.2435 4.05256L16.3583 4.44424C16.3778 4.51087 16.3833 4.52923 16.388 4.54412C16.5682 5.11033 17.1278 5.49353 17.6571 5.50879H20.2286C20.6546 5.50879 21 5.90152 21 6.38597C21 6.87043 20.6546 7.26316 20.2286 7.26316H3.77143C3.34538 7.26316 3 6.87043 3 6.38597Z"/>
                                                                     <path fillRule="evenodd" clipRule="evenodd" d="M11.5956 22.0001H12.4044C15.1871 22.0001 16.5785 22.0001 17.4831 21.1142C18.3878 20.2283 18.4803 18.7751 18.6654 15.8686L18.9321 11.6807C19.0326 10.1037 19.0828 9.31524 18.6289 8.81558C18.1751 8.31592 17.4087 8.31592 15.876 8.31592H8.12404C6.59127 8.31592 5.82488 8.31592 5.37105 8.81558C4.91722 9.31524 4.96744 10.1037 5.06788 11.6807L5.33459 15.8686C5.5197 18.7751 5.61225 20.2283 6.51689 21.1142C7.42153 22.0001 8.81289 22.0001 11.5956 22.0001ZM10.2463 12.1886C10.2051 11.7548 9.83753 11.4382 9.42537 11.4816C9.01321 11.525 8.71251 11.9119 8.75372 12.3457L9.25372 17.6089C9.29494 18.0427 9.66247 18.3593 10.0746 18.3159C10.4868 18.2725 10.7875 17.8856 10.7463 17.4518L10.2463 12.1886ZM14.5746 11.4816C14.9868 11.525 15.2875 11.9119 15.2463 12.3457L14.7463 17.6089C14.7051 18.0427 14.3375 18.3593 13.9254 18.3159C13.5132 18.2725 13.2125 17.8856 13.2537 17.4518L13.7537 12.1886C13.7949 11.7548 14.1625 11.4382 14.5746 11.4816Z"/>
@@ -1062,11 +963,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                
                                 <div className="mt-4 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-400">
-                                    <p className="text-sm text-gray-700">
-                                        <strong>How to use:</strong> Click an item on the left, then click its matching category on the right to draw a connection. Click the trash icon to remove a connection.
-                                    </p>
+                                    <p className="text-sm text-gray-700"><strong>How to use:</strong> Click an item on the left, then click its matching category on the right to draw a connection. Click the trash icon to remove a connection.</p>
                                 </div>
                             </div>
                         )}
@@ -1074,57 +972,14 @@
                             <div className="mb-6">
                                 <div className="mb-6">
                                     <p className="text-sm font-semibold text-gray-600 mb-3">📦 Drag these devices (click to preview):</p>
-                                    <div 
-                                        onDragOver={handleDragOver}
-                                        onDrop={(e) => {
-                                            e.preventDefault();
-                                            const item = draggedItem || e.dataTransfer.getData('text/plain');
-                                            if (item) {
-                                                // Remove item from any category it's in
-                                                let newAnswers = { ...(answers[currentQuestion] || {}) };
-                                                Object.keys(newAnswers).forEach(key => {
-                                                    if (Array.isArray(newAnswers[key])) {
-                                                        newAnswers[key] = newAnswers[key].filter(i => i !== item);
-                                                        // Remove empty arrays
-                                                        if (newAnswers[key].length === 0) {
-                                                            delete newAnswers[key];
-                                                        }
-                                                    }
-                                                });
-                                                setAnswers({ ...answers, [currentQuestion]: newAnswers });
-                                                setDropZones(newAnswers);
-                                                setDraggedItem(null);
-                                            }
-                                        }}
-                                        className="flex flex-wrap gap-3 p-4 bg-gray-50 rounded-xl border-2 border-gray-200 min-h-16 transition-all hover:border-purple-300 hover:bg-purple-50"
-                                    >
+                                    <div onDragOver={handleDragOver} onDrop={(e) => { e.preventDefault(); const item = draggedItem || e.dataTransfer.getData('text/plain'); if (item) { let newAnswers = { ...(answers[currentQuestion] || {}) }; Object.keys(newAnswers).forEach(key => { if (Array.isArray(newAnswers[key])) { newAnswers[key] = newAnswers[key].filter(i => i !== item); if (newAnswers[key].length === 0) { delete newAnswers[key]; } } }); setAnswers({ ...answers, [currentQuestion]: newAnswers }); setDropZones(newAnswers); setDraggedItem(null); } }} className="flex flex-wrap gap-3 p-4 bg-gray-50 rounded-xl border-2 border-gray-200 min-h-16 transition-all hover:border-purple-300 hover:bg-purple-50" >
                                         {getAvailableItems().length === 0 ? (
                                             <p className="text-gray-400 text-sm italic w-full text-center">All devices placed! (Drag back here to remove)</p>
                                         ) : (
                                             getAvailableItems().map((item) => (
-                                                <div 
-                                                    key={item.name} 
-                                                    draggable 
-                                                    onDragStart={(e) => handleDragStart(e, item.name)}
-                                                    onClick={() => setPreviewImage({ name: item.name, icon: item.icon })}
-                                                    className="flex flex-col items-center px-4 py-3 bg-white border-2 border-purple-300 rounded-xl cursor-pointer hover:border-purple-500 hover:shadow-lg transition-all transform hover:scale-105"
-                                                    title="Click to preview, drag to place"
-                                                >
+                                                <div key={item.name} draggable onDragStart={(e) => handleDragStart(e, item.name)} onClick={() => setPreviewImage({ name: item.name, icon: item.icon })} className="flex flex-col items-center px-4 py-3 bg-white border-2 border-purple-300 rounded-xl cursor-pointer hover:border-purple-500 hover:shadow-lg transition-all transform hover:scale-105" title="Click to preview, drag to place" >
                                                     <div className="w-16 h-16 mb-2 flex items-center justify-center">
-                                                        <img 
-                                                            src={`../Images/${item.name.toLowerCase()}.png`}
-                                                            alt={item.name}
-                                                            className="max-w-full max-h-full object-contain pointer-events-none"
-                                                            onError={(e) => {
-                                                                // Fallback to emoji if image doesn't load
-                                                                e.target.onerror = null;
-                                                                e.target.style.display = 'none';
-                                                                const fallback = document.createElement('span');
-                                                                fallback.className = 'text-4xl';
-                                                                fallback.textContent = item.icon;
-                                                                e.target.parentElement.appendChild(fallback);
-                                                            }}
-                                                        />
+                                                        <img src={`../Images/${item.name.toLowerCase()}.png`} alt={item.name} className="max-w-full max-h-full object-contain pointer-events-none" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; const fallback = document.createElement('span'); fallback.className = 'text-4xl'; fallback.textContent = item.icon; e.target.parentElement.appendChild(fallback); }} />
                                                     </div>
                                                     <div className="text-sm font-semibold font-poppins text-gray-800 pointer-events-none">{item.name}</div>
                                                 </div>
@@ -1134,84 +989,35 @@
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {currentQ.categories.map((category) => (
-                                        <div 
-                                            key={category} 
-                                            onDragOver={handleDragOver} 
-                                            onDrop={(e) => handleDrop(e, category)} 
-                                            className="p-4 border-2 border-dashed rounded-xl min-h-40 transition-all border-gray-300 bg-gray-50 hover:border-purple-400 hover:bg-purple-50"
-                                        >
+                                        <div key={category} onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, category)} className="p-4 border-2 border-dashed rounded-xl min-h-40 transition-all border-gray-300 bg-gray-50 hover:border-purple-400 hover:bg-purple-50" >
                                             <p className="font-semibold text-gray-700 mb-3 text-center text-lg">{category}</p>
                                             <div className="flex flex-wrap gap-2 justify-center">
                                                 {dropZones[category] && dropZones[category].map((itemName) => { 
                                                     const item = currentQ.items.find(i => i.name === itemName); 
                                                     return (
-                                                        <div 
-                                                            key={itemName} 
-                                                            draggable 
-                                                            onDragStart={(e) => handleDragStart(e, itemName)}
-                                                            onClick={() => setPreviewImage({ name: itemName, icon: item?.icon })}
-                                                            className="flex flex-col items-center px-3 py-2 bg-white border-2 border-purple-400 rounded-xl cursor-pointer hover:border-purple-600 hover:shadow-lg transition-all"
-                                                            title="Click to preview, drag to move"
-                                                        >
+                                                        <div key={itemName} draggable onDragStart={(e) => handleDragStart(e, itemName)} onClick={() => setPreviewImage({ name: itemName, icon: item?.icon })} className="flex flex-col items-center px-3 py-2 bg-white border-2 border-purple-400 rounded-xl cursor-pointer hover:border-purple-600 hover:shadow-lg transition-all" title="Click to preview, drag to move" >
                                                             <div className="w-12 h-12 mb-1 flex items-center justify-center">
-                                                                <img 
-                                                                    src={`../Images/${itemName.toLowerCase()}.png`}
-                                                                    alt={itemName}
-                                                                    className="max-w-full max-h-full object-contain pointer-events-none"
-                                                                    onError={(e) => {
-                                                                        e.target.onerror = null;
-                                                                        e.target.style.display = 'none';
-                                                                        const fallback = document.createElement('span');
-                                                                        fallback.className = 'text-2xl';
-                                                                        fallback.textContent = item?.icon || '📦';
-                                                                        e.target.parentElement.appendChild(fallback);
-                                                                    }}
-                                                                />
+                                                                <img src={`../Images/${itemName.toLowerCase()}.png`} alt={itemName} className="max-w-full max-h-full object-contain pointer-events-none" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; const fallback = document.createElement('span'); fallback.className = 'text-2xl'; fallback.textContent = item?.icon || '📦'; e.target.parentElement.appendChild(fallback); }} />
                                                             </div>
                                                             <div className="text-xs font-semibold font-poppins text-gray-800 pointer-events-none">{itemName}</div>
                                                         </div>
                                                     ); 
                                                 })}
-                                                {(!dropZones[category] || dropZones[category].length === 0) && (
-                                                    <p className="text-gray-400 text-sm italic">Drop devices here...</p>
-                                                )}
+                                                {(!dropZones[category] || dropZones[category].length === 0) && ( <p className="text-gray-400 text-sm italic">Drop devices here...</p> )}
                                             </div>
                                         </div>
                                     ))}
                                 </div>
-                                
-                                {/* Image Preview Modal */}
                                 {previewImage && (
-                                    <div 
-                                        className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4"
-                                        onClick={() => setPreviewImage(null)}
-                                    >
-                                        <div 
-                                            className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-8 text-center fade-in"
-                                            onClick={(e) => e.stopPropagation()}
-                                        >
+                                    <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4" onClick={() => setPreviewImage(null)} >
+                                        <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-8 text-center fade-in" onClick={(e) => e.stopPropagation()} >
                                             <div className="mb-6">
                                                 <h3 className="text-2xl font-bold font-poppins text-gray-800 mb-4">{previewImage.name}</h3>
                                                 <div className="flex items-center justify-center bg-gray-50 rounded-2xl p-8 min-h-80">
-                                                    <img 
-                                                        src={`../Images/${previewImage.name.toLowerCase()}.png`}
-                                                        alt={previewImage.name}
-                                                        className="max-w-full max-h-96 object-contain"
-                                                        onError={(e) => {
-                                                            e.target.onerror = null;
-                                                            e.target.style.display = 'none';
-                                                            const fallback = document.createElement('div');
-                                                            fallback.className = 'text-9xl';
-                                                            fallback.textContent = previewImage.icon || '📦';
-                                                            e.target.parentElement.appendChild(fallback);
-                                                        }}
-                                                    />
+                                                    <img src={`../Images/${previewImage.name.toLowerCase()}.png`} alt={previewImage.name} className="max-w-full max-h-96 object-contain" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; const fallback = document.createElement('div'); fallback.className = 'text-9xl'; fallback.textContent = previewImage.icon || '📦'; e.target.parentElement.appendChild(fallback); }} />
                                                 </div>
                                             </div>
-                                            <button 
-                                                onClick={() => setPreviewImage(null)}
-                                                className="bg-purple-600 hover:bg-purple-700 text-white font-bold font-poppins py-3 px-8 rounded-xl transition-all shadow-lg hover:scale-105 transform"
-                                            >
+                                            <button onClick={() => setPreviewImage(null)} className="bg-purple-600 hover:bg-purple-700 text-white font-bold font-poppins py-3 px-8 rounded-xl transition-all shadow-lg hover:scale-105 transform" >
                                                 Close Preview
                                             </button>
                                             <p className="text-gray-500 text-sm mt-3">Click outside or press Close to exit</p>
