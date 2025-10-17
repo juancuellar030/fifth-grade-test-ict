@@ -840,30 +840,29 @@
                                             <div key={stmtIndex} className={`p-4 rounded-xl border-2 ${
                                                 isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
                                             }`}>
-                                                <div className="flex items-baseline flex-wrap gap-1">
+                                                <div className={`flex items-baseline gap-2`}>
                                                     <span className={`font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                                                        {stmtIndex + 1}. {parts[0]}
+                                                        {stmtIndex + 1}.
                                                     </span>
-                                                    <input
-                                                        type="text"
-                                                        value={userAnswer}
-                                                        onChange={(e) => {
-                                                            const newAnswers = { ...(answers[currentQuestion] || {}) };
-                                                            newAnswers[stmtIndex] = e.target.value;
-                                                            handleAnswer(newAnswers);
-                                                        }}
-                                                        placeholder="type here..."
-                                                        className={`w-36 px-3 py-2 border-2 rounded-lg focus:outline-none focus:border-purple-400 ${
-                                                            isDarkMode 
-                                                                ? `bg-gray-600 text-white placeholder-gray-400 ${isAnswered ? 'border-purple-500 bg-purple-900' : 'border-gray-500'}` 
-                                                                : `bg-white text-gray-800 ${isAnswered ? 'border-purple-400 bg-purple-50' : 'border-gray-300'}`
-                                                        }`}
-                                                    />
-                                                    {parts[1] && (
-                                                        <span className={isDarkMode ? 'text-gray-200' : 'text-gray-800'}>
-                                                            {parts[1]}
-                                                        </span>
-                                                    )}
+                                                    <p className={isDarkMode ? 'text-gray-200' : 'text-gray-800'}>
+                                                        {parts[0]}
+                                                        <input
+                                                            type="text"
+                                                            value={userAnswer}
+                                                            onChange={(e) => {
+                                                                const newAnswers = { ...(answers[currentQuestion] || {}) };
+                                                                newAnswers[stmtIndex] = e.target.value;
+                                                                handleAnswer(newAnswers);
+                                                            }}
+                                                            placeholder="type here..."
+                                                            className={`inline-block align-middle w-36 mx-2 px-3 py-1 border-2 rounded-lg focus:outline-none focus:border-purple-400 ${
+                                                                isDarkMode 
+                                                                    ? `bg-gray-600 text-white placeholder-gray-400 ${isAnswered ? 'border-purple-500 bg-purple-900' : 'border-gray-500'}` 
+                                                                    : `bg-white text-gray-800 ${isAnswered ? 'border-purple-400 bg-purple-50' : 'border-gray-300'}`
+                                                            }`}
+                                                        />
+                                                        {parts[1]}
+                                                    </p>
                                                 </div>
                                             </div>
                                         );
