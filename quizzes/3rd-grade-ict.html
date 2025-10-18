@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICT Quiz for 4th Grade</title>
+    
+    <!-- Poppins Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Script & Configuration -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Poppins', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+              poppins: ['Poppins', 'sans-serif'],
+            },
+          },
+        },
+      }
+    </script>
+    
+    <!-- Library Scripts -->
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif !important;
+        }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .slide-in { animation: slideIn 0.3s ease-out; }
+        .slide-out { animation: slideOut 0.3s ease-in; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(-50px); } }
+        .shake { animation: shake 0.5s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+        .pulse { animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes confettiFall { 0% { transform: translateY(-10px) translateX(0) rotateX(0deg) rotateY(0deg) rotateZ(0deg); opacity: 1; } 50% { opacity: 1; } 100% { transform: translateY(100vh) translateX(var(--sway)) rotateX(360deg) rotateY(360deg) rotateZ(720deg); opacity: 0; } }
+        .confetti-piece { animation: confettiFall linear forwards; }
+    </style>
+</head>
+<body class="font-sans"> 
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- HELPER & ANIMATION COMPONENTS (DEFINED GLOBALLY) ---
+
+        const Monitor = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" strokeWidth="2"/>
+                <line x1="8" y1="21" x2="16" y2="21" strokeWidth="2"/>
+                <line x1="12" y1="17" x2="12" y2="21" strokeWidth="2"/>
+            </svg>
+        );
+
+        const WarningIcon = ({ className }) => (
+            <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 7V13M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                <circle cx="12" cy="16.5" r="1" fill="currentColor"></circle>
+            </svg>
+        );
+
+        const MoonIcon = ({ className }) => (
+            <svg className={className} viewBox="0 0 24 24" fill="none">
+                <path d="M3.32031 11.6835C3.32031 16.6541 7.34975 20.6835 12.3203 20.6835C16.1075 20.6835 19.3483 18.3443 20.6768 15.032C19.6402 15.4486 18.5059 15.6834 17.3203 15.6834C12.3497 15.6834 8.32031 11.654 8.32031 6.68342C8.32031 5.50338 8.55165 4.36259 8.96453 3.32996C5.65605 4.66028 3.32031 7.89912 3.32031 11.6835Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+        );
+        
+        const SunIcon = ({ className }) => (
+            <svg className={className} viewBox="0 0 24 24" fill="none">
+                <path d="M12 3V4M12 20V21M4 12H3M6.31412 6.31412L5.5 5.5M17.6859 6.31412L18.5 5.5M6.31412 17.69L5.5 18.5001M17.6859 17.69L18.5 18.5001M21 12H20M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+        );
+           
+        const Confetti = () => {
+             const confettiPieces = Array.from({ length: 250 }).map((_, i) => ({ id: i, left: Math.random() * 100, delay: Math.random() * 3, duration: 2 + Math.random() * 1, color: ['#ff5353', '#ffee53', '#53ffa9', '#5395ff', '#ef53ff', '#45B7D1'][Math.floor(Math.random() * 6)], rotX: Math.random() * 360, rotY: Math.random() * 360, rotZ: Math.random() * 360, swayAmount: 50 + Math.random() * 100 }));
+            return (
+                <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ perspective: '1000px' }}>
+                    {confettiPieces.map(piece => (
+                        <div key={piece.id} className="confetti-piece absolute w-3 h-3 rounded-full" style={{ left: `${piece.left}%`, top: '-10px', backgroundColor: piece.color, animationDelay: `${piece.delay}s`, animationDuration: `${piece.duration}s`, boxShadow: `0 0 8px ${piece.color}`, '--sway': `${piece.swayAmount - 50}px` }}/>
+                    ))}
+                </div>
+            );
+        };
+
+        // --- MAIN QUIZ COMPONENT ---
+
+        // Shuffle function
+        const shuffleArray = (array) => {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        };
+
+        const ICTQuiz = () => {
+            // FIX: ALL useState hooks MUST be at the top level, unconditionally.
+            const [passwordEntered, setPasswordEntered] = useState(false);
+            const [passwordInput, setPasswordInput] = useState('');
+            const [passwordError, setPasswordError] = useState(false);
+            const [showPassword, setShowPassword] = useState(false);
+            const [studentName, setStudentName] = useState('');
+            const [showSuggestions, setShowSuggestions] = useState(false);
+            const [hasStarted, setHasStarted] = useState(false);
+            const [currentQuestion, setCurrentQuestion] = useState(0);
+            const [answers, setAnswers] = useState({});
+            const [isCompleted, setIsCompleted] = useState(false);
+            const [completedStudents, setCompletedStudents] = useState({});
+            const [showNameError, setShowNameError] = useState(false);
+            const [questionTransition, setQuestionTransition] = useState('enter');
+            const [draggedItem, setDraggedItem] = useState(null);
+            const [dropZones, setDropZones] = useState({});
+            const [startTime, setStartTime] = useState(null);
+            const [fullscreenExitCount, setFullscreenExitCount] = useState(0);
+            const [dataSubmitted, setDataSubmitted] = useState(false);
+            const [showWarning, setShowWarning] = useState(false);
+            const [randomizedQuestions, setRandomizedQuestions] = useState([]);
+            const [showReview, setShowReview] = useState(false);
+            const [showExitConfirm, setShowExitConfirm] = useState(false);
+            const [previewImage, setPreviewImage] = useState(null);
+            const [matchingLines, setMatchingLines] = useState({});
+            const [drawingFrom, setDrawingFrom] = useState(null);
+            const [currentMousePos, setCurrentMousePos] = useState(null);
+            const [isDarkMode, setIsDarkMode] = useState(false);
+            const inputRef = useRef(null);
+            
+            // Base questions can be defined here
+            const baseQuestions = [ { id: 1, type: 'multiple-choice-group', question: 'Answer each question by selecting the correct option:', questions: [ { text: 'What is cultural information?', options: ['Facts about computers', 'Stories, traditions, and ways people live', 'Messages sent by phone', 'Websites and apps'], correct: 1 }, { text: 'What does it mean to keep information private?', options: ['Tell everyone your secrets', 'Share only the correct information with people you know', 'Publish everything online', 'Ignore all information'], correct: 1 }, { text: 'What does social participation mean?', options: ['Watching TV alone', 'Doing activities with others', 'Playing video games at home by yourself', 'Reading a book'], correct: 1 } ] }, { id: 2, type: 'drag-drop', question: 'Match the example to the correct concept:', items: ['Website🌐', 'Talking to friends💬', 'School soccer game⚽', 'Keeping your password a secret🔑'], categories: ['Online Source of Information', 'Face-to-Face Communication', 'Social Participation', 'Protecting Privacy'], correctAnswers: { 'Online Source of Information': 'Website🌐', 'Face-to-Face Communication': 'Talking to friends💬', 'Social Participation': 'School soccer game⚽', 'Protecting Privacy': 'Keeping your password a secret🔑' } }, { id: 3, type: 'drag-drop-images', question: 'Drag each device to the correct group:', items: [ { name: 'Holiday Celebration', icon: '🎉' }, { name: 'Email', icon: '📧' }, { name: 'Traditional Dance', icon: '💃' }, { name: 'Smartphone App', icon: '📱' }, { name: 'Family Recipe', icon: '📜' }, { name: 'Photo on a Tablet', icon: '🖼️' } ], categories: ['Cultural Information', 'Digital Information'], correctAnswers: { 'Cultural Information': ['Holiday Celebration', 'Traditional Dance', 'Family Recipe'], 'Digital Information': ['Email', 'Smartphone App', 'Photo on a Tablet'] } }, { id: 4, type: 'true-false-group', question: 'Read each statement and select True or False:', statements: [ { text: "Social media posts are examples of cultural information.", correct: 1 }, { text: 'A book from your school bag is an example of digital information.', correct: 1 }, { text: 'Working on a group project with classmates is a form of social participation.', correct: 0 } ] }, { id: 5, type: 'fill-group', question: 'Write the correct word from the box to fill in each blank:', wordBank: ['information', 'Digital', 'sources', 'privacy', 'communication'], statements: [{ text: 'Traditions and family stories are examples of cultural _______.', answer: 'information' }, { text: '_______ information include facts, pictures, and messages on computers and phones.', answer: 'Digital' }, { text: 'Checking books and websites to find answers means you are using different _______.', answer: 'sources' }, { text: 'Not sharing personal information froom other people is how you respect their _______.', answer: 'privacy' }] } ];
+
+            // Initialize randomized questions on component mount
+            useEffect(() => {
+                const randomized = shuffleArray(baseQuestions).map(q => {
+                    if (q.type === 'multiple-choice-group') {
+                        return {
+                            ...q,
+                            questions: shuffleArray(q.questions.map(subQ => ({
+                                ...subQ,
+                                options: shuffleArray(subQ.options.map((opt, idx) => ({ text: opt, originalIndex: idx }))),
+                                correctText: subQ.options[subQ.correct]
+                            })))
+                        };
+                    } else if (q.type === 'true-false-group') {
+                        return { ...q, statements: shuffleArray(q.statements) };
+                    } else if (q.type === 'fill-group') {
+                        return { ...q, statements: shuffleArray(q.statements), wordBank: shuffleArray(q.wordBank) };
+                    } else if (q.type === 'drag-drop') {
+                        return { ...q, items: shuffleArray(q.items), categories: shuffleArray(q.categories) };
+                    } else if (q.type === 'drag-drop-images') {
+                        return { ...q, items: shuffleArray(q.items), categories: shuffleArray(q.categories) };
+                    }
+                    return q;
+                });
+                setRandomizedQuestions(randomized);
+            }, []);
+        
+            // ALL other functions and variables must also be defined before any returns.
+            const questions = randomizedQuestions;
+            const gradingScale = { 0: 2.0, 1: 2.2, 2: 2.3, 3: 2.5, 4: 2.7, 5: 2.8, 6: 3.0, 7: 3.2, 8: 3.3, 9: 3.5, 10: 3.6, 11: 3.8, 12: 3.9, 13: 4.0, 14: 4.2, 15: 4.3, 16: 4.5, 17: 4.6, 18: 4.7, 19: 4.9, 20: 5.0 };
+            const studentList = [ "Danna Sofia Acero Soto", "Gabriela Aguirre Santofimio", "Jerónimo Alvarado Gomez", "Ana Isabel Andrade Tamayo", "Thiago Emmanuel Angel Perdomo", "Mariana Artunduaga Pastrana", "Jhon Fredy Junior Bonilla Ramirez", "Samuel Cabrejo Gonzalez", "Matias Corredor Aroca", "Ana Lucia Gaitan Vargas", "Angel Gabriel Gonzalez Fernandez", "Samuel Hernandez Zea", "Jeronimo Mayor Motta", "David Esteban Medina Obando", "Maria Victoria Monje Ordoñez", "Kevin Samuel Mosquera Baylon", "Juan Martin Obregon Sanchez", "Gabriel Alejandro Pacheco Pérez", "Laura Sofia Paredes Ordoñez", "Luciana Perdomo Graffe", "Gina Marcela Puentes Suarez", "Ana Sofia Rivera Díaz", "Ana María Suarez Barreto", "Samuel David Tovar Bahamon", "Dylan Samuel Vargas Vasquez", "Juan Andres Zapata Salazar", "Juan Sebastian Alvira Charry", "Maria José Aristizabal Rincon", "Martin Barreto Dussan", "Diego Andres Camacho Garcia", "Thaliana Camacho Salazar", "Violetta Chinchilla Rios", "Valeria Cubillos Camacho", "Gabriela Díaz Polania", "Celeste Díaz Rodriguez", "Julieta Dussan Lemus", "Luciana Celeste Gonzalez Suarez", "Victoria Guarin Estupiñan", "Juan Pablo Guio Quintero", "Mia Muñoz Sanchez", "Maria Antonia Palacio Sanchez", "Samuel José Perlaza Medina", "Martin Pinchao Valenzuela", "Emmanuel Pineda Uni", "Santiago Pino Alarcon", "Emily Luciana Romero Tamayo", "Dante Rubiano Ortiz", "Samantha Salinas Martinez", "Salome Sanchez Hernandez", "Jose David Silva Cabrera", "Guadalupe Tello Pérez", "Lenin Santiago Trujillo Torrejano", "Santiago Urrea Vanegas", "Dante Almario Gamboa", "Santiago Barreiro Garcia", "Luna Bautista Reyes", "Eduard Santiago Cardenas Rodriguez", "Luciana Carvajal Plaza", "Zahira Sofia Chacon Rujana", "Dulce María Chaux Lopez", "Emma Clavijo Perdomo", "Maria Celeste Diaz Mejia", "Maria Paz Fajardo Castañeda", "Martin Jara Aldana", "Daliana Lucia Lugo Silva", "Juan Esteban Mejia Borrero", "Juan José Ordoñez Gomez", "Nicoll Mariana Ortega Cortes", "Abril Pérez Niño", "Sara Valentina Pinzon Narvaez", "Adrian Felipe Puentes Diaz", "Juan Andres Ramirez Salcedo", "Juana Valeria Rengifo Otalora", "Samuel Nicolas Rincon Medina", "Jeronimo Sora Ortiz", "Isabella Trujillo Montealegre", "Mia Isabella Trujillo Soto", "Jorge Mario Valencia Pacheco", "America Isabela Herrera Leon", "Angela Maria Arevalo Gonzalez", "Daniel Mathias Cardenas Tovar", "Ariadnna Claros Agudelo", "Analucia Contreras Garcia", "Emiliano Cuellar Celis", "Angel Martin Díaz Sons", "Oralis Ariana Dussan Rojas", "Ana Isabella Espinosa Bustacara", "Antonella Esquivel Mosquera", "Maria Joaquina Gaitan Amaya", "Sara Valentina Gutierrez Dussan", "Lucas Andres Icopo Melendez", "Julieta María Meneses Tejada", "Mia Salome Ortigoza Gomez", "Rafael Thomas Ortiz Gonzalez", "Martin Palomino Hernandez", "Salome Peralta Medina", "Samuel Perdomo Herrera", "Isabella Preciado Cuervo", "Isabella Suaza Fajardo", "Emiliano Tamayo Alvarado", "Adrian Eduardo Vargas Zapata", "Juan Felipe Vergara Molano", "Iann Santiago Villarreal Bastidas", "Salome Zorro Fernandez" ];
+            const passwords = ['z7nt2o', '4dzvi8', '8ixiuc', '8qgl0n', 'uhbwxh', 'jmdhbk', '7wrhiq', 'dic2qx', 'ek2shq', 'c4irhu', 'mw5h6e', 'fghchr', 'r43bgp', 'dtn7mf', 'uioptq', 'vquuak', 'cz8dau', 'gkb3s2', 'gdavbu', 'ublnac', 'ctmg2r', 'z6n3ss', 'c07tfv', 'i4meff', 'u8ddkm', 'yu3iub', '3wumyu', 'qr1lu9', 'abws44', 'mzkssg', 'u6nvus', 'drwnsz', 'xoivmp', 'mxtshl', 'brpqol', 'xa7bsm', 'ciplsu', '7dkhln', 'a8djt9', 'vem8oi', 'jgtv0p', 'qrqjxt', 'bh5lv1', 'pyiar6', 'wzbyda', 'uok80y', '0grnm8', 'v54xjd', 'eqn1c7', '38cdqy', 'qmuzyx', 'nafwob', 'jb3xvc', 'jtfjm8', 'uvyagu', 'rvn59h', '6pq9zh', 'uvtipz', 'dmnhgb', 'zhxgcp', 'zwdb5k', 'qjqyja', 'b7tdwo', 'gw3lqr', '3qwp8h', 'ruqrzh', 'dmzrtb', 'kmlsxe', 'xtthin', 'wrdvai', 'aik8se', 'qmgxxi', 'a9efrh', 'ixbeao', '1yf1em', 'a1fnxs', 'nwbdff', 'qcsm1c', 'xvths8', 'urbk1c', 'h0odrv', 'evoj58', 'bat2md', 'l6ky5a', 'axg1xa', 'uvu211', 'g9xwtl', 'k1ddq2', 'lwmeo1', '2ndczg', 'v3wvc3', 'zvxuwb', '2ksq1g', 'tkpxy3', 'h3f5g1', 'j8d9k2', 'p4m7n3', 'a2b3c4', 'd5e6f7', 'g8h9i1', 'j2k3l4', 'm5n6p7', 'q8r9s1', 't2u3v4'];
+            const studentPasswordMap = {};
+            studentList.forEach((student, index) => {
+                studentPasswordMap[student] = passwords[index];
+            });
+            
+            const calculatePoints = () => { 
+                let points = 0; 
+                questions.forEach((q, index) => { 
+                    const userAnswers = answers[index] || {}; 
+                    if (q.type === 'multiple-choice-group') {
+                        q.questions.forEach((subQ, qIndex) => { 
+                            if (userAnswers[qIndex] !== undefined) {
+                                const selectedOption = subQ.options[userAnswers[qIndex]];
+                                if (selectedOption && selectedOption.text === subQ.correctText) {
+                                    points++;
+                                }
+                            }
+                        }); 
+                    } else if (q.type === 'drag-drop') {
+                        Object.keys(q.correctAnswers).forEach(category => { 
+                            if (userAnswers[category] === q.correctAnswers[category]) points++; 
+                        }); 
+                    } else if (q.type === 'drag-drop-images') { 
+                        q.items.forEach(item => { 
+                            const correctCat = Object.keys(q.correctAnswers).find(cat => q.correctAnswers[cat].includes(item.name)); 
+                            const userCat = Object.keys(userAnswers).find(cat => (userAnswers[cat] || []).includes(item.name)); 
+                            if (correctCat === userCat) points++; 
+                        }); 
+                    } else if (q.type === 'true-false-group') {
+                        q.statements.forEach((stmt, stmtIndex) => { 
+                            if (userAnswers[stmtIndex] === stmt.correct) points++; 
+                        }); 
+                    } else if (q.type === 'fill-group') {
+                        q.statements.forEach((stmt, stmtIndex) => { 
+                            if (userAnswers[stmtIndex]?.toLowerCase().trim() === stmt.answer.toLowerCase()) points++; 
+                        }); 
+                    } 
+                }); 
+                return points; 
+            };
+            
+            const getGradeFromScore = (score) => gradingScale[score] !== undefined ? gradingScale[score] : 2.0;
+            const filteredStudents = studentList.filter(name => name.toLowerCase().includes(studentName.toLowerCase()));
+            const submitResultsToGoogleSheet = async (data) => {
+                const webAppUrl = 'https://script.google.com/macros/s/AKfycbxBpLDS4AzwLJVh1IF_xdtSeBp7CCkUQxLp9bNy8qJlOKu9np0S7fdcov7GLZVWiRd4/exec';
+                try { await fetch(webAppUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); console.log('Data sent'); } catch (error) { console.error('Error sending data:', error); }
+            };
+
+            useEffect(() => {
+                if (isCompleted && !dataSubmitted) {
+                    const points = calculatePoints();
+                    const grade = getGradeFromScore(points);
+                    const endTime = new Date().toISOString();
+                    const results = { studentName, startTime, endTime, score: points, grade, fullscreenExits: fullscreenExitCount };
+                    submitResultsToGoogleSheet(results);
+                    setDataSubmitted(true);
+                }
+            }, [isCompleted, dataSubmitted, answers]);
+
+            useEffect(() => {
+                const handleFullscreenChange = () => { if (!document.fullscreenElement && hasStarted && !isCompleted) { setShowWarning(true); setFullscreenExitCount(prev => prev + 1); }};
+                const handleVisibilityChange = () => { if (document.hidden && hasStarted && !isCompleted) { setShowWarning(true); setFullscreenExitCount(prev => prev + 1); }};
+                document.addEventListener('fullscreenchange', handleFullscreenChange);
+                document.addEventListener('visibilitychange', handleVisibilityChange);
+                return () => { document.removeEventListener('fullscreenchange', handleFullscreenChange); document.removeEventListener('visibilitychange', handleVisibilityChange); };
+            }, [hasStarted, isCompleted]);
+            
+            useEffect(() => { const currentQ = questions[currentQuestion]; if (currentQ && currentQ.type.includes('drag-drop')) { setDropZones(answers[currentQuestion] || {}); } }, [currentQuestion, answers]);
+            useEffect(() => { const handleClickOutside = (e) => { if (inputRef.current && !inputRef.current.contains(e.target)) setShowSuggestions(false); }; document.addEventListener('mousedown', handleClickOutside); return () => document.removeEventListener('mousedown', handleClickOutside); }, []);
+
+            const enterFullscreen = () => { if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().then(() => setShowWarning(false)); };
+            
+            const handlePasswordSubmit = () => {
+                const matchedStudent = Object.keys(studentPasswordMap).find(
+                    student => studentPasswordMap[student] === passwordInput.trim()
+                );
+                
+                if (matchedStudent) {
+                    setStudentName(matchedStudent);
+                    setPasswordEntered(true);
+                    setPasswordInput('');
+                    setPasswordError(false);
+                } else {
+                    setPasswordError(true);
+                    setPasswordInput('');
+                }
+            };
+            
+            const handleStartQuiz = () => {
+                if (!studentName.trim() || !studentList.includes(studentName)) { setShowNameError(true); return; }
+                if (completedStudents[studentName]) { alert('You have already completed this quiz!'); return; }
+                setStartTime(new Date().toISOString());
+                setHasStarted(true);
+                enterFullscreen();
+            };
+            
+            const handleAnswer = (answer) => setAnswers({ ...answers, [currentQuestion]: answer });
+            const handleDragStart = (e, item) => { setDraggedItem(item); e.dataTransfer.setData('text/plain', item); };
+            const handleDragOver = (e) => e.preventDefault();
+            const handleDrop = (e, category) => { e.preventDefault(); const item = draggedItem || e.dataTransfer.getData('text/plain'); if (item) { let newAnswers = { ...(answers[currentQuestion] || {}) }; Object.keys(newAnswers).forEach(key => { if (Array.isArray(newAnswers[key])) newAnswers[key] = newAnswers[key].filter(i => i !== item); else if (newAnswers[key] === item) delete newAnswers[key]; }); if (questions[currentQuestion].type === 'drag-drop-images') { if (!newAnswers[category]) newAnswers[category] = []; if (!newAnswers[category].includes(item)) newAnswers[category].push(item); } else { newAnswers[category] = item; } setAnswers({ ...answers, [currentQuestion]: newAnswers }); setDropZones(newAnswers); setDraggedItem(null); } };
+            const getAvailableItems = () => { const currentQ = questions[currentQuestion]; const currentAnswers = answers[currentQuestion] || {}; if (currentQ.type.includes('drag-drop')) { const placedItems = Object.values(currentAnswers).flat(); return currentQ.items.filter(item => !placedItems.includes(item.name || item)); } if (currentQ.type === 'fill-group') return currentQ.wordBank.filter(word => !Object.values(currentAnswers).includes(word)); return []; };
+            const handleNext = () => { setQuestionTransition('exit'); setTimeout(() => { if (currentQuestion < questions.length - 1) { setCurrentQuestion(prev => prev + 1); setQuestionTransition('enter'); } else { setIsCompleted(true); setCompletedStudents({ ...completedStudents, [studentName]: true }); if (document.exitFullscreen) document.exitFullscreen(); } }, 300); };
+            const handleBack = () => { if (currentQuestion > 0) { setQuestionTransition('exit'); setTimeout(() => setCurrentQuestion(prev => prev - 1), 300); }};
+            const DarkModeToggle = () => (
+                <button
+                    onClick={() => setIsDarkMode(!isDarkMode)}
+                    className={`fixed top-4 right-4 z-50 p-3 rounded-full shadow-lg transition-all hover:scale-110 transform ${
+                        isDarkMode 
+                            ? 'bg-gray-800 text-yellow-400 hover:bg-gray-700' 
+                            : 'bg-white text-gray-800 hover:bg-gray-100'
+                    }`}
+                    title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                    aria-label="Toggle dark mode"
+                >
+                    {isDarkMode ? <SunIcon className="w-6 h-6" /> : <MoonIcon className="w-6 h-6" />}
+                </button>
+            );
+            
+            // PASSWORD SCREEN - First screen shown
+            if (!passwordEntered && !hasStarted && !isCompleted) {
+                return (
+                    <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
+                        isDarkMode 
+                            ? 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900' 
+                            : 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500'
+                    }`}>
+                        <DarkModeToggle />
+                        <div className={`rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 transform transition-all fade-in ${
+                            isDarkMode ? 'bg-gray-800' : 'bg-white'
+                        }`}>
+                            {/* ===== UPDATE TEXT COLORS FOR DARK MODE ===== */}
+                            <div className="flex items-center justify-center mb-6">
+                                <Monitor className="w-12 h-12 text-blue-600 mr-3"/>
+                                <h1 className={`text-4xl font-bold font-poppins ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>Information and Communication Quiz - 4th Grade</h1>
+                            </div>
+                            <p className={`text-center mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Enter your password to access the quiz</p>
+                            <div className="mb-6">
+                                <label className={`block font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Password:</label>
+                                <div className="relative">
+                                    <input 
+                                        type={showPassword ? 'text' : 'password'} 
+                                        value={passwordInput} 
+                                        onChange={(e) => {
+                                            setPasswordInput(e.target.value);
+                                            setPasswordError(false);
+                                        }}
+                                        onKeyPress={(e) => {
+                                            if (e.key === 'Enter') {
+                                                handlePasswordSubmit();
+                                            }
+                                        }}
+                                        placeholder="Enter your password..."
+                                        className={`w-full p-3 pr-12 border-2 rounded-lg focus:border-blue-500 focus:outline-none ${
+                                            isDarkMode ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'border-gray-300 bg-white'
+                                        }`}
+                                        autoFocus
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute inset-y-0 right-0 flex items-center px-4 text-gray-600 hover:text-blue-600"
+                                        aria-label={showPassword ? "Hide password" : "Show password"}
+                                    >
+                                        {showPassword ? (
+                                            // New Closed Eye Icon
+                                            <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <g clipPath="url(#clip0_429_11158)">
+                                                    <path d="M10.7302 5.07319C11.1448 5.02485 11.5684 5 11.9999 5C16.6639 5 20.3998 7.90264 21.9999 12C21.6053 13.0104 21.0809 13.9482 20.4446 14.7877M6.51956 6.51944C4.47949 7.76406 2.90105 9.69259 1.99994 12C3.60008 16.0974 7.33597 19 11.9999 19C14.0375 19 15.8979 18.446 17.4805 17.4804M9.87871 9.87859C9.33576 10.4215 8.99994 11.1715 8.99994 12C8.99994 13.6569 10.3431 15 11.9999 15C12.8284 15 13.5785 14.6642 14.1214 14.1212" stroke="#696969" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"></path>
+                                                    <path d="M4 4L20 20" stroke="#696969" strokeWidth="2.5" strokeLinecap="round"></path>
+                                                </g>
+                                                <defs>
+                                                    <clipPath id="clip0_429_11158">
+                                                        <rect width="24" height="24" fill="white"></rect>
+                                                    </clipPath>
+                                                </defs>
+                                            </svg>
+                                        ) : (
+                                            // New Opened Eye Icon
+                                            <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <g clipPath="url(#clip0_429_11085)">
+                                                    <path d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z" stroke="#696969" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"></path>
+                                                    <path d="M2 12C3.60014 7.90264 7.33603 5 12 5C16.664 5 20.3999 7.90264 22 12C20.3999 16.0974 16.664 19 12 19C7.33603 19 3.60014 16.0974 2 12Z" stroke="#696969" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"></path>
+                                                </g>
+                                                <defs>
+                                                    <clipPath id="clip0_429_11085">
+                                                        <rect width="24" height="24" fill="white"></rect>
+                                                    </clipPath>
+                                                </defs>
+                                            </svg>
+                                        )}
+                                    </button>
+                                </div>
+                                {passwordError && (
+                                    <p className="text-red-500 text-sm mt-2">Invalid password. Please try again.</p>
+                                )}
+                            </div>
+                            <button 
+                                onClick={handlePasswordSubmit}
+                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold font-poppins py-4 px-6 rounded-xl transition-colors shadow-lg"
+                            >
+                                Submit Password
+                            </button>
+                        </div>
+                    </div>
+                );
+            }
+
+            if (questions.length === 0) {
+                return (
+                    <div className={`min-h-screen flex items-center justify-center transition-colors duration-300 ${
+                        isDarkMode ? 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900' : 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500'
+                    }`}>
+                        <div className={`text-2xl font-poppins ${isDarkMode ? 'text-white' : 'text-white'}`}>Loading Quiz...</div>
+                    </div>
+                );
+            }
+
+            // NAME CONFIRMATION AND START SCREEN - After password
+            if (passwordEntered && !hasStarted && !isCompleted) {
+                return (
+                    <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
+                        isDarkMode 
+                            ? 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900'
+                            : 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500'
+                    }`}>
+                        <DarkModeToggle />
+                        <div className={`rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 transform transition-all fade-in ${
+                            isDarkMode ? 'bg-gray-800' : 'bg-white'
+                        }`}>
+                            <div className="flex items-center justify-center mb-6">
+                                <Monitor className="w-12 h-12 text-blue-600 mr-3"/>
+                                <h1 className={`text-4xl font-bold font-poppins ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>Information and Communication Quiz - 4th Grade</h1>
+                            </div>
+                            <p className={`text-center mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Welcome to the Technology quiz!</p>
+                            <div className={`rounded-lg p-6 mb-6 border-l-4 ${isDarkMode ? 'bg-yellow-900 border-yellow-600' : 'bg-yellow-50 border-yellow-400'}`}>
+                                <p className={`text-lg font-semibold font-poppins mb-2 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>Your Name:</p>
+                                <p className={`text-2xl font-bold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>{studentName}</p>
+                            </div>
+                            <div className={`rounded-lg p-6 mb-6 ${isDarkMode ? 'bg-blue-900' : 'bg-blue-50'}`}>
+                                <p className={`text-lg font-semibold font-poppins mb-3 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>📋 Instructions:</p>
+                                <ul className={`space-y-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                    <li>• There are 5 questions in total.</li>
+                                    <li>• The total score is 20 points.</li>
+                                    <li>• Read each question carefully.</li>
+                                </ul>
+                            </div>
+                            <button onClick={handleStartQuiz} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold font-poppins py-4 px-6 rounded-xl transition-colors shadow-lg">
+                                Start Quiz
+                            </button>
+                            <p className={`text-sm text-center mt-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>⚠️ The quiz will enter fullscreen mode. Please stay on this tab.</p>
+                        </div>
+                    </div>
+                );
+            }
+
+            if (isCompleted) {
+                const points = calculatePoints();
+                const totalPoints = 20;
+                const grade = getGradeFromScore(points);
+                const percentage = Math.round((points / totalPoints) * 100);
+                const isPerfectScore = percentage === 100;
+                
+                if (showReview) {
+                    // Review Mode - Show answers with feedback
+                    return (
+                        <div className={`min-h-screen p-4 overflow-y-auto transition-colors duration-300 ${
+                            isDarkMode 
+                                ? 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900' 
+                                : 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500'
+                        }`}>
+                            <DarkModeToggle />
+                            <div className={`rounded-3xl shadow-2xl p-8 max-w-4xl mx-auto my-8 relative z-10 ${
+                                isDarkMode ? 'bg-gray-800' : 'bg-white'
+                            }`}>
+                                <div className="text-center mb-6">
+                                    <h2 className={`text-3xl font-bold font-poppins mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Review Your Answers</h2>
+                                    <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>See which answers were correct and incorrect</p>
+                                </div>
+                                
+                                {questions.map((q, qIndex) => {
+                                    const userAnswers = answers[qIndex] || {};
+                                    return (
+                                        <div key={qIndex} className={`mb-8 p-6 rounded-xl border-2 ${
+                                            isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
+                                        }`}>
+                                            <h3 className={`text-xl font-bold font-poppins mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                                                Question {qIndex + 1}: {q.question}
+                                            </h3>
+                                            
+                                            {q.type === 'multiple-choice-group' && (
+                                                <div className="space-y-4">
+                                                    {q.questions.map((subQ, subIndex) => {
+                                                        const userChoice = userAnswers[subIndex];
+                                                        const selectedOption = userChoice !== undefined ? subQ.options[userChoice] : null;
+                                                        const isCorrect = selectedOption?.text === subQ.correctText;
+                                                        
+                                                        return (
+                                                            <div key={subIndex} className="p-4 bg-white rounded-lg">
+                                                                <p className="font-semibold text-gray-800 mb-2">{subIndex + 1}. {subQ.text}</p>
+                                                                <div className="ml-4">
+                                                                    <p className={`${isCorrect ? 'text-green-600' : 'text-red-600'} font-semibold mb-1`}>
+                                                                        {isCorrect ? '✓ Correct!' : '✗ Incorrect'}
+                                                                    </p>
+                                                                    <p className="text-gray-700">Your answer: <span className={isCorrect ? 'text-green-600' : 'text-red-600'}>{selectedOption?.text || 'No answer'}</span></p>
+                                                                    {!isCorrect && (
+                                                                        <p className="text-gray-700">Correct answer: <span className="text-green-600 font-semibold">{subQ.correctText}</span></p>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            )}
+                                            
+                                            {q.type === 'true-false-group' && (
+                                                <div className="space-y-4">
+                                                    {q.statements.map((stmt, stmtIndex) => {
+                                                        const userChoice = userAnswers[stmtIndex];
+                                                        const isCorrect = userChoice === stmt.correct;
+                                                        
+                                                        return (
+                                                            <div key={stmtIndex} className="p-4 bg-white rounded-lg">
+                                                                <p className="font-semibold text-gray-800 mb-2">{stmtIndex + 1}. {stmt.text}</p>
+                                                                <div className="ml-4">
+                                                                    <p className={`${isCorrect ? 'text-green-600' : 'text-red-600'} font-semibold mb-1`}>
+                                                                        {isCorrect ? '✓ Correct!' : '✗ Incorrect'}
+                                                                    </p>
+                                                                    <p className="text-gray-700">Your answer: <span className={isCorrect ? 'text-green-600' : 'text-red-600'}>{userChoice === 0 ? 'True' : userChoice === 1 ? 'False' : 'No answer'}</span></p>
+                                                                    {!isCorrect && (
+                                                                        <p className="text-gray-700">Correct answer: <span className="text-green-600 font-semibold">{stmt.correct === 0 ? 'True' : 'False'}</span></p>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            )}
+                                            
+                                            {q.type === 'drag-drop' && (
+                                                <div className="space-y-3">
+                                                    {q.categories.map((category) => {
+                                                        const userAnswer = userAnswers[category];
+                                                        const correctAnswer = q.correctAnswers[category];
+                                                        const isCorrect = userAnswer === correctAnswer;
+                                                        
+                                                        return (
+                                                            <div key={category} className="p-4 bg-white rounded-lg">
+                                                                <p className="font-semibold text-gray-800 mb-2">{category}</p>
+                                                                <div className="ml-4">
+                                                                    <p className={`${isCorrect ? 'text-green-600' : 'text-red-600'} font-semibold mb-1`}>
+                                                                        {isCorrect ? '✓ Correct!' : '✗ Incorrect'}
+                                                                    </p>
+                                                                    <p className="text-gray-700">Your answer: <span className={isCorrect ? 'text-green-600' : 'text-red-600'}>{userAnswer || 'No answer'}</span></p>
+                                                                    {!isCorrect && (
+                                                                        <p className="text-gray-700">Correct answer: <span className="text-green-600 font-semibold">{correctAnswer}</span></p>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            )}
+                                            
+                                            {q.type === 'drag-drop-images' && (
+                                                <div className="space-y-3">
+                                                    {q.items.map((item) => {
+                                                        const correctCat = Object.keys(q.correctAnswers).find(cat => 
+                                                            q.correctAnswers[cat].includes(item.name)
+                                                        );
+                                                        const userCat = Object.keys(userAnswers).find(cat => 
+                                                            (userAnswers[cat] || []).includes(item.name)
+                                                        );
+                                                        const isCorrect = correctCat === userCat;
+                                                        
+                                                        return (
+                                                            <div key={item.name} className="p-4 bg-white rounded-lg">
+                                                                <p className="font-semibold text-gray-800 mb-2">{item.icon} {item.name}</p>
+                                                                <div className="ml-4">
+                                                                    <p className={`${isCorrect ? 'text-green-600' : 'text-red-600'} font-semibold mb-1`}>
+                                                                        {isCorrect ? '✓ Correct!' : '✗ Incorrect'}
+                                                                    </p>
+                                                                    <p className="text-gray-700">Your answer: <span className={isCorrect ? 'text-green-600' : 'text-red-600'}>{userCat || 'No answer'}</span></p>
+                                                                    {!isCorrect && (
+                                                                        <p className="text-gray-700">Correct answer: <span className="text-green-600 font-semibold">{correctCat}</span></p>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            )}
+                                            
+                                            {q.type === 'fill-group' && (
+                                                <div className="space-y-3">
+                                                    {q.statements.map((stmt, stmtIndex) => {
+                                                        const userAnswer = userAnswers[stmtIndex];
+                                                        const isCorrect = userAnswer?.toLowerCase().trim() === stmt.answer.toLowerCase();
+                                                        
+                                                        return (
+                                                            <div key={stmtIndex} className="p-4 bg-white rounded-lg">
+                                                                <p className="font-semibold text-gray-800 mb-2">{stmtIndex + 1}. {stmt.text}</p>
+                                                                <div className="ml-4">
+                                                                    <p className={`${isCorrect ? 'text-green-600' : 'text-red-600'} font-semibold mb-1`}>
+                                                                        {isCorrect ? '✓ Correct!' : '✗ Incorrect'}
+                                                                    </p>
+                                                                    <p className="text-gray-700">Your answer: <span className={isCorrect ? 'text-green-600' : 'text-red-600'}>{userAnswer || 'No answer'}</span></p>
+                                                                    {!isCorrect && (
+                                                                        <p className="text-gray-700">Correct answer: <span className="text-green-600 font-semibold">{stmt.answer}</span></p>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                                
+                                <div className="text-center mt-8">
+                                    <button 
+                                        onClick={() => setShowReview(false)}
+                                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold font-poppins py-4 px-8 rounded-xl transition-all shadow-lg hover:scale-105 transform"
+                                    >
+                                        Back to Results
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                }
+                
+                // Results Screen with Two Buttons
+                return (
+                    <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
+                        isDarkMode 
+                            ? 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900' 
+                            : 'bg-gradient-to-br from-green-400 via-blue-500 to-purple-500'
+                    }`}>
+                        <DarkModeToggle />
+                        {isPerfectScore && <Confetti />}
+                        <div className={`rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 fade-in ${
+                            isDarkMode ? 'bg-gray-800' : 'bg-white'
+                        }`}>
+                            <div className="text-center">
+                                <div className="text-6xl mb-4">🎉</div>
+                                <h2 className={`text-4xl font-bold font-poppins mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Quiz Completed!</h2>
+                                <p className={`text-xl mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Great job, {studentName}!</p>
+                                <div className={`${isPerfectScore ? (isDarkMode ? 'bg-yellow-900' : 'bg-yellow-50') : (isDarkMode ? 'bg-blue-900' : 'bg-blue-50')} rounded-lg p-6 my-6 text-center transition-all duration-300 ${isPerfectScore ? 'scale-105 transform' : ''}`}>
+                                    <p className={`text-2xl font-bold mb-2 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>Your Score: {points} / {totalPoints}</p>
+                                    <p className="text-3xl font-bold text-green-600 mb-3">Your Grade: {grade.toFixed(1)}</p>
+                                    <p className={`text-xl mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{percentage}%</p>
+                                    <p className={`${isPerfectScore ? 'text-green-700 text-2xl font-bold' : (isDarkMode ? 'text-gray-300 mt-2' : 'text-gray-700 mt-2')} font-poppins`}>
+                                        {percentage === 100 ? '✅ PERFECT SCORE! AMAZING! ✅' : percentage >= 80 ? '🌟 Excellent work!' : percentage >= 60 ? '👍 Good job!' : '💪 Keep studying!'}
+                                    </p>
+                                </div>
+                                
+                                {/* Two Action Buttons */}
+                                <div className="flex flex-col gap-4 mt-6">
+                                    <button 
+                                        onClick={() => setShowReview(true)}
+                                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold font-poppins py-4 px-6 rounded-xl transition-all shadow-lg hover:scale-105 transform"
+                                    >
+                                        📋 Review My Answers
+                                    </button>
+                                    
+                                    <button 
+                                        onClick={() => setShowExitConfirm(true)}
+                                        className="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold font-poppins py-4 px-6 rounded-xl transition-all shadow-lg hover:scale-105 transform"
+                                    >
+                                        ✖️ Close Quiz
+                                    </button>
+                                </div>
+                                
+                                <p className={`text-sm mt-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Thank you for taking the ICT quiz!</p>
+                            </div>
+                            
+                            {showExitConfirm && (
+                                <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
+                                    <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 text-center fade-in">
+                                        <div className="mb-6">
+                                            <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                <svg className="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                                </svg>
+                                            </div>
+                                            <h3 className="text-2xl font-bold font-poppins text-gray-800 mb-3">Ready to Exit?</h3>
+                                            <p className="text-lg text-gray-700 mb-4">Your results have been saved!</p>
+                                        </div>
+                                        
+                                        <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6 text-left rounded-lg">
+                                            <p className="text-sm font-semibold text-gray-800 mb-2">📌 To close this tab:</p>
+                                            <p className="text-sm text-gray-700">Press <kbd className="px-2 py-1 bg-white border border-gray-300 rounded shadow-sm font-mono text-xs">Ctrl</kbd> + <kbd className="px-2 py-1 bg-white border border-gray-300 rounded shadow-sm font-mono text-xs">W</kbd></p>
+                                            <p className="text-xs text-gray-600 mt-2">Or click the <strong>X</strong> on your browser tab</p>
+                                        </div>
+                                        
+                                        <div className="flex gap-3">
+                                            <button 
+                                                onClick={() => setShowExitConfirm(false)}
+                                                className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold font-poppins py-3 px-6 rounded-xl transition-all shadow-md hover:scale-105 transform"
+                                            >
+                                                Stay
+                                            </button>
+                                            <button 
+                                                onClick={() => {
+                                                    if (document.exitFullscreen) {
+                                                        document.exitFullscreen();
+                                                    }
+                                                    setShowExitConfirm(false);
+                                                    window.close();
+                                                }}
+                                                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold font-poppins py-3 px-6 rounded-xl transition-all shadow-lg hover:scale-105 transform"
+                                            >
+                                                Exit Quiz
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                );
+            }
+
+            const currentQ = questions[currentQuestion];
+            const isAnswered = (() => { const currentAnswers = answers[currentQuestion] || {}; if (currentQ.type.includes('group')) return Object.keys(currentAnswers).length === (currentQ.questions || currentQ.statements).length; if (currentQ.type.includes('drag-drop-images')) return Object.values(currentAnswers).flat().length === currentQ.items.length; if (currentQ.type === 'drag-drop') return Object.keys(currentAnswers).length === currentQ.categories.length; return currentAnswers !== undefined; })();
+
+            return (
+                <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
+                    isDarkMode 
+                        ? 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900' 
+                        : 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500'
+                }`}>
+                    <DarkModeToggle />
+                    {showWarning && (
+                        <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
+                            <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 text-center fade-in shake">
+                                <div className="mb-6">
+                                    <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 pulse">
+                                        <WarningIcon className="w-12 h-12 text-red-600" />
+                                    </div>
+                                    <h2 className="text-3xl font-bold font-poppins text-gray-800 mb-3">⚠️ Warning!</h2>
+                                    <p className="text-lg text-gray-700 mb-2">You have exited fullscreen mode or switched tabs.</p>
+                                    <p className="text-md text-gray-600">Please return to fullscreen mode to continue.</p>
+                                </div>
+                                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 text-left"><p className="text-sm text-gray-700"><strong>Remember:</strong> You must stay in fullscreen during the entire quiz.</p></div>
+                                <button onClick={enterFullscreen} className="w-full bg-red-600 hover:bg-red-700 text-white font-bold font-poppins py-4 px-6 rounded-xl transition-all shadow-lg hover:scale-105 transform">Return to Fullscreen</button>
+                            </div>
+                        </div>
+                    )}
+                    <div className={`rounded-3xl shadow-2xl p-8 max-w-2xl w-full relative z-10 ${questionTransition === 'enter' ? 'slide-in' : 'slide-out'} ${showWarning ? 'blur-sm' : ''} ${
+                        isDarkMode ? 'bg-gray-800' : 'bg-white'
+                    }`}>
+                       <div className="mb-6">
+                            <div className="flex justify-between items-center mb-4">
+                                <span className={`text-sm font-semibold ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Question {currentQuestion + 1} of {questions.length}</span>
+                                <span className={`text-sm font-semibold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>{studentName}</span>
+                            </div>
+                            <div className={`w-full rounded-full h-2 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
+                                <div className="bg-blue-600 h-2 rounded-full transition-all duration-500" style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}></div>
+                            </div>
+                        </div>
+                        <h2 className={`text-2xl font-bold font-poppins mb-6 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{currentQ.question}</h2>
+
+                        {currentQ.type === 'multiple-choice-group' && (
+                            <div className="mb-6 space-y-4">
+                                {currentQ.questions.map((q, qIndex) => (
+                                    <div key={qIndex} className={`p-4 rounded-xl border-2 ${
+                                        isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
+                                    }`}>
+                                        <p className={`font-medium mb-3 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+                                            {qIndex + 1}. {q.text}
+                                        </p>
+                                        <div className="space-y-2">
+                                            {q.options.map((option, optIndex) => (
+                                                <button 
+                                                    key={optIndex} 
+                                                    onClick={() => { 
+                                                        const newAnswers = { ...(answers[currentQuestion] || {}), [qIndex]: optIndex }; 
+                                                        handleAnswer(newAnswers); 
+                                                    }} 
+                                                    className={`w-full p-3 text-left rounded-lg border-2 transition-all ${
+                                                        (answers[currentQuestion] || {})[qIndex] === optIndex 
+                                                            ? `border-blue-600 font-semibold transform scale-105 ${isDarkMode ? 'bg-blue-900 text-white' : 'bg-blue-100 text-gray-800'}` 
+                                                            : `border-gray-300 hover:border-blue-400 ${isDarkMode ? 'bg-gray-600 text-gray-200 hover:bg-gray-500' : 'bg-blue-50 text-gray-800 hover:bg-blue-100'}`
+                                                    }`}
+                                                >
+                                                    {option.text}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        {currentQ.type === 'true-false-group' && (
+                            <div className="mb-6 space-y-4">
+                                {currentQ.statements.map((statement, stmtIndex) => (
+                                    <div key={stmtIndex} className={`p-4 rounded-xl border-2 ${
+                                        isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
+                                    }`}>
+                                        <p className={`font-medium mb-3 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+                                            {stmtIndex + 1}. {statement.text}
+                                        </p>
+                                        <div className="flex gap-3">
+                                            <button 
+                                                onClick={() => { 
+                                                    const newAnswers = { ...(answers[currentQuestion] || {}), [stmtIndex]: 0 }; 
+                                                    handleAnswer(newAnswers); 
+                                                }} 
+                                                className={`flex-1 p-3 rounded-lg border-2 transition-all ${
+                                                    (answers[currentQuestion] || {})[stmtIndex] === 0 
+                                                        ? `border-blue-600 font-semibold ${isDarkMode ? 'bg-blue-900 text-white' : 'bg-blue-50 text-gray-800'}` 
+                                                        : `border-gray-300 hover:border-blue-400 ${isDarkMode ? 'bg-gray-600 text-gray-200 hover:bg-gray-500' : 'bg-white text-gray-800 hover:bg-gray-100'}`
+                                                }`}
+                                            >
+                                                True
+                                            </button>
+                                            <button 
+                                                onClick={() => { 
+                                                    const newAnswers = { ...(answers[currentQuestion] || {}), [stmtIndex]: 1 }; 
+                                                    handleAnswer(newAnswers); 
+                                                }} 
+                                                className={`flex-1 p-3 rounded-lg border-2 transition-all ${
+                                                    (answers[currentQuestion] || {})[stmtIndex] === 1 
+                                                        ? `border-blue-600 font-semibold ${isDarkMode ? 'bg-blue-900 text-white' : 'bg-blue-50 text-gray-800'}` 
+                                                        : `border-gray-300 hover:border-blue-400 ${isDarkMode ? 'bg-gray-600 text-gray-200 hover:bg-gray-500' : 'bg-white text-gray-800 hover:bg-gray-100'}`
+                                                }`}
+                                            >
+                                                False
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        {currentQ.type === 'fill-group' && (
+                            <div className="mb-6">
+                                <div className="mb-6">
+                                    <p className={`text-sm font-semibold mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                                        📝 Word Bank - Use these words to fill in the blanks:
+                                    </p>
+                                    <div className={`flex flex-wrap gap-3 p-4 rounded-xl border-2 ${
+                                        isDarkMode ? 'bg-purple-900 border-purple-700' : 'bg-purple-50 border-purple-200'
+                                    }`}>
+                                        {currentQ.wordBank.map((word) => (
+                                            <div 
+                                                key={word}
+                                                className={`px-4 py-2 rounded-lg font-semibold font-poppins ${
+                                                    isDarkMode ? 'bg-purple-700 text-purple-200' : 'bg-purple-200 text-purple-800'
+                                                }`}
+                                            >
+                                                {word}
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <p className={`text-xs mt-2 italic ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                        💡 Tip: Copy the spelling exactly (not case-sensitive)
+                                    </p>
+                                </div>
+                                <div className="space-y-4">
+                                    {currentQ.statements.map((statement, stmtIndex) => {
+                                        const parts = statement.text.split('_______');
+                                        const userAnswer = (answers[currentQuestion] || {})[stmtIndex] || '';
+                                        const isAnswered = userAnswer.trim() !== '';
+                                        
+                                        return (
+                                            <div key={stmtIndex} className={`p-4 rounded-xl border-2 ${
+                                                isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
+                                            }`}>
+                                                <div className={`flex items-baseline gap-2`}>
+                                                    <span className={`font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                                        {stmtIndex + 1}.
+                                                    </span>
+                                                    <p className={isDarkMode ? 'text-gray-200' : 'text-gray-800'}>
+                                                        {parts[0]}
+                                                        <input
+                                                            type="text"
+                                                            value={userAnswer}
+                                                            onChange={(e) => {
+                                                                const newAnswers = { ...(answers[currentQuestion] || {}) };
+                                                                newAnswers[stmtIndex] = e.target.value;
+                                                                handleAnswer(newAnswers);
+                                                            }}
+                                                            placeholder="type here..."
+                                                            className={`inline-block align-middle w-36 mx-2 px-3 py-1 border-2 rounded-lg focus:outline-none focus:border-purple-400 ${
+                                                                isDarkMode 
+                                                                    ? `bg-gray-600 text-white placeholder-gray-400 ${isAnswered ? 'border-purple-500 bg-purple-900' : 'border-gray-500'}` 
+                                                                    : `bg-white text-gray-800 ${isAnswered ? 'border-purple-400 bg-purple-50' : 'border-gray-300'}`
+                                                            }`}
+                                                        />
+                                                        {parts[1]}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+                        {currentQ.type === 'drag-drop' && (
+                            <div className="mb-6">
+                                <p className="text-sm font-semibold text-gray-600 mb-4">🎯 Click an item, then click its matching category to draw a line:</p>
+                                
+                                <div className="relative" style={{ minHeight: '400px' }}>
+                                    <svg 
+                                        className="absolute inset-0 w-full h-full pointer-events-none" 
+                                        style={{ zIndex: 1 }}
+                                    >
+                                        {Object.entries(answers[currentQuestion] || {}).map(([category, item]) => {
+                                            const itemEl = document.getElementById(`item-${currentQuestion}-${item}`);
+                                            const catEl = document.getElementById(`cat-${currentQuestion}-${category}`);
+                                            if (!itemEl || !catEl) return null;
+                                            const itemRect = itemEl.getBoundingClientRect();
+                                            const catRect = catEl.getBoundingClientRect();
+                                            const svgEl = itemEl.closest('.relative').querySelector('svg');
+                                            const containerRect = svgEl.getBoundingClientRect();
+                                            const x1 = itemRect.right - containerRect.left;
+                                            const y1 = itemRect.top + itemRect.height / 2 - containerRect.top;
+                                            const x2 = catRect.left - containerRect.left;
+                                            const y2 = catRect.top + catRect.height / 2 - containerRect.top;
+                                            return (
+                                                <g key={`${category}-${item}`}>
+                                                    <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#9333ea" strokeWidth="3" strokeLinecap="round" />
+                                                    <circle cx={x1} cy={y1} r="5" fill="#9333ea" />
+                                                    <circle cx={x2} cy={y2} r="5" fill="#9333ea" />
+                                                </g>
+                                            );
+                                        })}
+                                        {drawingFrom && currentMousePos && (() => {
+                                            const itemEl = document.getElementById(`item-${currentQuestion}-${drawingFrom}`);
+                                            if (!itemEl) return null;
+                                            const itemRect = itemEl.getBoundingClientRect();
+                                            const svgEl = itemEl.closest('.relative').querySelector('svg');
+                                            const containerRect = svgEl.getBoundingClientRect();
+                                            const x1 = itemRect.right - containerRect.left;
+                                            const y1 = itemRect.top + itemRect.height / 2 - containerRect.top;
+                                            const x2 = currentMousePos.x - containerRect.left;
+                                            const y2 = currentMousePos.y - containerRect.top;
+                                            return (
+                                                <g>
+                                                    <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#c084fc" strokeWidth="3" strokeDasharray="5,5" strokeLinecap="round" />
+                                                    <circle cx={x1} cy={y1} r="5" fill="#c084fc" />
+                                                </g>
+                                            );
+                                        })()}
+                                    </svg>
+                                    
+                                    <div 
+                                        className="grid grid-cols-[1fr_100px_1fr] gap-4"
+                                        onMouseMove={(e) => { if (drawingFrom) { setCurrentMousePos({ x: e.clientX, y: e.clientY }); } }}
+                                        onMouseLeave={() => { if (drawingFrom) { setDrawingFrom(null); setCurrentMousePos(null); } }} >
+                                        <div className="space-y-3">
+                                            <p className={`font-semibold mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Items:</p>
+                                            {currentQ.items.map((item) => {
+                                                const isMatched = Object.values(answers[currentQuestion] || {}).includes(item);
+                                                const isDrawing = drawingFrom === item;
+                                                return (
+                                                    <button key={item} id={`item-${currentQuestion}-${item}`} onClick={() => { if (drawingFrom === item) { setDrawingFrom(null); setCurrentMousePos(null); } else if (!isMatched) { setDrawingFrom(item); } }} className={`p-3 rounded-xl border-2 transition-all text-left font-semibold ${ isDrawing ? 'border-purple-500 bg-purple-100 shadow-lg scale-105 transform' : isMatched ? 'border-purple-400 bg-purple-50' : 'border-gray-300 bg-white hover:border-purple-300 hover:bg-purple-50' }`} style={{ zIndex: 2, position: 'relative', width: '180px' }} >
+                                                        {item}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                        <div></div>
+                                        <div className="space-y-3">
+                                            <p className="font-semibold text-gray-700 mb-3">Categories:</p>
+                                            {currentQ.categories.map((category) => {
+                                                const matchedItem = (answers[currentQuestion] || {})[category];
+                                                return (
+                                                    <div key={category} className="relative">
+                                                        <button id={`cat-${currentQuestion}-${category}`} onClick={() => { if (drawingFrom) { const newAnswers = { ...(answers[currentQuestion] || {}) }; Object.keys(newAnswers).forEach(cat => { if (newAnswers[cat] === drawingFrom) { delete newAnswers[cat]; } }); newAnswers[category] = drawingFrom; handleAnswer(newAnswers); setDrawingFrom(null); setCurrentMousePos(null); } }} className={`w-full p-3 rounded-xl border-2 transition-all text-left ${ matchedItem ? 'border-purple-400 bg-purple-50 pr-12' : drawingFrom ? 'border-purple-300 bg-purple-50 hover:border-purple-500 hover:bg-purple-100' : 'border-gray-300 bg-gray-50' }`} style={{ zIndex: 2, position: 'relative' }} >
+                                                            <div className="font-bold text-gray-800">{category}</div>
+                                                            {matchedItem && ( <div className="text-sm text-purple-600 mt-1">→ {matchedItem}</div> )}
+                                                        </button>
+                                                        {matchedItem && (
+                                                            <button onClick={() => { const newAnswers = { ...(answers[currentQuestion] || {}) }; delete newAnswers[category]; handleAnswer(newAnswers); }} className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 hover:bg-red-100 rounded-lg transition-all" style={{ zIndex: 3 }} title="Remove connection" >
+                                                                <svg className="w-5 h-5 text-red-500" viewBox="0 0 24 24" fill="currentColor">
+                                                                    <path d="M3 6.38597C3 5.90152 3.34538 5.50879 3.77143 5.50879L6.43567 5.50832C6.96502 5.49306 7.43202 5.11033 7.61214 4.54412C7.61688 4.52923 7.62232 4.51087 7.64185 4.44424L7.75665 4.05256C7.8269 3.81241 7.8881 3.60318 7.97375 3.41617C8.31209 2.67736 8.93808 2.16432 9.66147 2.03297C9.84457 1.99972 10.0385 1.99986 10.2611 2.00002H13.7391C13.9617 1.99986 14.1556 1.99972 14.3387 2.03297C15.0621 2.16432 15.6881 2.67736 16.0264 3.41617C16.1121 3.60318 16.1733 3.81241 16.2435 4.05256L16.3583 4.44424C16.3778 4.51087 16.3833 4.52923 16.388 4.54412C16.5682 5.11033 17.1278 5.49353 17.6571 5.50879H20.2286C20.6546 5.50879 21 5.90152 21 6.38597C21 6.87043 20.6546 7.26316 20.2286 7.26316H3.77143C3.34538 7.26316 3 6.87043 3 6.38597Z"/>
+                                                                    <path fillRule="evenodd" clipRule="evenodd" d="M11.5956 22.0001H12.4044C15.1871 22.0001 16.5785 22.0001 17.4831 21.1142C18.3878 20.2283 18.4803 18.7751 18.6654 15.8686L18.9321 11.6807C19.0326 10.1037 19.0828 9.31524 18.6289 8.81558C18.1751 8.31592 17.4087 8.31592 15.876 8.31592H8.12404C6.59127 8.31592 5.82488 8.31592 5.37105 8.81558C4.91722 9.31524 4.96744 10.1037 5.06788 11.6807L5.33459 15.8686C5.5197 18.7751 5.61225 20.2283 6.51689 21.1142C7.42153 22.0001 8.81289 22.0001 11.5956 22.0001ZM10.2463 12.1886C10.2051 11.7548 9.83753 11.4382 9.42537 11.4816C9.01321 11.525 8.71251 11.9119 8.75372 12.3457L9.25372 17.6089C9.29494 18.0427 9.66247 18.3593 10.0746 18.3159C10.4868 18.2725 10.7875 17.8856 10.7463 17.4518L10.2463 12.1886ZM14.5746 11.4816C14.9868 11.525 15.2875 11.9119 15.2463 12.3457L14.7463 17.6089C14.7051 18.0427 14.3375 18.3593 13.9254 18.3159C13.5132 18.2725 13.2125 17.8856 13.2537 17.4518L13.7537 12.1886C13.7949 11.7548 14.1625 11.4382 14.5746 11.4816Z"/>
+                                                                </svg>
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="mt-4 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-400">
+                                    <p className="text-sm text-gray-700"><strong>How to use:</strong> Click an item on the left, then click its matching category on the right to draw a connection. Click the trash icon to remove a connection.</p>
+                                </div>
+                            </div>
+                        )}
+                        {currentQ.type === 'drag-drop-images' && (
+                            <div className="mb-6">
+                                <div className="mb-6">
+                                    <p className="text-sm font-semibold text-gray-600 mb-3">📦 Drag these devices (click to preview):</p>
+                                    <div onDragOver={handleDragOver} onDrop={(e) => { e.preventDefault(); const item = draggedItem || e.dataTransfer.getData('text/plain'); if (item) { let newAnswers = { ...(answers[currentQuestion] || {}) }; Object.keys(newAnswers).forEach(key => { if (Array.isArray(newAnswers[key])) { newAnswers[key] = newAnswers[key].filter(i => i !== item); if (newAnswers[key].length === 0) { delete newAnswers[key]; } } }); setAnswers({ ...answers, [currentQuestion]: newAnswers }); setDropZones(newAnswers); setDraggedItem(null); } }} className="flex flex-wrap gap-3 p-4 bg-gray-50 rounded-xl border-2 border-gray-200 min-h-16 transition-all hover:border-purple-300 hover:bg-purple-50" >
+                                        {getAvailableItems().length === 0 ? (
+                                            <p className="text-gray-400 text-sm italic w-full text-center">All devices placed! (Drag back here to remove)</p>
+                                        ) : (
+                                            getAvailableItems().map((item) => (
+                                                <div key={item.name} draggable onDragStart={(e) => handleDragStart(e, item.name)} onClick={() => setPreviewImage({ name: item.name, icon: item.icon })} className="flex flex-col items-center px-4 py-3 bg-white border-2 border-purple-300 rounded-xl cursor-pointer hover:border-purple-500 hover:shadow-lg transition-all transform hover:scale-105" title="Click to preview, drag to place" >
+                                                    <div className="w-16 h-16 mb-2 flex items-center justify-center">
+                                                        <img src={`../Images/${item.name.toLowerCase()}.png`} alt={item.name} className="max-w-full max-h-full object-contain pointer-events-none" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; const fallback = document.createElement('span'); fallback.className = 'text-4xl'; fallback.textContent = item.icon; e.target.parentElement.appendChild(fallback); }} />
+                                                    </div>
+                                                    <div className="text-sm font-semibold font-poppins text-gray-800 pointer-events-none">{item.name}</div>
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {currentQ.categories.map((category) => (
+                                        <div key={category} onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, category)} className="p-4 border-2 border-dashed rounded-xl min-h-40 transition-all border-gray-300 bg-gray-50 hover:border-purple-400 hover:bg-purple-50" >
+                                            <p className="font-semibold text-gray-700 mb-3 text-center text-lg">{category}</p>
+                                            <div className="flex flex-wrap gap-2 justify-center">
+                                                {dropZones[category] && dropZones[category].map((itemName) => { 
+                                                    const item = currentQ.items.find(i => i.name === itemName); 
+                                                    return (
+                                                        <div key={itemName} draggable onDragStart={(e) => handleDragStart(e, itemName)} onClick={() => setPreviewImage({ name: itemName, icon: item?.icon })} className="flex flex-col items-center px-3 py-2 bg-white border-2 border-purple-400 rounded-xl cursor-pointer hover:border-purple-600 hover:shadow-lg transition-all" title="Click to preview, drag to move" >
+                                                            <div className="w-12 h-12 mb-1 flex items-center justify-center">
+                                                                <img src={`../Images/${itemName.toLowerCase()}.png`} alt={itemName} className="max-w-full max-h-full object-contain pointer-events-none" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; const fallback = document.createElement('span'); fallback.className = 'text-2xl'; fallback.textContent = item?.icon || '📦'; e.target.parentElement.appendChild(fallback); }} />
+                                                            </div>
+                                                            <div className="text-xs font-semibold font-poppins text-gray-800 pointer-events-none">{itemName}</div>
+                                                        </div>
+                                                    ); 
+                                                })}
+                                                {(!dropZones[category] || dropZones[category].length === 0) && ( <p className="text-gray-400 text-sm italic">Drop devices here...</p> )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                {previewImage && (
+                                    <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4" onClick={() => setPreviewImage(null)} >
+                                        <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-8 text-center fade-in" onClick={(e) => e.stopPropagation()} >
+                                            <div className="mb-6">
+                                                <h3 className="text-2xl font-bold font-poppins text-gray-800 mb-4">{previewImage.name}</h3>
+                                                <div className="flex items-center justify-center bg-gray-50 rounded-2xl p-8 min-h-80">
+                                                    <img src={`../Images/${previewImage.name.toLowerCase()}.png`} alt={previewImage.name} className="max-w-full max-h-96 object-contain" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; const fallback = document.createElement('div'); fallback.className = 'text-9xl'; fallback.textContent = previewImage.icon || '📦'; e.target.parentElement.appendChild(fallback); }} />
+                                                </div>
+                                            </div>
+                                            <button onClick={() => setPreviewImage(null)} className="bg-purple-600 hover:bg-purple-700 text-white font-bold font-poppins py-3 px-8 rounded-xl transition-all shadow-lg hover:scale-105 transform" >
+                                                Close Preview
+                                            </button>
+                                            <p className="text-gray-500 text-sm mt-3">Click outside or press Close to exit</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        
+                        <div className="flex gap-3 mt-8">
+                            {currentQuestion > 0 && (<button onClick={handleBack} className="px-6 py-4 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded-xl transition-all shadow-lg hover:scale-105 transform font-poppins">← Back</button>)}
+                            <button onClick={handleNext} disabled={!isAnswered} className={`flex-1 py-4 px-6 rounded-xl font-bold transition-all ${isAnswered ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:scale-105 transform' : 'bg-gray-300 text-gray-500 cursor-not-allowed'} font-poppins`}>{currentQuestion < questions.length - 1 ? 'Next →' : 'Finish Quiz'}</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<ICTQuiz />, document.getElementById('root'));
+    </script>
+</body>
+</html>
