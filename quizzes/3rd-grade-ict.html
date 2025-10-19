@@ -337,17 +337,91 @@
             
             const getGradeFromScore = (score) => gradingScale[score] !== undefined ? gradingScale[score] : 2.0;
             const filteredStudents = studentList.filter(name => name.toLowerCase().includes(studentName.toLowerCase()));
-            const submitResultsToGoogleSheet = async (data) => {
-                const webAppUrl = 'https://script.google.com/macros/s/AKfycbxBpLDS4AzwLJVh1IF_xdtSeBp7CCkUQxLp9bNy8qJlOKu9np0S7fdcov7GLZVWiRd4/exec';
-                try { await fetch(webAppUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); console.log('Data sent'); } catch (error) { console.error('Error sending data:', error); }
-            };
+            const formatDetailedAnswers = () => {
+            const detailed = {};
+            
+            questions.forEach((q, qIndex) => {
+                const userAnswers = answers[qIndex] || {};
+                let answerText = "";
+                
+                if (q.type === 'multiple-choice-group') {
+                    const parts = [];
+                    q.questions.forEach((subQ, subIndex) => {
+                        const selectedIdx = userAnswers[subIndex];
+                        const selectedOption = selectedIdx !== undefined ? subQ.options[selectedIdx]?.text : "No answer";
+                        parts.push(`Q${qIndex + 1}.${subIndex + 1}: ${selectedOption}`);
+                    });
+                    answerText = parts.join(" | ");
+                } 
+                else if (q.type === 'drag-drop') {
+                    const parts = [];
+                    q.categories.forEach(category => {
+                        const item = userAnswers[category] || "No answer";
+                        parts.push(`${category}: ${item}`);
+                    });
+                    answerText = parts.join(" | ");
+                } 
+                else if (q.type === 'drag-drop-images') {
+                    const parts = [];
+                    Object.keys(q.correctAnswers).forEach(category => {
+                        const items = userAnswers[category] || [];
+                        parts.push(`${category}: ${items.join(', ') || 'None'}`);
+                    });
+                    answerText = parts.join(" | ");
+                } 
+                else if (q.type === 'true-false-group') {
+                    const parts = [];
+                    q.statements.forEach((stmt, stmtIndex) => {
+                        const answer = userAnswers[stmtIndex] === 0 ? "True" : userAnswers[stmtIndex] === 1 ? "False" : "No answer";
+                        parts.push(`Statement ${stmtIndex + 1}: ${answer}`);
+                    });
+                    answerText = parts.join(" | ");
+                } 
+                else if (q.type === 'fill-group') {
+                    const parts = [];
+                    q.statements.forEach((stmt, stmtIndex) => {
+                        const answer = userAnswers[stmtIndex] || "No answer";
+                        parts.push(`Blank ${stmtIndex + 1}: ${answer}`);
+                    });
+                    answerText = parts.join(" | ");
+                }
+                
+                detailed[`q${qIndex + 1}`] = answerText;
+            });
+            
+            return detailed;
+        };
+        
+        const submitResultsToGoogleSheet = async (data) => {
+            const webAppUrl = 'https://script.google.com/macros/s/AKfycbzcfF8cnvJKAlMgjb2-0vR_tjxl-ioONQD3Nyp0U1zVHMY-dRS-nd_X0l-3325X8OY/exec';
+            try { 
+                await fetch(webAppUrl, { 
+                    method: 'POST', 
+                    mode: 'no-cors', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify(data) 
+                }); 
+                console.log('Data sent with detailed answers'); 
+            } catch (error) { 
+                console.error('Error sending data:', error); 
+            }
+        };
 
             useEffect(() => {
                 if (isCompleted && !dataSubmitted) {
                     const points = calculatePoints();
                     const grade = getGradeFromScore(points);
                     const endTime = new Date().toISOString();
-                    const results = { studentName, startTime, endTime, score: points, grade, fullscreenExits: fullscreenExitCount };
+                    const detailedAnswers = formatDetailedAnswers();
+                    const results = { 
+                        studentName, 
+                        startTime, 
+                        endTime, 
+                        score: points, 
+                        grade, 
+                        fullscreenExits: fullscreenExitCount,
+                        detailedAnswers 
+                    };
                     submitResultsToGoogleSheet(results);
                     setDataSubmitted(true);
                 }
