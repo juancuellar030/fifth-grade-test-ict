@@ -394,8 +394,8 @@
         };
         
         const submitResultsToGoogleSheet = async (data) => {
+            data.gradeLevel = '3rd Grade'; // ADD THIS LINE
             const webAppUrl = 'https://script.google.com/macros/s/AKfycbwP6Z1O-5LWrWlz7H_jAlmuJbxY40V_tSImvrTADP_Qoo7Tq_XP26sxV4HwppijoFhW/exec';
-            data.gradeLevel = '3rd Grade';
             try { 
                 await fetch(webAppUrl, { 
                     method: 'POST', 
