@@ -230,11 +230,32 @@
             }, [isCompleted, dataSubmitted, answers]);
 
             useEffect(() => {
-                const handleFullscreenChange = () => { if (!document.fullscreenElement && hasStarted && !isCompleted) { setShowWarning(true); setFullscreenExitCount(prev => prev + 1); }};
-                const handleVisibilityChange = () => { if (document.hidden && hasStarted && !isCompleted) { setShowWarning(true); setFullscreenExitCount(prev => prev + 1); }};
+                // Detect if device is mobile/tablet
+                const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                                      (navigator.maxTouchPoints && navigator.maxTouchPoints > 2);
+                
+                const handleFullscreenChange = () => { 
+                    // Skip fullscreen check on mobile/tablet devices
+                    if (isMobileDevice) return;
+                    if (!document.fullscreenElement && hasStarted && !isCompleted) { 
+                        setShowWarning(true); 
+                        setFullscreenExitCount(prev => prev + 1); 
+                    }
+                };
+                
+                const handleVisibilityChange = () => { 
+                    if (document.hidden && hasStarted && !isCompleted) { 
+                        setShowWarning(true); 
+                        setFullscreenExitCount(prev => prev + 1); 
+                    }
+                };
+                
                 document.addEventListener('fullscreenchange', handleFullscreenChange);
                 document.addEventListener('visibilitychange', handleVisibilityChange);
-                return () => { document.removeEventListener('fullscreenchange', handleFullscreenChange); document.removeEventListener('visibilitychange', handleVisibilityChange); };
+                return () => { 
+                    document.removeEventListener('fullscreenchange', handleFullscreenChange); 
+                    document.removeEventListener('visibilitychange', handleVisibilityChange); 
+                };
             }, [hasStarted, isCompleted]);
             
             useEffect(() => { const currentQ = questions[currentQuestion]; if (currentQ && currentQ.type.includes('drag-drop')) { setDropZones(answers[currentQuestion] || {}); } }, [currentQuestion, answers]);
